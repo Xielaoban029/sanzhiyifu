@@ -145,7 +145,59 @@
       box-shadow: 0 0 0 2px var(--accent);
     }
     .tl-node.hebei .tl-dot { background: var(--cat-hebei); box-shadow: 0 0 0 2px var(--cat-hebei); }
-    /* ===== 进度条 ===== */
+        /* ===== 三标式时间轴 ===== */
+.tl-axis { position: relative; padding: 0; }
+/* 朝代标尺（外层） */
+.tl-dynasty-bar {
+  display: flex; overflow-x: auto; gap: 4px; padding: 8px 4px; margin-bottom: 0;
+  position: sticky; top: 0; z-index: 5;
+  background: var(--bg-primary);
+  border-bottom: 2px solid var(--border);
+}
+.tl-dynasty-tag {
+  flex-shrink: 0; padding: 4px 10px; border-radius: 6px; cursor: pointer;
+  font-size: 0.7rem; font-weight: 600; text-align: center;
+  background: var(--bg-card); border: 1px solid var(--border);
+  transition: all 0.2s; white-space: nowrap;
+}
+.tl-dynasty-tag:hover { border-color: var(--accent); }
+.tl-dynasty-tag.active { background: var(--accent); color: white; border-color: var(--accent); }
+.tl-dynasty-tag.hebei { border-left: 3px solid var(--cat-hebei); }
+/* 事件列表（中+内层） */
+.tl-event-list { padding: 4px 0; }
+.tl-event-group { margin-bottom: 0; }
+.tl-event-group-header {
+  padding: 10px 8px; margin: 0 -8px; border-radius: 8px; cursor: pointer;
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg-secondary); margin-bottom: 8px;
+  transition: background 0.2s; position: sticky; top: 48px; z-index: 4;
+}
+.tl-event-group-header:hover { filter: brightness(0.97); }
+.tl-eg-dynasty { font-size: 1rem; font-weight: 700; color: var(--accent); }
+.tl-eg-years { font-size: 0.7rem; color: var(--text-muted); }
+.tl-eg-badge { font-size: 0.6rem; padding: 1px 6px; border-radius: 4px; background: var(--accent-light); color: var(--accent); }
+/* 单条事件（三标式） */
+.tl-event {
+  position: relative; padding: 8px 8px 8px 24px; margin-bottom: 2px;
+  border-left: 2px solid var(--border);
+  margin-left: 12px; cursor: pointer; transition: all 0.2s;
+  border-radius: 0 6px 6px 0;
+}
+.tl-event:hover { background: var(--bg-secondary); border-left-color: var(--accent); }
+.tl-event::before {
+  content: ''; position: absolute; left: -7px; top: 14px;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--accent); border: 2px solid var(--bg-card);
+}
+.tl-event.hebei::before { background: var(--cat-hebei); }
+.tl-event-year { font-size: 0.65rem; font-weight: 700; color: var(--accent); display: inline-block; padding: 1px 6px; border-radius: 3px; background: var(--accent-light); }
+.tl-event-title { font-size: 0.85rem; font-weight: 600; margin: 2px 0; }
+.tl-event-detail { font-size: 0.75rem; line-height: 1.5; color: var(--text-secondary); display: none; margin-top: 4px; }
+.tl-event.open .tl-event-detail { display: block; }
+.tl-event.open .tl-event-summary { display: none; }
+.tl-event-summary { font-size: 0.7rem; color: var(--gold); font-style: italic; margin-top: 1px; }
+.tl-event-significance { font-size: 0.7rem; line-height: 1.5; color: var(--gold); padding: 6px 8px; border-radius: 4px; background: rgba(197,165,90,0.08); margin-top: 4px; }
+/* ===== 进度条 ===== */
     .progress-bar {
       height: 8px; border-radius: 4px; background: var(--border); overflow: hidden;
     }
@@ -352,8 +404,8 @@ const dynasties = [
       { name: '桀', description: '夏朝末代君主，暴君', contribution: '暴政致亡国' }
     ],
     keyEvents: [
-      { year: -2070, event: '禹建立夏朝' },
-      { year: -1600, event: '商汤灭夏，夏朝灭亡' }
+      { year: -2070, event: '禹建立夏朝', details: '禹因治水有功受舜禅让成为部落联盟首领，死后其子启继承王位，开创世袭制。夏朝定都阳城（今河南登封），建立国家机构，制定刑法，修筑监狱。', significance: '中国历史上第一个世袭制王朝的建立，标志着中国原始社会的终结和阶级社会的开端' },
+      { year: -1600, event: '商汤灭夏，夏朝灭亡', details: '夏朝末代君主桀暴虐无道，商部落首领汤起兵伐夏，在鸣条之战中击败夏军，夏朝灭亡。', significance: '中国历史上第一次王朝更替，"汤武革命"的开端' }
     ]
   },
   {
@@ -367,9 +419,9 @@ const dynasties = [
       { name: '纣王', description: '末代君主，暴君', contribution: '暴政致亡国' }
     ],
     keyEvents: [
-      { year: -1600, event: '商汤灭夏，建立商朝' },
-      { year: -1300, event: '盘庚迁殷' },
-      { year: -1046, event: '武王伐纣，商朝灭亡' }
+      { year: -1600, event: '商汤灭夏，建立商朝', details: '商汤在伊尹辅佐下灭夏，建立商朝。吸取夏亡教训，推行仁政，商朝前期社会稳定、经济繁荣。', significance: '中国历史上第二个王朝，首次出现有文字记载的信史时代' },
+      { year: -1300, event: '盘庚迁殷', details: '商朝中期因王室内乱和自然灾害多次迁都，至盘庚时将都城迁至殷（今河南安阳），此后商朝又称殷商。', significance: '都城稳定后商朝进入鼎盛期，殷墟出土的甲骨文证实了商朝历史' },
+      { year: -1046, event: '武王伐纣，商朝灭亡', details: '商纣王暴虐无道，周武王在姜子牙辅佐下会盟诸侯，于牧野之战中以少胜多击败商军，纣王自焚而死。', significance: '周朝取代商朝，开启了分封制和礼乐文明的新时代' }
     ]
   },
   {
@@ -383,9 +435,9 @@ const dynasties = [
       { name: '周幽王', description: '西周末代君主', contribution: '烽火戏诸侯' }
     ],
     keyEvents: [
-      { year: -1046, event: '武王伐纣，建立西周' },
-      { year: -841, event: '国人暴动，共和行政' },
-      { year: -771, event: '犬戎攻破镐京，西周灭亡' }
+      { year: -1046, event: '武王伐纣，建立西周', details: '周武王灭商后定都镐京，实行分封制，将土地和人民分封给同姓宗亲和功臣。周公旦辅佐年幼的成王，制礼作乐，建立宗法制。', significance: '分封制和宗法制奠定了中国封建社会政治制度的基础，礼乐制度影响中国数千年' },
+      { year: -841, event: '国人暴动，共和行政', details: '周厉王暴政引发平民暴动，厉王出逃。朝政由周公和召公共同主持，史称"共和行政"。这是中国历史有确切纪年的开始。', significance: '中国历史有确切纪年的开端，共和行政是中国早期贵族共和政治的罕见例子' },
+      { year: -771, event: '犬戎攻破镐京，西周灭亡', details: '周幽王为博褒姒一笑"烽火戏诸侯"，失信于诸侯。申侯联合犬戎攻破镐京，幽王被杀，西周灭亡。', significance: '西周的灭亡标志着春秋战国时代的开始，王室衰微，诸侯争霸' }
     ]
   },
   {
@@ -399,11 +451,11 @@ const dynasties = [
       { name: '秦始皇', description: '秦朝建立者（战国末期）', contribution: '统一六国' }
     ],
     keyEvents: [
-      { year: -770, event: '周平王东迁洛邑，东周开始' },
-      { year: -656, event: '齐桓公称霸' },
-      { year: -551, event: '孔子诞生' },
-      { year: -356, event: '商鞅变法' },
-      { year: -221, event: '秦统一六国' }
+      { year: -770, event: '周平王东迁洛邑，东周开始', details: '周平王在诸侯护卫下将都城东迁至洛邑（今河南洛阳），东周开始。周王室权威衰落，诸侯争霸时代来临。', significance: '中国进入春秋战国大变革时期，旧秩序瓦解，新制度萌芽' },
+      { year: -656, event: '齐桓公称霸', details: '齐桓公任用管仲为相进行改革，以"尊王攘夷"为号召，在葵丘会盟诸侯，成为春秋第一位霸主。', significance: '标志着春秋五霸时代的开始，"尊王攘夷"成为诸侯争霸的主流口号' },
+      { year: -551, event: '孔子诞生', details: '孔子生于鲁国陬邑（今山东曲阜），创立儒家学派，主张"仁"和"礼"，编订《诗》《书》《礼》《乐》《易》《春秋》六经。', significance: '儒家思想的创立深刻影响了中国乃至整个东亚文明两千多年' },
+      { year: -356, event: '商鞅变法', details: '秦孝公任用商鞅在秦国推行变法，内容：废井田开阡陌、奖励耕战、推行县制、实行连坐法、统一度量衡。', significance: '秦国由弱变强的转折点，为日后统一六国奠定了制度基础' },
+      { year: -221, event: '秦统一六国', details: '秦王嬴政先后灭韩、赵、魏、楚、燕、齐六国，结束了长达500多年的诸侯割据局面，建立了中国历史上第一个统一的中央集权国家。', significance: '中国历史上第一次真正意义上的统一，确立了此后两千多年的政治格局' }
     ]
   },
   {
@@ -417,10 +469,10 @@ const dynasties = [
       { name: '陈胜', description: '大泽乡起义领袖', contribution: '首举反秦义旗' }
     ],
     keyEvents: [
-      { year: -221, event: '秦始皇统一六国' },
-      { year: -213, event: '焚书坑儒' },
-      { year: -209, event: '陈胜吴广起义' },
-      { year: -206, event: '秦朝灭亡' }
+      { year: -221, event: '秦始皇统一六国', details: '秦王嬴政自称"始皇帝"，推行郡县制取代分封制，统一文字（小篆）、货币（圆形方孔钱）、度量衡、车轨，修筑长城防御匈奴，修建驰道连通全国。', significance: '建立了中国历史上第一个统一的中央集权国家，"书同文、车同轨"奠定了中华文明大一统的格局' },
+      { year: -213, event: '焚书坑儒', details: '秦始皇采纳李斯建议，禁止私学、焚烧诸子百家书籍（除秦记、医药、卜筮等），次年又坑杀四百六十余名儒生方士。', significance: '中国文化史上的一次浩劫，严重破坏了百家争鸣的思想传统，反映了法家思想的极端化' },
+      { year: -209, event: '陈胜吴广起义', details: '九百名被征发戍边的贫苦农民在大泽乡因暴雨误期，按秦律当斩。陈胜、吴广揭竿而起，提出"王侯将相宁有种乎"，各地纷纷响应。', significance: '中国历史上第一次大规模的农民起义，首举反秦义旗，敲响了秦朝灭亡的丧钟' },
+      { year: -206, event: '秦朝灭亡', details: '刘邦率军攻入咸阳，秦王子婴投降。秦朝仅存在15年便灭亡。随后项羽与刘邦展开长达四年的楚汉之争。', significance: '第一个大一统王朝的速亡，证明严刑峻法不足以治国，为汉初"休养生息"政策提供了深刻启示' }
     ]
   },
   {
@@ -436,13 +488,14 @@ const dynasties = [
       { name: '张衡', description: '东汉科学家', contribution: '发明地动仪' }
     ],
     keyEvents: [
-      { year: -202, event: '刘邦建立西汉' },
-      { year: -140, event: '汉武帝即位' },
-      { year: -138, event: '张骞出使西域，开辟丝绸之路' },
-      { year: 9, event: '王莽篡汉' },
-      { year: 25, event: '刘秀建立东汉' },
-      { year: 105, event: '蔡伦改进造纸术' },
-      { year: 220, event: '东汉灭亡' }
+      { year: -202, event: '刘邦建立西汉', details: '刘邦在楚汉之争中击败项羽，在定陶称帝，建立汉朝。吸取秦亡教训，推行休养生息政策，减轻赋税徭役。', significance: '汉朝建立，继承秦制而有所改革，开启了长达四百年的汉帝国时代' },
+      { year: -180, event: '文景之治', details: '汉文帝、汉景帝继续推行"与民休息"政策，轻徭薄赋，刑法宽松，社会经济恢复发展，府库充盈。', significance: '为汉武帝时期的强盛奠定了经济基础，休养生息政策的典范' },
+      { year: -140, event: '汉武帝即位', details: '汉武帝刘彻推行"推恩令"削弱诸侯国，采纳董仲舒建议"罢黜百家，独尊儒术"，设立太学，推行盐铁官营。', significance: '儒家思想成为中国官方正统思想，影响中国两千多年；汉朝达到鼎盛' },
+      { year: -138, event: '张骞出使西域，开辟丝绸之路', details: '张骞奉汉武帝之命出使西域，虽未达军事目的，但带回了西域的地理物产信息，促进了东西方交流。', significance: '丝绸之路开辟，促进了东西方文明交流，对世界历史产生深远影响' },
+      { year: 9, event: '王莽篡汉建立新朝', details: '外戚王莽废西汉孺子婴，自立为帝，改国号为"新"。推行"王莽改制"，但措施脱离实际，引发社会动荡。', significance: '西汉灭亡，王莽改制是历史上一次不成功的改良尝试' },
+      { year: 25, event: '刘秀建立东汉', details: '刘秀在绿林军、赤眉军起义中崛起，称帝定都洛阳。平定各地割据势力，统一全国。', significance: '东汉建立，刘秀以"柔道治国"恢复生产，史称"光武中兴"' },
+      { year: 105, event: '蔡伦改进造纸术', details: '东汉宦官蔡伦用树皮、麻头、破布等原料制造出轻便廉价的纸张，时称"蔡侯纸"。', significance: '造纸术是四大发明之一，对世界文明的传播作出了巨大贡献' },
+      { year: 220, event: '东汉灭亡，三国开始', details: '曹丕逼迫汉献帝禅让建立魏国。刘备在成都称帝（蜀汉），孙权在建业称帝（吴），三国鼎立格局正式形成。', significance: '东汉400年统治结束，中国进入三国分裂时期' }
     ]
   },
   {
@@ -456,10 +509,10 @@ const dynasties = [
       { name: '关羽', description: '蜀汉名将', contribution: '忠义象征' }
     ],
     keyEvents: [
-      { year: 200, event: '官渡之战' },
-      { year: 208, event: '赤壁之战' },
-      { year: 220, event: '曹丕建魏，东汉灭亡' },
-      { year: 280, event: '西晋统一全国' }
+      { year: 200, event: '官渡之战', details: '曹操与袁绍在官渡决战。曹操以少胜多，火烧乌巢粮草，击败袁绍十万大军。', significance: '曹操统一北方的决定性战役' },
+      { year: 208, event: '赤壁之战', details: '孙权、刘备联军在赤壁以火攻大败曹操。孙刘联军以少胜多，曹操退回北方。', significance: '奠定了三国鼎立的基础，以少胜多的经典战例' },
+      { year: 220, event: '曹丕建魏，东汉灭亡', details: '曹操去世后，其子曹丕逼汉献帝禅让，建立魏国，定都洛阳。', significance: '东汉灭亡，三国时代正式开始' },
+      { year: 280, event: '西晋统一全国', details: '晋武帝司马炎灭吴，结束了自东汉末年以来近百年的分裂局面。', significance: '中国再次统一，但西晋的统一仅维持三十余年' }
     ]
   },
   {
@@ -473,12 +526,12 @@ const dynasties = [
       { name: '顾恺之', description: '东晋画家', contribution: '《洛神赋图》' }
     ],
     keyEvents: [
-      { year: 265, event: '西晋建立' },
-      { year: 316, event: '西晋灭亡，五胡乱华' },
-      { year: 317, event: '东晋建立' },
-      { year: 383, event: '淝水之战' },
-      { year: 494, event: '北魏孝文帝改革' },
-      { year: 589, event: '隋朝统一' }
+      { year: 265, event: '西晋建立', details: '司马炎取代曹魏建立西晋，定都洛阳。280年灭吴统一全国。但统治腐朽，分封诸王导致"八王之乱"。', significance: '短暂统一后因内乱迅速衰落，反映门阀政治的弊端' },
+      { year: 316, event: '西晋灭亡，五胡乱华', details: '匈奴、鲜卑、羯、氐、羌等北方少数民族入侵，攻破长安，俘虏晋愍帝，西晋灭亡。北方进入十六国时期。', significance: '少数民族大量进入中原，开启民族大融合的历史进程' },
+      { year: 317, event: '东晋建立', details: '司马睿在建康称帝建立东晋。北方士族和百姓大量南迁，史称"衣冠南渡"，促进了江南开发。', significance: '中国经济重心开始南移，江南地区得到大规模开发' },
+      { year: 383, event: '淝水之战', details: '前秦苻坚率大军进攻东晋，在淝水被东晋谢玄以少胜多击败。前秦瓦解，北方重新分裂。', significance: '以少胜多的经典战役，阻止了北方少数民族南下的势头' },
+      { year: 494, event: '北魏孝文帝改革', details: '北魏孝文帝推汉化改革：迁都洛阳、改汉姓、穿汉服、说汉语、与汉族通婚。', significance: '促进北方民族大融合，为隋唐统一奠定基础' },
+      { year: 589, event: '隋朝统一全国', details: '隋文帝杨坚灭陈，结束了自西晋灭亡以来近300年的分裂局面。', significance: '结束南北朝长期分裂，开启隋唐大一统时代' }
     ]
   },
   {
@@ -491,9 +544,9 @@ const dynasties = [
       { name: '隋炀帝', description: '隋朝第二位皇帝', contribution: '开通大运河' }
     ],
     keyEvents: [
-      { year: 581, event: '隋朝建立' },
-      { year: 605, event: '开通大运河' },
-      { year: 618, event: '隋朝灭亡' }
+      { year: 581, event: '隋朝建立', details: '杨坚取代北周建立隋朝，589年灭陈统一全国。推行均田制、整顿户籍、改革官制、创立科举制。', significance: '科举制的创立影响中国选官制度一千多年' },
+      { year: 605, event: '开通大运河', details: '隋炀帝征发数百万民工开凿大运河，连接涿郡、洛阳、余杭，全长两千多公里，沟通五大水系。', significance: '大运河促进南北经济文化交流，但劳民伤财加速隋朝灭亡' },
+      { year: 618, event: '隋朝灭亡', details: '隋炀帝暴政引发农民起义，杨广在江都被部下缢杀。李渊在长安称帝建立唐朝。', significance: '与秦一样二世而亡，"其兴也勃焉，其亡也忽焉"' }
     ]
   },
   {
@@ -510,14 +563,14 @@ const dynasties = [
       { name: '玄奘', description: '唐代高僧', contribution: '西行取经' }
     ],
     keyEvents: [
-      { year: 618, event: '唐朝建立' },
-      { year: 626, event: '玄武门之变' },
-      { year: 627, event: '贞观之治开始' },
-      { year: 641, event: '文成公主入藏' },
-      { year: 690, event: '武则天称帝' },
-      { year: 713, event: '开元盛世' },
-      { year: 755, event: '安史之乱' },
-      { year: 907, event: '唐朝灭亡' }
+      { year: 618, event: '唐朝建立', details: '李渊在太原起兵，攻占长安称帝建立唐朝。随后平定各地割据势力，统一全国。', significance: '中国最强盛的王朝之一的开端，盛唐气象从此开启' },
+      { year: 626, event: '玄武门之变', details: '秦王李世民在玄武门发动政变，杀太子建成和齐王元吉，迫使李渊退位登基。', significance: '李世民即位开启"贞观之治"，唐代政治转折性事件' },
+      { year: 627, event: '贞观之治开始', details: '唐太宗以"水能载舟亦能覆舟"为鉴，虚心纳谏，整顿吏治，完善三省六部制，修订唐律。', significance: '封建社会盛世典范，政治清明、社会稳定、经济发展' },
+      { year: 641, event: '文成公主入藏', details: '唐太宗派文成公主嫁给吐蕃赞普松赞干布，带去书籍、医药、工匠和技术。', significance: '汉藏和亲典范，促进汉藏友好和民族融合' },
+      { year: 690, event: '武则天称帝', details: '武则天废唐睿宗自立为帝，改国号为"周"，定都洛阳。发展科举制，打破门阀垄断。', significance: '中国历史上唯一的女皇帝，打破男性垄断皇权的传统' },
+      { year: 713, event: '开元盛世', details: '唐玄宗在位前期励精图治，任用贤相，整顿吏治，发展经济，唐朝进入全盛时期。', significance: '唐朝鼎盛时期，代表中国古代文明的最高峰' },
+      { year: 755, event: '安史之乱', details: '安禄山、史思明在范阳（今北京）发动叛乱，历时八年才被平定。唐朝从此由盛转衰。范阳位于今河北地区。', significance: '唐朝由盛转衰的转折点，河北成为安史之乱重灾区' },
+      { year: 907, event: '唐朝灭亡', details: '朱温篡唐建立后梁，唐朝灭亡。中国进入五代十国的分裂割据时期。', significance: '近三百年的大唐帝国终结，中国再次进入分裂时期' }
     ]
   },
   {
@@ -533,10 +586,10 @@ const dynasties = [
       { name: '王安石', description: '北宋改革家', contribution: '王安石变法' }
     ],
     keyEvents: [
-      { year: 960, event: '陈桥兵变，宋朝建立' },
-      { year: 1069, event: '王安石变法' },
-      { year: 1127, event: '靖康之变，北宋灭亡' },
-      { year: 1279, event: '崖山海战，南宋灭亡' }
+      { year: 960, event: '陈桥兵变，宋朝建立', details: '赵匡胤在陈桥驿兵变黄袍加身，建立宋朝。杯酒释兵权解除功臣兵权，实行重文轻武政策。', significance: '结束五代十国分裂，"重文轻武"影响此后三百年' },
+      { year: 1069, event: '王安石变法', details: '王安石推行青苗法、免役法、市易法等新法，因触及既得利益集团，最终失败。', significance: '北宋规模最大的改革，反映封建社会后期改革的艰难' },
+      { year: 1127, event: '靖康之变，北宋灭亡', details: '金军攻破开封，掳走徽钦二帝及大量皇室北去。宋高宗赵构南渡建立南宋。', significance: '北宋灭亡的国耻，激励后世爱国精神的重要历史记忆' },
+      { year: 1279, event: '崖山海战，南宋灭亡', details: '元军进攻崖山，陆秀夫背负幼帝赵昺投海殉国，十余万军民跳海殉国。', significance: '南宋彻底灭亡，中国首次完全被少数民族政权征服' }
     ]
   },
   {
@@ -550,9 +603,9 @@ const dynasties = [
       { name: '郭守敬', description: '科学家', contribution: '编《授时历》' }
     ],
     keyEvents: [
-      { year: 1271, event: '忽必烈建立元朝' },
-      { year: 1279, event: '元灭南宋，统一全国' },
-      { year: 1368, event: '明朝建立，元朝灭亡' }
+      { year: 1271, event: '忽必烈建立元朝', details: '忽必烈取《易经》"大哉乾元"定国号为"大元"，定都大都（今北京）。实行行省制，河北属中书省"腹里"。', significance: '第一个由少数民族建立的大一统王朝，行省制影响至今' },
+      { year: 1279, event: '元灭南宋，统一全国', details: '崖山海战后元朝统一全国。版图北到西伯利亚、南到南海、西到中亚，是历史最大。', significance: '空前大统一，促进民族融合和中西方交流' },
+      { year: 1368, event: '元朝灭亡', details: '元末红巾军起义爆发，朱元璋派徐达、常遇春北伐攻占大都，元顺帝北逃。', significance: '元朝不足百年即亡，证明民族压迫政策难以持久' }
     ]
   },
   {
@@ -568,10 +621,10 @@ const dynasties = [
       { name: '戚继光', description: '抗倭名将', contribution: '抗击倭寇' }
     ],
     keyEvents: [
-      { year: 1368, event: '朱元璋建立明朝' },
-      { year: 1405, event: '郑和首次下西洋' },
-      { year: 1421, event: '迁都北京' },
-      { year: 1644, event: '李自成攻占北京，明朝灭亡' }
+      { year: 1368, event: '朱元璋建立明朝', details: '朱元璋在应天（南京）称帝，年号洪武。推翻元朝统治后，推行"休养生息"政策，奖励垦荒，兴修水利，整顿吏治。', significance: '最后一个由汉族建立的大一统王朝，明初社会经济迅速恢复发展' },
+      { year: 1405, event: '郑和首次下西洋', details: '明成祖朱棣派郑和率领庞大船队从福建长乐出发，到达东南亚、印度洋沿岸，最远到达东非。前后七次，历时28年。', significance: '世界航海史上的壮举，比哥伦布发现美洲早近90年，促进了中外文化交流' },
+      { year: 1421, event: '明成祖迁都北京', details: '明成祖朱棣将都城从南京迁至北京，修建紫禁城。北京从此成为明清两代的政治中心。', significance: '奠定了北京此后600年作为中国政治中心的地位' },
+      { year: 1644, event: '李自成攻占北京，明朝灭亡', details: '李自成率农民起义军攻占北京，崇祯帝在煤山自缢。随后吴三桂引清军入关，李自成撤退。', significance: '明朝统治结束，中国进入最后一个封建王朝——清朝' }
     ]
   },
   {
@@ -586,15 +639,14 @@ const dynasties = [
       { name: '康有为', description: '维新派领袖', contribution: '戊戌变法' }
     ],
     keyEvents: [
-      { year: 1644, event: '清军入关' },
-      { year: 1840, event: '鸦片战争' },
-      { year: 1842, event: '《南京条约》签订' },
-      { year: 1851, event: '太平天国运动' },
-      { year: 1860, event: '第二次鸦片战争，火烧圆明园' },
-      { year: 1894, event: '甲午中日战争' },
-      { year: 1898, event: '戊戌变法' },
-      { year: 1911, event: '辛亥革命' },
-      { year: 1912, event: '中华民国成立，清朝灭亡' }
+      { year: 1644, event: '清军入关，定都北京', details: '清军在吴三桂引导下入关，击败李自成，顺治帝迁都北京。清朝开始对全国的统治。', significance: '中国最后一个封建王朝的建立，满族入主中原' },
+      { year: 1681, event: '平定三藩之乱', details: '康熙帝平定吴三桂、耿精忠、尚之信三藩叛乱，加强了中央集权，维护了国家统一。', significance: '消除了割据隐患，巩固了清王朝的统治' },
+      { year: 1684, event: '清朝统一台湾', details: '康熙帝派施琅率军攻占台湾，消灭郑氏政权，在台湾设立府县，隶属福建省。', significance: '台湾正式纳入中央政权管辖，维护了国家领土完整' },
+      { year: 1840, event: '鸦片战争', details: '英国以林则徐虎门销烟为借口发动侵华战争。清政府战败，被迫签订《南京条约》。', significance: '中国近代史的开端，标志中国开始沦为半殖民地半封建社会' },
+      { year: 1851, event: '太平天国运动', details: '洪秀全在广西金田村发动起义，建立太平天国，定都天京（南京）。颁布《天朝田亩制度》。', significance: '中国历史上规模最大的农民起义，沉重打击了清王朝统治' },
+      { year: 1894, event: '甲午中日战争', details: '日本发动侵华战争，北洋水师在黄海大战中与日军激战，最终在威海卫全军覆没。', significance: '战败标志洋务运动破产，《马关条约》大大加深了民族危机' },
+      { year: 1898, event: '戊戌变法', details: '康有为、梁启超领导维新变法，光绪帝颁布变法诏令。103天后被慈禧太后镇压，史称"百日维新"。', significance: '资产阶级改良运动的高潮，证明君主立宪道路在中国行不通' },
+      { year: 1911, event: '辛亥革命，清朝灭亡', details: '武昌起义爆发，各省纷纷响应。1912年中华民国成立，清帝退位，中国两千多年的封建帝制终结。', significance: '结束了中国两千多年的封建君主专制制度，建立了亚洲第一个民主共和国' }
     ]
   },
   {
@@ -608,12 +660,13 @@ const dynasties = [
       { name: '毛泽东', description: '新中国缔造者', contribution: '领导新民主主义革命胜利' }
     ],
     keyEvents: [
-      { year: 1840, event: '鸦片战争' },
-      { year: 1911, event: '辛亥革命' },
-      { year: 1919, event: '五四运动' },
-      { year: 1921, event: '中国共产党成立' },
-      { year: 1937, event: '全面抗日战争爆发' },
-      { year: 1949, event: '中华人民共和国成立' }
+      { year: 1840, event: '鸦片战争', details: '英国发动侵华战争，清政府战败。1842年签订《南京条约》，割让香港岛，开放五口通商。', significance: '中国近代史开端，开始沦为半殖民地半封建社会' },
+      { year: 1911, event: '辛亥革命', details: '孙中山领导辛亥革命推翻清政府，结束了两千多年的封建帝制。1912年中华民国成立。', significance: '封建帝制终结，民主共和观念深入人心' },
+      { year: 1915, event: '新文化运动', details: '陈独秀创办《新青年》，提倡"民主"与"科学"，反对封建礼教。鲁迅发表《狂人日记》。', significance: '思想解放运动，为五四运动奠定了思想基础' },
+      { year: 1919, event: '五四运动', details: '巴黎和会中国外交失败引发学生爱国运动，后发展成全国范围的罢工罢课罢市。', significance: '新民主主义革命的开端，标志着中国工人阶级登上政治舞台' },
+      { year: 1921, event: '中国共产党成立', details: '中共一大在上海召开（后转嘉兴南湖），确定党的名称和纲领，选举陈独秀为中央局书记。共有13名代表，代表全国50多名党员。', significance: '开天辟地的大事变，中国革命从此有了坚强的领导核心' },
+      { year: 1937, event: '全面抗日战争爆发', details: '七七事变（卢沟桥事变）后全面抗战开始。国共第二次合作，建立抗日民族统一战线。河北是抗战重要战场。', significance: '全民族抗战的开始，中国人民为世界反法西斯战争作出巨大贡献' },
+      { year: 1949, event: '中华人民共和国成立', details: '毛泽东在天安门城楼庄严宣告中华人民共和国成立，中国人民从此站起来了。', significance: '结束了中国半殖民地半封建社会的历史，开启了中华民族的新纪元' }
     ]
   },
   {
@@ -626,15 +679,15 @@ const dynasties = [
       { name: '邓小平', description: '改革开放总设计师', contribution: '提出改革开放' }
     ],
     keyEvents: [
-      { year: 1949, event: '中华人民共和国成立' },
-      { year: 1950, event: '抗美援朝' },
-      { year: 1964, event: '第一颗原子弹爆炸' },
-      { year: 1978, event: '改革开放' },
-      { year: 1997, event: '香港回归' },
-      { year: 1999, event: '澳门回归' },
-      { year: 2001, event: '加入WTO' },
-      { year: 2010, event: '成为世界第二大经济体' },
-      { year: 2021, event: '全面建成小康社会' }
+      { year: 1949, event: '中华人民共和国成立', details: '毛泽东在北京天安门城楼庄严宣告中华人民共和国成立。新中国成立后，完成社会主义改造（农业、手工业、资本主义工商业），确立社会主义制度。', significance: '结束了半殖民地半封建社会历史，中国人民站起来了，开启了中华民族新纪元' },
+      { year: 1950, event: '抗美援朝', details: '中国人民志愿军跨过鸭绿江，与朝鲜军民共同抗击美国侵略。1953年签订停战协定。', significance: '打出了国威军威，为新中国的建设赢得了相对稳定的外部环境' },
+      { year: 1964, event: '第一颗原子弹爆炸成功', details: '中国在新疆罗布泊成功爆炸第一颗原子弹。1967年氢弹试验成功，1970年东方红一号卫星发射。', significance: '"两弹一星"极大提升了中国的国际地位和国防实力' },
+      { year: 1978, event: '改革开放', details: '十一届三中全会召开，邓小平提出改革开放政策。从农村家庭联产承包责任制开始，逐步扩展到城市经济体制改革，设立深圳等经济特区。', significance: '决定当代中国命运的关键抉择，中国经济从此驶入快车道' },
+      { year: 1997, event: '香港回归', details: '中英两国政府举行香港政权交接仪式，香港特别行政区成立，董建华任首任行政长官，"一国两制"首次成功实践。', significance: '洗雪了百年耻辱，"一国两制"构想成功实现' },
+      { year: 1999, event: '澳门回归', details: '中葡两国政府举行澳门政权交接仪式，澳门特别行政区成立。', significance: '标志着外国列强占领中国领土历史的彻底终结' },
+      { year: 2001, event: '加入世界贸易组织', details: '中国正式加入WTO，成为第143个成员。中国更加深入地参与经济全球化进程。', significance: '标志着中国对外开放进入新阶段，中国经济与世界经济的深度融合' },
+      { year: 2010, event: '成为世界第二大经济体', details: '中国GDP超过日本，成为仅次于美国的世界第二大经济体。中国经济持续快速增长。', significance: '中国经济实力的历史性跨越，国际影响力显著提升' },
+      { year: 2021, event: '全面建成小康社会', details: '习近平总书记宣布我国脱贫攻坚战取得全面胜利，近1亿农村贫困人口全部脱贫，全面建成小康社会目标如期实现。', significance: '实现了第一个百年奋斗目标，为全面建设社会主义现代化国家奠定坚实基础' }
     ]
   }
 ];
@@ -1411,55 +1464,68 @@ function usk() {
   S.st.ld = t; sv(); uhs();
 }
 
-// ======================== 时间轴 ========================
+// ======================== 时间轴（三标式） ========================
 function rt(p) {
   const isHB = id => knowledgePoints.some(kp => kp.dynasty === dynasties.find(d=>d.id===id)?.name && kp.isHebeiRelated);
-  let h = `<div class="fade-in"><div class="flex flex-wrap gap-3 mb-4 items-center">
-    <span class="text-sm font-medium" style="color:var(--text-secondary);">📂 筛选：</span>
-    <select id="tlf" class="px-3 py-1.5 rounded-lg border text-sm" style="background:var(--bg-card);border-color:var(--border);color:var(--text-primary);" onchange="S.tl.cat=this.value;rt()">
-      <option value="all">全部</option><option value="文学">📖文学</option><option value="历史事件">🏛️历史</option><option value="哲学">💭哲学</option><option value="人物">👤人物</option><option value="文化">🎭文化</option><option value="河北特色">🔴河北</option><option value="三支政策">📋三支</option>
-    </select>
-    <span class="text-xs" style="color:var(--text-muted);">💡 点击朝代查看详情</span>
-  </div>
-  <div class="tl-container card p-4 mb-4">`;
+  const targetId = p?.dynasty || S.tl.sel;
+
+  let h = `<div class="fade-in tl-axis">`;
+
+  // === 外层：朝代标尺（顶部水平滚动标签） ===
+  h += `<div class="tl-dynasty-bar" id="tlBar">`;
   dynasties.forEach(d => {
     const hb = isHB(d.id);
-    h += `<div class="tl-node ${hb?'hebei':''}" onclick="S.tl.sel='${d.id}';rt()"><div class="tl-dot"></div><div class="text-sm font-bold" style="color:var(--text-primary);">${d.name}</div><div class="text-xs" style="color:var(--text-muted);">${U.fy(d.startYear)}</div>${hb?'<div class="text-xs text-hebei">🔴</div>':''}</div>`;
+    const act = d.id === targetId;
+    h += `<div class="tl-dynasty-tag ${act?'active':''} ${hb?'hebei':''}" onclick="S.tl.sel='${d.id}';rt()" data-id="${d.id}">${d.name}</div>`;
   });
   h += `</div>`;
-  const sel = p?.dynasty || S.tl.sel;
-  if (sel) { const d = dynasties.find(dd => dd.id === sel); if (d) h += ddDetail(d); }
-  h += `</div>`; ri(h);
-  const f = $('tlf'); if (f) f.value = S.tl.cat;
+
+  // === 中层+内层：一条完整的事件时间线 ===
+  h += `<div class="tl-event-list">`;
+  dynasties.forEach(d => {
+    const active = d.id === targetId;
+    // 展开还是收起？只展开目标朝代，其余折叠
+    const open = d.id === targetId;
+    h += `<div class="tl-event-group" data-id="${d.id}">`;
+    // 朝代分组标题（点击跳转）
+    h += `<div class="tl-event-group-header" onclick="S.tl.sel='${d.id}';rt()">
+      <span class="tl-eg-dynasty">${d.name}</span>
+      <span class="tl-eg-years">${U.fy(d.startYear)} ~ ${U.fy(d.endYear)}</span>
+      ${d.capital?`<span class="tl-eg-badge">🏛️${d.capital}</span>`:''}
+      ${isHB(d.id)?'<span class="text-hebei" style="font-size:0.6rem;">🔴河北</span>':''}
+      <span style="margin-left:auto;font-size:0.7rem;color:var(--text-muted);">${d.keyEvents?.length||0}件大事 ${open?'▲':'▼'}</span>
+    </div>`;
+    // 事件列表（只有目标朝代展开）
+    if (open && d.keyEvents?.length) {
+      d.keyEvents.forEach(e => {
+        const hasHebei = e.significance && (e.significance.includes('河北') || e.details?.includes('河北'));
+        h += `<div class="tl-event ${hasHebei?'hebei':''}" onclick="this.classList.toggle('open')">
+          <span class="tl-event-year">${U.fy(e.year)}</span>
+          <div class="tl-event-title">${e.event}</div>
+          <div class="tl-event-summary">${e.significance ? e.significance.slice(0,50)+(e.significance.length>50?'...':'') : '点击查看详情 →'}</div>
+          <div class="tl-event-detail">
+            ${e.details ? `<div style="margin-bottom:4px;">📖 ${e.details}</div>` : ''}
+            ${e.significance ? `<div class="tl-event-significance">🎯 意义：${e.significance}</div>` : ''}
+          </div>
+        </div>`;
+      });
+      // 刷题快捷
+      let qs = quizQuestions.filter(q => q.dynasty === d.name);
+      if (qs.length) h += `<div style="margin:8px 0 16px 12px;"><button onclick="startQz('${d.name}')" class="px-3 py-1.5 rounded-lg text-xs text-white" style="background:var(--accent);">✍️ 刷${d.name}题目（${qs.length}题）</button></div>`;
+    }
+    h += `</div>`;
+  });
+  h += `</div></div>`;
+
+  ri(h);
+  // 滚动目标标签到视野
+  setTimeout(() => {
+    const el = document.querySelector(`.tl-dynasty-tag[data-id="${targetId}"]`);
+    if (el) el.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+  }, 50);
 }
 
-function ddDetail(d) {
-  const cat = S.tl.cat;
-  let kps = knowledgePoints.filter(kp => kp.dynasty === d.name || kp.content.includes(d.name));
-  if (cat !== 'all') kps = kps.filter(kp => kp.category === cat);
-  let qs = quizQuestions.filter(q => q.dynasty === d.name);
-  if (cat !== 'all') qs = qs.filter(q => q.category === cat);
-  let h = `<div class="card p-5 mb-4 fade-in" style="border-left:4px solid var(--accent);">
-    <div class="flex items-center gap-2 mb-3"><span class="text-lg font-bold">${d.name}</span><span class="text-xs" style="color:var(--text-muted)">${U.fy(d.startYear)} ~ ${U.fy(d.endYear)}</span>${d.capital?`<span class="badge text-xs" style="background:var(--border);">🏛️ ${d.capital}</span>`:''}</div>
-    <p class="text-sm mb-4 leading-relaxed" style="color:var(--text-secondary);">${d.summary}</p>`;
-  if (d.keyFigures?.length) {
-    h += `<div class="mb-3"><span class="text-sm font-bold">👤 重要人物：</span><div class="flex flex-wrap gap-2 mt-1">`;
-    d.keyFigures.forEach(f => { h += `<span class="badge text-xs" style="background:var(--accent-light);color:var(--accent);" title="${f.description}">${f.name}</span>`; });
-    h += `</div></div>`;
-  }
-  if (d.keyEvents?.length) {
-    h += `<div class="mb-3"><span class="text-sm font-bold">📅 重要事件：</span><ul class="mt-1 space-y-1">`;
-    d.keyEvents.forEach(e => { h += `<li class="text-xs" style="color:var(--text-secondary);">· ${U.fy(e.year)} — ${e.event}</li>`; });
-    h += `</ul></div>`;
-  }
-  if (kps.length) {
-    h += `<div class="mt-3"><span class="text-sm font-bold">📖 关联知识点：</span><div class="flex flex-wrap gap-2 mt-1">`;
-    kps.forEach(kp => { const c = U.cc(kp.category); h += `<span class="badge text-xs clickable" style="background:${c}20;color:${c};" onclick="nav('dashboard',{q:'${kp.title.replace(/'/g,"\\'")}'})">${U.ci(kp.category)} ${kp.title}</span>`; });
-    h += `</div></div>`;
-  }
-  if (qs.length) h += `<div class="mt-4 pt-3" style="border-top:1px solid var(--border);"><button onclick="startQz('${d.name}')" class="px-4 py-2 rounded-lg text-sm text-white" style="background:var(--accent);">✍️ 刷该朝代（${qs.length}题）</button></div>`;
-  h += `</div>`; return h;
-}
+// ddDetail 已合并到 rt() 中
 
 // ======================== 刷题 ========================
 function rq(p) {
