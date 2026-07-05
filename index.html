@@ -123,81 +123,35 @@
     .quiz-option.wrong { border-color: var(--wrong); background: #FFEBEE; color: var(--wrong); }
     .dark .quiz-option.correct { background: #1B3A1B; }
     .dark .quiz-option.wrong { background: #3A1B1B; }
-    /* ===== 时间轴 ===== */
-    .tl-container {
-      display: flex; gap: 0; overflow-x: auto; padding: 20px 0;
-      position: relative;
-    }
-    .tl-container::before {
-      content: ''; position: absolute; top: 50%; left: 0; right: 0;
-      height: 3px; background: var(--timeline-line); transform: translateY(-50%);
-      z-index: 0;
-    }
-    .tl-node {
-      flex-shrink: 0; width: 120px; text-align: center; cursor: pointer;
-      position: relative; z-index: 1; padding-top: 10px;
-      transition: transform 0.2s;
-    }
-    .tl-node:hover { transform: translateY(-4px); }
-    .tl-dot {
-      width: 16px; height: 16px; border-radius: 50%;
-      background: var(--accent); margin: 0 auto 8px; border: 3px solid var(--bg-primary);
-      box-shadow: 0 0 0 2px var(--accent);
-    }
-    .tl-node.hebei .tl-dot { background: var(--cat-hebei); box-shadow: 0 0 0 2px var(--cat-hebei); }
-        /* ===== 三标式时间轴 ===== */
-.tl-axis { position: relative; padding: 0; }
-/* 朝代标尺（外层） */
-.tl-dynasty-bar {
-  display: flex; overflow-x: auto; gap: 4px; padding: 8px 4px; margin-bottom: 0;
-  position: sticky; top: 0; z-index: 5;
-  background: var(--bg-primary);
-  border-bottom: 2px solid var(--border);
-}
-.tl-dynasty-tag {
-  flex-shrink: 0; padding: 4px 10px; border-radius: 6px; cursor: pointer;
-  font-size: 0.7rem; font-weight: 600; text-align: center;
-  background: var(--bg-card); border: 1px solid var(--border);
-  transition: all 0.2s; white-space: nowrap;
-}
-.tl-dynasty-tag:hover { border-color: var(--accent); }
-.tl-dynasty-tag.active { background: var(--accent); color: white; border-color: var(--accent); }
-.tl-dynasty-tag.hebei { border-left: 3px solid var(--cat-hebei); }
-/* 事件列表（中+内层） */
-.tl-event-list { padding: 4px 0; }
-.tl-event-group { margin-bottom: 0; }
-.tl-event-group-header {
-  padding: 10px 8px; margin: 0 -8px; border-radius: 8px; cursor: pointer;
-  display: flex; align-items: center; gap: 8px;
-  background: var(--bg-secondary); margin-bottom: 8px;
-  transition: background 0.2s; position: sticky; top: 48px; z-index: 4;
-}
-.tl-event-group-header:hover { filter: brightness(0.97); }
-.tl-eg-dynasty { font-size: 1rem; font-weight: 700; color: var(--accent); }
-.tl-eg-years { font-size: 0.7rem; color: var(--text-muted); }
-.tl-eg-badge { font-size: 0.6rem; padding: 1px 6px; border-radius: 4px; background: var(--accent-light); color: var(--accent); }
-/* 单条事件（三标式） */
-.tl-event {
-  position: relative; padding: 8px 8px 8px 24px; margin-bottom: 2px;
-  border-left: 2px solid var(--border);
-  margin-left: 12px; cursor: pointer; transition: all 0.2s;
-  border-radius: 0 6px 6px 0;
-}
-.tl-event:hover { background: var(--bg-secondary); border-left-color: var(--accent); }
-.tl-event::before {
-  content: ''; position: absolute; left: -7px; top: 14px;
-  width: 10px; height: 10px; border-radius: 50%;
-  background: var(--accent); border: 2px solid var(--bg-card);
-}
-.tl-event.hebei::before { background: var(--cat-hebei); }
-.tl-event-year { font-size: 0.65rem; font-weight: 700; color: var(--accent); display: inline-block; padding: 1px 6px; border-radius: 3px; background: var(--accent-light); }
-.tl-event-title { font-size: 0.85rem; font-weight: 600; margin: 2px 0; }
-.tl-event-detail { font-size: 0.75rem; line-height: 1.5; color: var(--text-secondary); display: none; margin-top: 4px; }
-.tl-event.open .tl-event-detail { display: block; }
-.tl-event.open .tl-event-summary { display: none; }
-.tl-event-summary { font-size: 0.7rem; color: var(--gold); font-style: italic; margin-top: 1px; }
-.tl-event-significance { font-size: 0.7rem; line-height: 1.5; color: var(--gold); padding: 6px 8px; border-radius: 4px; background: rgba(197,165,90,0.08); margin-top: 4px; }
-/* ===== 进度条 ===== */
+        /* ===== 水平多层时间轴 ===== */
+.tl-horiz { overflow-x: auto; overflow-y: visible; padding: 4px 0; position: relative; }
+.tl-horiz-inner { position: relative; min-width: max-content; padding: 28px 0 16px 0; }
+.tl-horiz-line { position: absolute; left: 0; right: 40px; top: 50%; height: 2px; background: var(--timeline-line); }
+.tl-layer-btn { padding: 3px 10px; border-radius: 4px; border: 1px solid var(--border); font-size: 0.65rem; cursor: pointer; background: var(--bg-card); color: var(--text-muted); transition: all 0.2s; }
+.tl-layer-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+.tl-layer-1 { position: relative; height: 32px; margin: 0 20px; }
+.tl-dyn-block { position: absolute; text-align: center; cursor: pointer; transition: all 0.2s; }
+.tl-dyn-block:hover { filter: brightness(0.85); }
+.tl-dyn-block .tl-dyn-name { font-size: 0.75rem; font-weight: 700; white-space: nowrap; color: var(--accent); background: var(--accent-light); padding: 1px 8px; border-radius: 4px; display: inline-block; }
+.tl-dyn-block .tl-dyn-years { font-size: 0.55rem; color: var(--text-muted); margin-top: 1px; }
+.tl-dyn-block.active .tl-dyn-name { background: var(--accent); color: white; }
+.tl-dyn-block.hebei .tl-dyn-name { border-left: 3px solid var(--cat-hebei); }
+.tl-divider { position: absolute; top: -8px; width: 1px; height: 16px; background: var(--border); }
+.tl-layer-2 { position: relative; height: 36px; margin: 0 20px 4px; }
+.tl-ev-mark { position: absolute; cursor: pointer; transition: all 0.2s; }
+.tl-ev-mark:hover { z-index: 5; }
+.tl-ev-mark .tl-ev-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin: 0 auto; border: 2px solid var(--bg-primary); box-shadow: 0 0 0 1px var(--accent); }
+.tl-ev-mark.hebei .tl-ev-dot { background: var(--cat-hebei); box-shadow: 0 0 0 1px var(--cat-hebei); }
+.tl-ev-mark .tl-ev-label { font-size: 0.6rem; color: var(--text-secondary); white-space: nowrap; text-align: center; margin-top: 2px; max-width: 100px; overflow: hidden; text-overflow: ellipsis; }
+.tl-ev-mark .tl-ev-year { font-size: 0.5rem; color: var(--text-muted); text-align: center; }
+.tl-layer-3 { margin: 0 20px; padding-top: 6px; border-top: 1px dashed var(--border); }
+.tl-detail-card { padding: 6px 10px; border-radius: 6px; background: var(--bg-secondary); margin-bottom: 4px; }
+.tl-detail-card .tl-dc-title { font-size: 0.78rem; font-weight: 600; }
+.tl-detail-card .tl-dc-year { font-size: 0.6rem; color: var(--accent); font-weight: 700; }
+.tl-detail-card .tl-dc-detail { font-size: 0.68rem; color: var(--text-secondary); line-height: 1.5; margin-top: 2px; }
+.tl-detail-card .tl-dc-sig { font-size: 0.65rem; color: var(--gold); padding: 3px 6px; border-radius: 4px; background: rgba(197,165,90,0.08); margin-top: 3px; }
+.tl-detail-card.hebei-card { border-left: 3px solid var(--cat-hebei); }
+.tl-empty { text-align: center; padding: 20px; color: var(--text-muted); font-size: 0.8rem; }/* ===== 进度条 ===== */
     .progress-bar {
       height: 8px; border-radius: 4px; background: var(--border); overflow: hidden;
     }
@@ -1464,70 +1418,119 @@ function usk() {
   S.st.ld = t; sv(); uhs();
 }
 
-// ======================== 时间轴（三标式） ========================
+// ======================== 时间轴（水平多层标注） ========================
+let _tlDetail = 2; // 精细度：1=仅朝代 2=朝代+事件 3=全部
+
 function rt(p) {
-  const isHB = id => knowledgePoints.some(kp => kp.dynasty === dynasties.find(d=>d.id===id)?.name && kp.isHebeiRelated);
-  const targetId = p?.dynasty || S.tl.sel;
+  const targetId = p?.dynasty || S.tl.sel || dynasties[0].id;
+  const dy = dynasties.find(d => d.id === targetId);
 
-  let h = `<div class="fade-in tl-axis">`;
+  // 计算总宽度（基于最晚朝代结束年份）
+  const firstY = dynasties[0].startYear;
+  const lastY = dynasties[dynasties.length-1].endYear;
+  const span = lastY - firstY;
+  const pxPerYear = 2.5; // 每年代理像素
+  const totalW = Math.max(span * pxPerYear, 600);
 
-  // === 外层：朝代标尺（顶部水平滚动标签） ===
-  h += `<div class="tl-dynasty-bar" id="tlBar">`;
+  let h = `<div class="fade-in">`;
+
+  // 精细度切换
+  h += `<div class="flex items-center gap-2 mb-3 flex-wrap">
+    <span class="text-xs" style="color:var(--text-secondary);">📏 精细度：</span>
+    <button class="tl-layer-btn ${_tlDetail>=1?'active':''}" onclick="_tlDetail=1;rt()">Ⅰ 朝代</button>
+    <button class="tl-layer-btn ${_tlDetail>=2?'active':''}" onclick="_tlDetail=2;rt()">Ⅱ +事件</button>
+    <button class="tl-layer-btn ${_tlDetail>=3?'active':''}" onclick="_tlDetail=3;rt()">Ⅲ +详情</button>
+    <span class="text-xs" style="color:var(--text-muted);margin-left:4px;">💡 左右滑动 · 点击事件查看详情</span>
+  </div>`;
+
+  // 滚动容器
+  h += `<div class="tl-horiz card p-3"><div class="tl-horiz-inner" style="width:${totalW}px;">`;
+  h += `<div class="tl-horiz-line"></div>`;
+
+  // ====== 第1层：朝代标尺（总有） ======
+  h += `<div class="tl-layer-1">`;
   dynasties.forEach(d => {
-    const hb = isHB(d.id);
-    const act = d.id === targetId;
-    h += `<div class="tl-dynasty-tag ${act?'active':''} ${hb?'hebei':''}" onclick="S.tl.sel='${d.id}';rt()" data-id="${d.id}">${d.name}</div>`;
-  });
-  h += `</div>`;
-
-  // === 中层+内层：一条完整的事件时间线 ===
-  h += `<div class="tl-event-list">`;
-  dynasties.forEach(d => {
+    const x = ((d.startYear - firstY) / span) * totalW;
+    const w = Math.max(((d.endYear - d.startYear) / span) * totalW - 2, 40);
     const active = d.id === targetId;
-    // 展开还是收起？只展开目标朝代，其余折叠
-    const open = d.id === targetId;
-    h += `<div class="tl-event-group" data-id="${d.id}">`;
-    // 朝代分组标题（点击跳转）
-    h += `<div class="tl-event-group-header" onclick="S.tl.sel='${d.id}';rt()">
-      <span class="tl-eg-dynasty">${d.name}</span>
-      <span class="tl-eg-years">${U.fy(d.startYear)} ~ ${U.fy(d.endYear)}</span>
-      ${d.capital?`<span class="tl-eg-badge">🏛️${d.capital}</span>`:''}
-      ${isHB(d.id)?'<span class="text-hebei" style="font-size:0.6rem;">🔴河北</span>':''}
-      <span style="margin-left:auto;font-size:0.7rem;color:var(--text-muted);">${d.keyEvents?.length||0}件大事 ${open?'▲':'▼'}</span>
+    const isHB = knowledgePoints.some(kp => kp.dynasty === d.name && kp.isHebeiRelated);
+    h += `<div class="tl-dyn-block ${active?'active':''} ${isHB?'hebei':''}" style="left:${x}px;width:${w}px;" onclick="S.tl.sel='${d.id}';rt()">
+      <div class="tl-dyn-name">${d.name}</div>
+      <div class="tl-dyn-years">${U.fy(d.startYear)}~${U.fy(d.endYear)}</div>
     </div>`;
-    // 事件列表（只有目标朝代展开）
-    if (open && d.keyEvents?.length) {
-      d.keyEvents.forEach(e => {
-        const hasHebei = e.significance && (e.significance.includes('河北') || e.details?.includes('河北'));
-        h += `<div class="tl-event ${hasHebei?'hebei':''}" onclick="this.classList.toggle('open')">
-          <span class="tl-event-year">${U.fy(e.year)}</span>
-          <div class="tl-event-title">${e.event}</div>
-          <div class="tl-event-summary">${e.significance ? e.significance.slice(0,50)+(e.significance.length>50?'...':'') : '点击查看详情 →'}</div>
-          <div class="tl-event-detail">
-            ${e.details ? `<div style="margin-bottom:4px;">📖 ${e.details}</div>` : ''}
-            ${e.significance ? `<div class="tl-event-significance">🎯 意义：${e.significance}</div>` : ''}
-          </div>
-        </div>`;
-      });
-      // 刷题快捷
-      let qs = quizQuestions.filter(q => q.dynasty === d.name);
-      if (qs.length) h += `<div style="margin:8px 0 16px 12px;"><button onclick="startQz('${d.name}')" class="px-3 py-1.5 rounded-lg text-xs text-white" style="background:var(--accent);">✍️ 刷${d.name}题目（${qs.length}题）</button></div>`;
+    // 朝代分隔竖线
+    if (d.startYear !== firstY) {
+      h += `<div class="tl-divider" style="left:${x}px;"></div>`;
     }
-    h += `</div>`;
   });
-  h += `</div></div>`;
+  h += `</div>`; // layer-1
 
+  // ====== 第2层：事件标注（精细度 >=2） ======
+  if (_tlDetail >= 2 && dy && dy.keyEvents?.length) {
+    // 找出当前朝代的事件范围
+    const dyStart = dy.startYear, dyEnd = dy.endYear;
+    const dySpan = dyEnd - dyStart;
+    const dyLeft = ((dyStart - firstY) / span) * totalW;
+    const dyWidth = Math.max(((dyEnd - dyStart) / span) * totalW, 80);
+
+    h += `<div class="tl-layer-2">`;
+    dy.keyEvents.forEach(e => {
+      const eX = ((e.year - firstY) / span) * totalW;
+      const hasHebei = (e.details && e.details.includes('河北')) || (e.significance && e.significance.includes('河北'));
+      h += `<div class="tl-ev-mark ${hasHebei?'hebei':''}" style="left:${eX-20}px;" onclick="showEvDetail('${d.id}',${dy.keyEvents.indexOf(e)})">
+        <div class="tl-ev-dot"></div>
+        <div class="tl-ev-label">${e.event.length>8?e.event.slice(0,7)+'…':e.event}</div>
+        <div class="tl-ev-year">${U.fy(e.year)}</div>
+      </div>`;
+    });
+    h += `</div>`; // layer-2
+  }
+
+  // ====== 第3层：详细事件卡片（精细度 >=3） ======
+  if (_tlDetail >= 3 && dy && dy.keyEvents?.length) {
+    h += `<div class="tl-layer-3" id="tlLayer3">`;
+    dy.keyEvents.forEach(e => {
+      const hasHebei = (e.details && e.details.includes('河北')) || (e.significance && e.significance.includes('河北'));
+      h += `<div class="tl-detail-card ${hasHebei?'hebei-card':''}">
+        <div class="tl-dc-year">${U.fy(e.year)}</div>
+        <div class="tl-dc-title">${e.event}</div>`;
+      if (e.details) h += `<div class="tl-dc-detail">📖 ${e.details}</div>`;
+      if (e.significance) h += `<div class="tl-dc-sig">🎯 ${e.significance}</div>`;
+      h += `</div>`;
+    });
+    // 刷题快捷
+    let qs = quizQuestions.filter(q => q.dynasty === dy.name);
+    if (qs.length) h += `<div style="margin-top:8px;"><button onclick="startQz('${dy.name}')" class="w-full px-3 py-1.5 rounded-lg text-xs text-white" style="background:var(--accent);">✍️ 刷${dy.name}题目（${qs.length}题）</button></div>`;
+    h += `</div>`;
+  }
+
+  // 无数据
+  if (!dy || !dy.keyEvents?.length) {
+    h += `<div class="tl-empty">暂无详细事件数据</div>`;
+  }
+
+  h += `</div></div></div>`; // horiz-inner, horiz, fade-in
   ri(h);
-  // 滚动目标标签到视野
+
+  // 滚动到当前朝代
   setTimeout(() => {
-    const el = document.querySelector(`.tl-dynasty-tag[data-id="${targetId}"]`);
+    const el = document.querySelector('.tl-dyn-block.active');
     if (el) el.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
   }, 50);
 }
 
-// ddDetail 已合并到 rt() 中
-
-// ======================== 刷题 ========================
+// 点击事件标注跳转到对应详情卡片
+function showEvDetail(dyId, idx) {
+  if (_tlDetail < 3) { _tlDetail = 3; rt(); }
+  setTimeout(() => {
+    const cards = document.querySelectorAll('.tl-detail-card');
+    if (cards && cards[idx]) {
+      cards[idx].scrollIntoView({ behavior:'smooth', block:'center' });
+      cards[idx].style.background = 'var(--accent-light)';
+      setTimeout(() => { cards[idx].style.background = ''; }, 1500);
+    }
+  }, 100);
+}// ======================== 刷题 ========================
 function rq(p) {
   if (S.qz.res) { rqRes(); return; }
   if (S.qz.qs.length && S.qz.idx < S.qz.qs.length) { rqQ(); return; }
