@@ -1,0 +1,1790 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>河北三支一扶 · 人文历史备考</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* ===== CSS 变量：亮色 & 暗色主题 ===== */
+    :root {
+      --crimson: #C23B22; --crimson-light: #E85D4A; --crimson-dark: #8B1A1A;
+      --gold: #C5A55A; --gold-light: #E0C878;
+      --ink: #2C2C2C; --ink-light: #4A4A4A;
+      --paper: #FFF8F0; --paper-dark: #F5EDE0;
+      --bg-primary: #FFFAF5; --bg-secondary: #FFF5EC; --bg-card: #FFFFFF;
+      --text-primary: #2C2C2C; --text-secondary: #5A5A5A; --text-muted: #999999;
+      --border: #E8DDD0; --shadow: 0 2px 12px rgba(0,0,0,0.08);
+      --shadow-hover: 0 6px 24px rgba(0,0,0,0.12);
+      --accent: var(--crimson); --accent-light: #FDE8E4;
+      --correct: #2D8B57; --wrong: #C23B22;
+      --cat-wenxue: #8B5CF6; --cat-lishi: #3B82F6; --cat-zhexue: #D97706;
+      --cat-renwu: #10B981; --cat-wenhua: #EC4899; --cat-shijie: #6366F1;
+      --cat-hebei: #DC2626; --cat-sanzhi: #0891B2;
+      --timeline-line: #D4C5B0;
+      --glass-bg: rgba(255,255,255,0.7); --glass-border: rgba(255,255,255,0.3);
+    }
+    .dark {
+      --bg-primary: #1A1410; --bg-secondary: #2A221C; --bg-card: #2A221C;
+      --text-primary: #F0E8E0; --text-secondary: #C0B0A0; --text-muted: #807060;
+      --border: #3A3028; --shadow: 0 2px 12px rgba(0,0,0,0.3);
+      --shadow-hover: 0 6px 24px rgba(0,0,0,0.4);
+      --accent-light: #3A1A1A;
+      --glass-bg: rgba(42,34,28,0.8); --glass-border: rgba(60,50,40,0.3);
+      --timeline-line: #4A3A2A;
+    }
+    /* ===== 全局 ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+      background: var(--bg-primary); color: var(--text-primary);
+      min-height: 100vh; transition: background 0.3s, color 0.3s;
+    }
+    /* 背景纹理 */
+    body::before {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: -1;
+      background-image:
+        radial-gradient(ellipse at 20% 50%, rgba(194,59,34,0.03) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(197,165,90,0.04) 0%, transparent 50%);
+    }
+    .dark body::before {
+      background-image:
+        radial-gradient(ellipse at 20% 50%, rgba(194,59,34,0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(197,165,90,0.06) 0%, transparent 50%);
+    }
+    /* ===== 滚动条 ===== */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+    /* ===== 毛玻璃 ===== */
+    .glass {
+      background: var(--glass-bg); backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+    }
+    /* ===== 卡片 ===== */
+    .card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 12px; box-shadow: var(--shadow);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover { box-shadow: var(--shadow-hover); }
+    /* ===== 中国风装饰 ===== */
+    .cn-divider {
+      height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 1rem 0; border: none;
+    }
+    .cn-ornament {
+      display: inline-flex; align-items: center; gap: 8px; color: var(--gold);
+      font-size: 0.8rem;
+    }
+    .cn-ornament::before, .cn-ornament::after {
+      content: '◆'; font-size: 0.5rem; opacity: 0.5;
+    }
+    /* ===== 标签页导航 ===== */
+    .tab-btn {
+      padding: 10px 20px; border: none; background: transparent;
+      color: var(--text-muted); cursor: pointer; font-size: 0.95rem;
+      border-bottom: 2px solid transparent; transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .tab-btn:hover { color: var(--text-secondary); }
+    .tab-btn.active {
+      color: var(--accent); border-bottom-color: var(--accent); font-weight: 600;
+    }
+    /* ===== 闪卡 3D 翻转 ===== */
+    .flashcard-container { perspective: 1000px; }
+    .flashcard-inner {
+      position: relative; width: 100%; height: 280px;
+      transition: transform 0.5s; transform-style: preserve-3d; cursor: pointer;
+    }
+    .flashcard-inner.flipped { transform: rotateY(180deg); }
+    .flashcard-front, .flashcard-back {
+      position: absolute; inset: 0; backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 16px; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 2rem;
+      background: var(--bg-card); border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+    .flashcard-back { transform: rotateY(180deg); }
+    /* ===== 刷题选项 ===== */
+    .quiz-option {
+      display: block; width: 100%; padding: 14px 18px; margin: 8px 0;
+      border: 2px solid var(--border); border-radius: 10px;
+      background: var(--bg-card); cursor: pointer; text-align: left;
+      font-size: 0.95rem; transition: all 0.2s;
+    }
+    .quiz-option:hover { border-color: var(--accent); background: var(--accent-light); }
+    .quiz-option.selected { border-color: var(--accent); background: var(--accent-light); }
+    .quiz-option.correct { border-color: var(--correct); background: #E8F5E9; color: var(--correct); }
+    .quiz-option.wrong { border-color: var(--wrong); background: #FFEBEE; color: var(--wrong); }
+    .dark .quiz-option.correct { background: #1B3A1B; }
+    .dark .quiz-option.wrong { background: #3A1B1B; }
+    /* ===== 时间轴 ===== */
+    .tl-container {
+      display: flex; gap: 0; overflow-x: auto; padding: 20px 0;
+      position: relative;
+    }
+    .tl-container::before {
+      content: ''; position: absolute; top: 50%; left: 0; right: 0;
+      height: 3px; background: var(--timeline-line); transform: translateY(-50%);
+      z-index: 0;
+    }
+    .tl-node {
+      flex-shrink: 0; width: 120px; text-align: center; cursor: pointer;
+      position: relative; z-index: 1; padding-top: 10px;
+      transition: transform 0.2s;
+    }
+    .tl-node:hover { transform: translateY(-4px); }
+    .tl-dot {
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--accent); margin: 0 auto 8px; border: 3px solid var(--bg-primary);
+      box-shadow: 0 0 0 2px var(--accent);
+    }
+    .tl-node.hebei .tl-dot { background: var(--cat-hebei); box-shadow: 0 0 0 2px var(--cat-hebei); }
+    /* ===== 进度条 ===== */
+    .progress-bar {
+      height: 8px; border-radius: 4px; background: var(--border); overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%; border-radius: 4px; transition: width 0.6s ease;
+      background: linear-gradient(90deg, var(--crimson), var(--gold));
+    }
+    /* ===== 动效 ===== */
+    .fade-in { animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes scaleIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .pulse { animation: pulse 0.5s ease; }
+    @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
+    .shake { animation: shake 0.3s ease; }
+    @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+    /* ===== 徽标 ===== */
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 10px; border-radius: 99px; font-size: 0.75rem; font-weight: 500;
+    }
+    .badge-hebei { background: #FEE2E2; color: #DC2626; }
+    .badge-high { background: #FEF3C7; color: #D97706; }
+    .badge-medium { background: #DBEAFE; color: #2563EB; }
+    .badge-low { background: #F3F4F6; color: #6B7280; }
+    .dark .badge-hebei { background: #3A1A1A; }
+    .dark .badge-high { background: #3A2A1A; }
+    .dark .badge-medium { background: #1A2A3A; }
+    .dark .badge-low { background: #2A2A2A; }
+    /* ===== 移动端响应式 ===== */
+    /* 安全区域适配（iPhone刘海屏） */
+    @supports (padding-top: env(safe-area-inset-top)) {
+      .mobile-nav { padding-bottom: env(safe-area-inset-bottom); }
+      header.glass { padding-top: env(safe-area-inset-top); }
+    }
+    /* 移动端：<768px */
+    @media (max-width: 767px) {
+      body { padding-bottom: 70px; } /* 底部导航空间 */
+      .tab-btn { padding: 12px 8px; font-size: 0.8rem; min-height: 48px; }
+      .flashcard-inner { height: 260px; }
+      .flashcard-front, .flashcard-back { padding: 1.2rem; }
+      .flashcard-front .text-lg { font-size: 1rem !important; }
+      .tl-node { width: 80px; min-height: 60px; }
+      .tl-node .text-sm { font-size: 0.7rem !important; }
+      .desktop-nav { display: none; }
+      .mobile-nav { display: flex !important; }
+      h1 { font-size: 1.05rem !important; }
+      .card { border-radius: 10px; }
+      .quiz-option { padding: 12px 14px; font-size: 0.88rem; margin: 6px 0; min-height: 44px; }
+      .badge { font-size: 0.65rem; padding: 2px 8px; }
+      header .text-lg { font-size: 1rem !important; }
+      #streakDisplay, #accuracyDisplay { font-size: 0.65rem !important; }
+      .grid-cols-2 { gap: 0.5rem; }
+      .p-5 { padding: 1rem !important; }
+      .p-6 { padding: 1.2rem !important; }
+      .p-4 { padding: 0.8rem !important; }
+      .px-4 { padding-left: 0.8rem !important; padding-right: 0.8rem !important; }
+      .py-6 { padding-top: 0.8rem !important; padding-bottom: 0.8rem !important; }
+      .text-2xl { font-size: 1.3rem !important; }
+      .text-3xl { font-size: 1.8rem !important; }
+      .gap-3 { gap: 0.5rem !important; }
+      .max-w-2xl { max-width: 100% !important; }
+      .max-w-lg { max-width: 100% !important; }
+      /* 移动端时间轴专用：纵向布局 */
+      .tl-container {
+        flex-direction: column; gap: 0; overflow-x: hidden; padding: 10px 0;
+      }
+      .tl-container::before {
+        top: 0; bottom: 0; left: 30px; right: auto; height: auto; width: 3px;
+        transform: none;
+      }
+      .tl-node {
+        width: 100%; text-align: left; display: flex; align-items: center;
+        gap: 12px; padding: 10px 0 10px 20px; flex-shrink: 0;
+      }
+      .tl-node .tl-dot { margin: 0; flex-shrink: 0; }
+      .tl-node > div:not(.tl-dot) { display: inline; }
+      .mobile-bottom-spacer { display: block; height: 80px; }
+    }
+    @media (min-width: 768px) {
+      .mobile-nav { display: none !important; }
+      .mobile-bottom-spacer { display: none; }
+    }
+    /* 平板 */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .grid-cols-2.md\:grid-cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    /* 桌面大屏 */
+    @media (min-width: 1280px) {
+      .max-w-5xl { max-width: 1000px; }
+    }
+    /* ===== 触控优化 ===== */
+    .touch-ripple {
+      position: relative; overflow: hidden;
+    }
+    .touch-ripple::after {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(194,59,34,0.15) 0%, transparent 60%);
+      opacity: 0; transition: opacity 0.3s; pointer-events: none;
+    }
+    .touch-ripple:active::after { opacity: 1; }
+    /* 移动端滑动指示器 */
+    .swipe-indicator {
+      display: none; text-align: center; font-size: 0.7rem;
+      color: var(--text-muted); padding: 4px 0;
+    }
+    @media (max-width: 767px) {
+      .swipe-indicator { display: block; }
+    }
+    /* ===== 工具 ===== */
+    .hebei-highlight {
+      background: linear-gradient(135deg, #FEE2E2, #FFF5F5);
+      border-left: 3px solid var(--cat-hebei);
+    }
+    .dark .hebei-highlight {
+      background: linear-gradient(135deg, #2A1A1A, #1A1410);
+    }
+    .text-hebei { color: var(--cat-hebei); }
+    .clickable { cursor: pointer; }
+    .no-select { user-select: none; }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            crimson: { DEFAULT: '#C23B22', light: '#E85D4A', dark: '#8B1A1A' },
+            gold: { DEFAULT: '#C5A55A', light: '#E0C878' },
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body>
+
+<!-- ============================== HEADER ============================== -->
+<header class="glass sticky top-0 z-50 border-b" style="border-color:var(--border);">
+  <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <span style="font-size:1.6rem;">📚</span>
+      <div>
+        <h1 class="font-bold text-lg" style="color:var(--crimson);">河北三支一扶 · 人文历史备考</h1>
+        <div class="flex items-center gap-3 text-xs" style="color:var(--text-muted);">
+          <span id="streakDisplay">🔥 学习 0 天</span>
+          <span id="accuracyDisplay">🎯 正确率 --</span>
+        </div>
+      </div>
+    </div>
+    <button id="darkToggle" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition" title="切换暗色模式">
+      <span id="darkIcon">🌙</span>
+    </button>
+  </div>
+</header>
+
+<!-- ============================== NAVIGATION ============================== -->
+<nav class="desktop-nav border-b glass sticky z-40" style="top:60px;border-color:var(--border);">
+  <div class="max-w-5xl mx-auto px-4 flex overflow-x-auto no-select" id="tabNav">
+    <button class="tab-btn active" data-tab="timeline">🏛️ 时间轴</button>
+    <button class="tab-btn" data-tab="quiz">✍️ 刷题</button>
+    <button class="tab-btn" data-tab="flashcards">🃏 闪卡</button>
+    <button class="tab-btn" data-tab="dashboard">📊 总览</button>
+  </div>
+</nav>
+
+<!-- ============================== MAIN CONTENT ============================== -->
+<main id="mainContent" class="max-w-5xl mx-auto px-4 py-6 fade-in">
+  <!-- 初始由 JS 渲染 -->
+  <div id="app"></div>
+</main>
+
+<!-- ============================== MOBILE BOTTOM SPACER ============================== -->
+<div class="mobile-bottom-spacer"></div>
+
+<!-- ============================== MOBILE NAV ============================== -->
+<nav class="mobile-nav fixed bottom-0 left-0 right-0 z-50 glass border-t" style="border-color:var(--border);">
+  <div class="flex justify-around py-2" id="mobileTabNav">
+    <button class="tab-btn active text-xs" data-tab="timeline">🏛️<br><span style="font-size:0.6rem;">时间轴</span></button>
+    <button class="tab-btn text-xs" data-tab="quiz">✍️<br><span style="font-size:0.6rem;">刷题</span></button>
+    <button class="tab-btn text-xs" data-tab="flashcards">🃏<br><span style="font-size:0.6rem;">闪卡</span></button>
+    <button class="tab-btn text-xs" data-tab="dashboard">📊<br><span style="font-size:0.6rem;">总览</span></button>
+  </div>
+</nav>
+
+<script>
+/* ===================================================================
+   河北三支一扶 · 人文历史备考工具
+   所有数据集中在本脚本顶部，修改数据无需动渲染逻辑
+   每个字段都标注了中文说明，方便理解
+   =================================================================== */
+
+// ======================== 数据部分 ========================
+
+// ----- 1. 朝代数据 (dynasties) -----
+//  用于时间轴可视化
+const dynasties = [
+  {
+    id: 'xia', name: '夏朝',
+    startYear: -2070, endYear: -1600,
+    summary: '中国历史上第一个世袭制王朝，由大禹建立。确立了王位世袭制，标志着原始社会的结束和阶级社会的开始。',
+    capital: '阳城（今河南登封）',
+    keyFigures: [
+      { name: '禹', description: '治水英雄，夏朝建立者', contribution: '开创世袭制' },
+      { name: '启', description: '禹之子，开创世袭制', contribution: '世袭制确立' },
+      { name: '桀', description: '夏朝末代君主，暴君', contribution: '暴政致亡国' }
+    ],
+    keyEvents: [
+      { year: -2070, event: '禹建立夏朝' },
+      { year: -1600, event: '商汤灭夏，夏朝灭亡' }
+    ]
+  },
+  {
+    id: 'shang', name: '商朝',
+    startYear: -1600, endYear: -1046,
+    summary: '中国历史上第二个朝代，也是第一个有同时期文字记载的王朝。甲骨文是中国最早的成熟文字体系。',
+    capital: '殷（今河南安阳）',
+    keyFigures: [
+      { name: '汤', description: '商朝开国君主', contribution: '灭夏建商' },
+      { name: '盘庚', description: '迁都至殷', contribution: '稳定商朝统治' },
+      { name: '纣王', description: '末代君主，暴君', contribution: '暴政致亡国' }
+    ],
+    keyEvents: [
+      { year: -1600, event: '商汤灭夏，建立商朝' },
+      { year: -1300, event: '盘庚迁殷' },
+      { year: -1046, event: '武王伐纣，商朝灭亡' }
+    ]
+  },
+  {
+    id: 'western_zhou', name: '西周',
+    startYear: -1046, endYear: -771,
+    summary: '由周武王建立，实行分封制和宗法制。周公旦制礼作乐，奠定了中华礼乐文明的基础。',
+    capital: '镐京（今陕西西安）',
+    keyFigures: [
+      { name: '周武王', description: '西周建立者', contribution: '伐纣建周' },
+      { name: '周公旦', description: '武王之弟，制礼作乐', contribution: '制定宗法制、礼乐制度' },
+      { name: '周幽王', description: '西周末代君主', contribution: '烽火戏诸侯' }
+    ],
+    keyEvents: [
+      { year: -1046, event: '武王伐纣，建立西周' },
+      { year: -841, event: '国人暴动，共和行政' },
+      { year: -771, event: '犬戎攻破镐京，西周灭亡' }
+    ]
+  },
+  {
+    id: 'eastern_zhou', name: '东周（春秋战国）',
+    startYear: -770, endYear: -221,
+    summary: '分为春秋和战国两个时期。王室衰微，诸侯争霸。同时出现了百家争鸣的思想繁荣局面。',
+    capital: '洛邑（今河南洛阳）',
+    keyFigures: [
+      { name: '孔子', description: '儒家学派创始人', contribution: '创立儒学，编订六经' },
+      { name: '老子', description: '道家学派创始人', contribution: '著《道德经》' },
+      { name: '秦始皇', description: '秦朝建立者（战国末期）', contribution: '统一六国' }
+    ],
+    keyEvents: [
+      { year: -770, event: '周平王东迁洛邑，东周开始' },
+      { year: -656, event: '齐桓公称霸' },
+      { year: -551, event: '孔子诞生' },
+      { year: -356, event: '商鞅变法' },
+      { year: -221, event: '秦统一六国' }
+    ]
+  },
+  {
+    id: 'qin', name: '秦朝',
+    startYear: -221, endYear: -206,
+    summary: '中国历史上第一个统一的中央集权制王朝。秦始皇推行郡县制、统一文字货币度量衡，但严刑峻法导致速亡。',
+    capital: '咸阳（今陕西西安）',
+    keyFigures: [
+      { name: '秦始皇', description: '秦朝建立者', contribution: '统一六国，建立中央集权制' },
+      { name: '李斯', description: '秦朝丞相', contribution: '辅佐秦始皇统一制度' },
+      { name: '陈胜', description: '大泽乡起义领袖', contribution: '首举反秦义旗' }
+    ],
+    keyEvents: [
+      { year: -221, event: '秦始皇统一六国' },
+      { year: -213, event: '焚书坑儒' },
+      { year: -209, event: '陈胜吴广起义' },
+      { year: -206, event: '秦朝灭亡' }
+    ]
+  },
+  {
+    id: 'han', name: '汉朝',
+    startYear: -202, endYear: 220,
+    summary: '中国历史上强盛的王朝之一，分西汉和东汉。汉武帝"罢黜百家，独尊儒术"，开辟丝绸之路。造纸术在东汉蔡伦改进后广泛传播。',
+    capital: '长安（西汉）、洛阳（东汉）',
+    keyFigures: [
+      { name: '刘邦', description: '汉高祖，西汉建立者', contribution: '建立汉朝' },
+      { name: '汉武帝', description: '西汉第七位皇帝', contribution: '独尊儒术，开拓疆域' },
+      { name: '司马迁', description: '史学家', contribution: '著《史记》' },
+      { name: '蔡伦', description: '东汉发明家', contribution: '改进造纸术' },
+      { name: '张衡', description: '东汉科学家', contribution: '发明地动仪' }
+    ],
+    keyEvents: [
+      { year: -202, event: '刘邦建立西汉' },
+      { year: -140, event: '汉武帝即位' },
+      { year: -138, event: '张骞出使西域，开辟丝绸之路' },
+      { year: 9, event: '王莽篡汉' },
+      { year: 25, event: '刘秀建立东汉' },
+      { year: 105, event: '蔡伦改进造纸术' },
+      { year: 220, event: '东汉灭亡' }
+    ]
+  },
+  {
+    id: 'three_kingdoms', name: '三国',
+    startYear: 220, endYear: 280,
+    summary: '魏、蜀、吴三国鼎立的时期。英雄辈出，赤壁之战、官渡之战等经典战役流传至今。',
+    capital: '洛阳（魏）、成都（蜀）、建业（吴）',
+    keyFigures: [
+      { name: '曹操', description: '魏国奠基人', contribution: '统一北方' },
+      { name: '诸葛亮', description: '蜀汉丞相', contribution: '辅佐刘备，治理蜀国' },
+      { name: '关羽', description: '蜀汉名将', contribution: '忠义象征' }
+    ],
+    keyEvents: [
+      { year: 200, event: '官渡之战' },
+      { year: 208, event: '赤壁之战' },
+      { year: 220, event: '曹丕建魏，东汉灭亡' },
+      { year: 280, event: '西晋统一全国' }
+    ]
+  },
+  {
+    id: 'jin', name: '两晋南北朝',
+    startYear: 265, endYear: 589,
+    summary: '西晋短暂统一后，五胡乱华，衣冠南渡。南北朝对峙时期，民族融合加速，佛教兴盛。',
+    capital: '洛阳（西晋）、建康（东晋）',
+    keyFigures: [
+      { name: '司马炎', description: '西晋建立者', contribution: '统一全国' },
+      { name: '王羲之', description: '东晋书法家', contribution: '书圣，《兰亭序》' },
+      { name: '顾恺之', description: '东晋画家', contribution: '《洛神赋图》' }
+    ],
+    keyEvents: [
+      { year: 265, event: '西晋建立' },
+      { year: 316, event: '西晋灭亡，五胡乱华' },
+      { year: 317, event: '东晋建立' },
+      { year: 383, event: '淝水之战' },
+      { year: 494, event: '北魏孝文帝改革' },
+      { year: 589, event: '隋朝统一' }
+    ]
+  },
+  {
+    id: 'sui', name: '隋朝',
+    startYear: 581, endYear: 618,
+    summary: '隋文帝杨坚统一全国，创立科举制。隋炀帝开通大运河，但暴政引发隋末农民起义。',
+    capital: '大兴城（今陕西西安）',
+    keyFigures: [
+      { name: '隋文帝', description: '隋朝建立者', contribution: '统一全国，创立科举制' },
+      { name: '隋炀帝', description: '隋朝第二位皇帝', contribution: '开通大运河' }
+    ],
+    keyEvents: [
+      { year: 581, event: '隋朝建立' },
+      { year: 605, event: '开通大运河' },
+      { year: 618, event: '隋朝灭亡' }
+    ]
+  },
+  {
+    id: 'tang', name: '唐朝',
+    startYear: 618, endYear: 907,
+    summary: '中国历史上最强盛的王朝之一。贞观之治、开元盛世，唐诗鼎盛。对外交流频繁，长安是国际大都市。',
+    capital: '长安（今陕西西安）',
+    keyFigures: [
+      { name: '唐太宗', description: '开创贞观之治', contribution: '贞观之治' },
+      { name: '武则天', description: '中国唯一女皇帝', contribution: '武周统治' },
+      { name: '唐玄宗', description: '开元盛世到安史之乱', contribution: '开元盛世' },
+      { name: '李白', description: '诗仙', contribution: '浪漫主义诗歌' },
+      { name: '杜甫', description: '诗圣', contribution: '现实主义诗歌' },
+      { name: '玄奘', description: '唐代高僧', contribution: '西行取经' }
+    ],
+    keyEvents: [
+      { year: 618, event: '唐朝建立' },
+      { year: 626, event: '玄武门之变' },
+      { year: 627, event: '贞观之治开始' },
+      { year: 641, event: '文成公主入藏' },
+      { year: 690, event: '武则天称帝' },
+      { year: 713, event: '开元盛世' },
+      { year: 755, event: '安史之乱' },
+      { year: 907, event: '唐朝灭亡' }
+    ]
+  },
+  {
+    id: 'song', name: '宋朝',
+    startYear: 960, endYear: 1279,
+    summary: '分为北宋和南宋。经济文化高度发达，理学兴起，宋词繁荣。活字印刷术、指南针、火药三大发明在宋代得到应用和发展。',
+    capital: '开封（北宋）、临安（南宋）',
+    keyFigures: [
+      { name: '赵匡胤', description: '宋太祖', contribution: '建立宋朝，杯酒释兵权' },
+      { name: '苏轼', description: '文学家', contribution: '豪放派词人，唐宋八大家之一' },
+      { name: '岳飞', description: '南宋抗金名将', contribution: '精忠报国' },
+      { name: '毕昇', description: '北宋发明家', contribution: '发明活字印刷术' },
+      { name: '王安石', description: '北宋改革家', contribution: '王安石变法' }
+    ],
+    keyEvents: [
+      { year: 960, event: '陈桥兵变，宋朝建立' },
+      { year: 1069, event: '王安石变法' },
+      { year: 1127, event: '靖康之变，北宋灭亡' },
+      { year: 1279, event: '崖山海战，南宋灭亡' }
+    ]
+  },
+  {
+    id: 'yuan', name: '元朝',
+    startYear: 1271, endYear: 1368,
+    summary: '中国历史上第一个由少数民族（蒙古族）建立的大一统王朝。实行行省制，版图为中国历史最大。',
+    capital: '大都（今北京）',
+    keyFigures: [
+      { name: '忽必烈', description: '元朝建立者', contribution: '建立元朝，定都大都' },
+      { name: '关汉卿', description: '元曲代表作家', contribution: '《窦娥冤》' },
+      { name: '郭守敬', description: '科学家', contribution: '编《授时历》' }
+    ],
+    keyEvents: [
+      { year: 1271, event: '忽必烈建立元朝' },
+      { year: 1279, event: '元灭南宋，统一全国' },
+      { year: 1368, event: '明朝建立，元朝灭亡' }
+    ]
+  },
+  {
+    id: 'ming', name: '明朝',
+    startYear: 1368, endYear: 1644,
+    summary: '中国历史上最后一个由汉族建立的大一统王朝。郑和下西洋、永乐大典、明长城等成就显著。资本主义萌芽出现。',
+    capital: '应天（今南京）、后迁至顺天（今北京）',
+    keyFigures: [
+      { name: '朱元璋', description: '明太祖', contribution: '建立明朝' },
+      { name: '郑和', description: '航海家', contribution: '七下西洋' },
+      { name: '张居正', description: '改革家', contribution: '张居正改革' },
+      { name: '李时珍', description: '医学家', contribution: '著《本草纲目》' },
+      { name: '戚继光', description: '抗倭名将', contribution: '抗击倭寇' }
+    ],
+    keyEvents: [
+      { year: 1368, event: '朱元璋建立明朝' },
+      { year: 1405, event: '郑和首次下西洋' },
+      { year: 1421, event: '迁都北京' },
+      { year: 1644, event: '李自成攻占北京，明朝灭亡' }
+    ]
+  },
+  {
+    id: 'qing', name: '清朝',
+    startYear: 1644, endYear: 1912,
+    summary: '中国历史上最后一个封建王朝，由满族建立。康乾盛世达到鼎盛，但后期闭关锁国，鸦片战争后沦为半殖民地半封建社会。',
+    capital: '北京',
+    keyFigures: [
+      { name: '康熙帝', description: '清朝第四位皇帝', contribution: '平定三藩，统一台湾' },
+      { name: '林则徐', description: '禁烟英雄', contribution: '虎门销烟' },
+      { name: '左宗棠', description: '洋务派代表', contribution: '收复新疆' },
+      { name: '康有为', description: '维新派领袖', contribution: '戊戌变法' }
+    ],
+    keyEvents: [
+      { year: 1644, event: '清军入关' },
+      { year: 1840, event: '鸦片战争' },
+      { year: 1842, event: '《南京条约》签订' },
+      { year: 1851, event: '太平天国运动' },
+      { year: 1860, event: '第二次鸦片战争，火烧圆明园' },
+      { year: 1894, event: '甲午中日战争' },
+      { year: 1898, event: '戊戌变法' },
+      { year: 1911, event: '辛亥革命' },
+      { year: 1912, event: '中华民国成立，清朝灭亡' }
+    ]
+  },
+  {
+    id: 'modern', name: '近代（1840-1949）',
+    startYear: 1840, endYear: 1949,
+    summary: '从鸦片战争到新中国成立的近代史，是中国从封建社会逐步沦为半殖民地半封建社会，再到民族独立和人民解放的奋斗历程。',
+    capital: '',
+    keyFigures: [
+      { name: '孙中山', description: '革命先行者', contribution: '领导辛亥革命' },
+      { name: '李大钊', description: '马克思主义传播者', contribution: '中国最早的马克思主义者' },
+      { name: '毛泽东', description: '新中国缔造者', contribution: '领导新民主主义革命胜利' }
+    ],
+    keyEvents: [
+      { year: 1840, event: '鸦片战争' },
+      { year: 1911, event: '辛亥革命' },
+      { year: 1919, event: '五四运动' },
+      { year: 1921, event: '中国共产党成立' },
+      { year: 1937, event: '全面抗日战争爆发' },
+      { year: 1949, event: '中华人民共和国成立' }
+    ]
+  },
+  {
+    id: 'contemporary', name: '当代（1949-至今）',
+    startYear: 1949, endYear: 2026,
+    summary: '新中国成立以来，经历了社会主义革命和建设、改革开放和社会主义现代化建设、中国特色社会主义新时代三个阶段。',
+    capital: '北京',
+    keyFigures: [
+      { name: '毛泽东', description: '新中国缔造者', contribution: '领导中国革命和建设' },
+      { name: '邓小平', description: '改革开放总设计师', contribution: '提出改革开放' }
+    ],
+    keyEvents: [
+      { year: 1949, event: '中华人民共和国成立' },
+      { year: 1950, event: '抗美援朝' },
+      { year: 1964, event: '第一颗原子弹爆炸' },
+      { year: 1978, event: '改革开放' },
+      { year: 1997, event: '香港回归' },
+      { year: 1999, event: '澳门回归' },
+      { year: 2001, event: '加入WTO' },
+      { year: 2010, event: '成为世界第二大经济体' },
+      { year: 2021, event: '全面建成小康社会' }
+    ]
+  }
+];
+
+// ----- 2. 知识点数据 (knowledgePoints) -----
+//  类别: 文学 | 历史事件 | 人物 | 哲学 | 文化 | 世界历史 | 河北特色 | 三支政策
+//  isHebeiRelated: 是否与河北相关（刷题时可用"河北特色"筛选）
+//  examFrequency: 考点频率 high / medium / low
+const knowledgePoints = [
+  // ===== 先秦 =====
+  { id: 'kp_001', title: '夏商周更替', category: '历史事件', dynasty: '先秦',
+    content: '夏朝（前2070-前1600）是禹建立的第一个世袭制王朝。商汤灭夏建立商朝（前1600-前1046），盘庚迁殷后又称殷商。周武王伐纣建立西周（前1046-前771），实行分封制和宗法制。',
+    tags: ['夏朝', '商朝', '西周', '世袭制', '分封制'], keyTerms: [
+      { term: '世袭制', definition: '王位由家族内部继承的制度' },
+      { term: '分封制', definition: '周天子将土地和人民分封给诸侯的制度' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_002', title: '百家争鸣', category: '哲学', dynasty: '先秦',
+    content: '春秋战国时期，各学派纷纷著书立说，形成了百家争鸣的局面。主要学派有：儒家（孔子、孟子）、道家（老子、庄子）、法家（韩非子、商鞅）、墨家（墨子）、兵家（孙武）等。',
+    tags: ['儒家', '道家', '法家', '墨家', '百家争鸣'], keyTerms: [
+      { term: '儒家', definition: '孔子创立，核心是仁和礼' },
+      { term: '道家', definition: '老子创立，主张道法自然、无为而治' },
+      { term: '法家', definition: '主张以法治国、君主专制' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_003', title: '《诗经》', category: '文学', dynasty: '先秦',
+    content: '《诗经》是中国第一部诗歌总集，收录了西周初年至春秋中叶的305篇诗歌。分为风（各地民歌）、雅（宫廷乐歌）、颂（宗庙祭祀乐歌）三部分。表现手法有赋、比、兴。',
+    tags: ['诗经', '风雅颂', '赋比兴', '诗歌总集'], keyTerms: [
+      { term: '风', definition: '各地民歌，共160篇' },
+      { term: '雅', definition: '宫廷乐歌，分大雅小雅' },
+      { term: '颂', definition: '宗庙祭祀乐歌，共40篇' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_004', title: '《楚辞》', category: '文学', dynasty: '先秦',
+    content: '《楚辞》是继《诗经》后的又一部诗歌总集，以屈原的《离骚》为代表。屈原是战国时期楚国诗人，开创了浪漫主义诗歌传统。',
+    tags: ['楚辞', '屈原', '离骚', '浪漫主义'], keyTerms: [
+      { term: '离骚', definition: '屈原代表作，中国最长的抒情诗' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_005', title: '商鞅变法', category: '历史事件', dynasty: '先秦',
+    content: '公元前356年，秦孝公任用商鞅在秦国实行变法。主要内容：废井田、开阡陌，奖励耕战，推行县制，实行连坐法。为秦国统一六国奠定了基础。',
+    tags: ['商鞅变法', '秦国', '战国'], keyTerms: [
+      { term: '商鞅变法', definition: '战国时期秦国由商鞅推行的全面改革' }
+    ], isHebeiRelated: false, examFrequency: 'medium' },
+
+  // ===== 秦汉 =====
+  { id: 'kp_006', title: '秦统一六国', category: '历史事件', dynasty: '秦朝',
+    content: '公元前221年，秦始皇嬴政灭六国，建立了中国历史上第一个统一的中央集权国家。实行郡县制，统一文字（小篆）、货币（圆形方孔钱）、度量衡，修筑长城。',
+    tags: ['秦始皇', '统一', '郡县制', '小篆'], keyTerms: [
+      { term: '郡县制', definition: '中央垂直管理地方的行政制度' },
+      { term: '焚书坑儒', definition: '秦始皇销毁诸子百家书籍、坑杀儒生的事件' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_007', title: '汉朝与丝绸之路', category: '历史事件', dynasty: '汉朝',
+    content: '汉武帝时期，张骞出使西域开辟了丝绸之路，促进了中外经济文化交流。汉朝实行"罢黜百家，独尊儒术"，儒家思想成为官方正统。',
+    tags: ['丝绸之路', '汉武帝', '张骞', '独尊儒术'], keyTerms: [
+      { term: '丝绸之路', definition: '从长安出发经西域通往中亚、欧洲的商路' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_008', title: '《史记》', category: '文学', dynasty: '汉朝',
+    content: '《史记》是司马迁所著的中国第一部纪传体通史，记载了从黄帝到汉武帝约3000年的历史。分为本纪、世家、列传、表、书五部分。鲁迅评价为"史家之绝唱，无韵之离骚"。',
+    tags: ['史记', '司马迁', '纪传体', '通史'], keyTerms: [
+      { term: '纪传体', definition: '以人物传记为中心的史书体裁' },
+      { term: '本纪', definition: '记载帝王事迹的部分' },
+      { term: '列传', definition: '记载重要人物事迹的部分' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_009', title: '造纸术', category: '文化', dynasty: '汉朝',
+    content: '东汉蔡伦在105年改进了造纸术，用树皮、麻头、破布等原料制造出轻便廉价的纸张，被称为"蔡侯纸"。造纸术是中国四大发明之一，对世界文明贡献巨大。',
+    tags: ['造纸术', '蔡伦', '四大发明'], keyTerms: [
+      { term: '四大发明', definition: '造纸术、指南针、火药、活字印刷术' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+
+  // ===== 三国两晋南北朝 =====
+  { id: 'kp_010', title: '三国鼎立', category: '历史事件', dynasty: '三国',
+    content: '东汉末年，群雄割据，最终形成魏（曹操）、蜀（刘备）、吴（孙权）三国鼎立的局面。官渡之战（200年）、赤壁之战（208年）是决定性的战役。',
+    tags: ['三国', '官渡之战', '赤壁之战', '曹操', '诸葛亮'], keyTerms: [
+      { term: '官渡之战', definition: '曹操击败袁绍，奠定统一北方基础' },
+      { term: '赤壁之战', definition: '孙刘联军击败曹操，奠定三国鼎立格局' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_011', title: '王羲之与书法', category: '文化', dynasty: '两晋南北朝',
+    content: '王羲之是东晋著名书法家，被誉为"书圣"。代表作《兰亭序》被称为"天下第一行书"。书法艺术在中国传统文化中占有重要地位。',
+    tags: ['王羲之', '书圣', '兰亭序', '书法'], keyTerms: [
+      { term: '书圣', definition: '对王羲之的尊称' },
+      { term: '兰亭序', definition: '王羲之最著名的行书作品' }
+    ], isHebeiRelated: false, examFrequency: 'medium' },
+
+  // ===== 隋唐 =====
+  { id: 'kp_012', title: '科举制度', category: '文化', dynasty: '隋唐',
+    content: '科举制度始于隋朝，完善于唐朝，是中国古代通过考试选拔官吏的制度。唐朝科举分为常科和制科，明经、进士是最重要的科目。打破了门阀世族对政治的垄断。',
+    tags: ['科举', '隋炀帝', '进士', '明经'], keyTerms: [
+      { term: '科举制', definition: '分科考试选拔官员的制度' },
+      { term: '进士科', definition: '科举中最重要的科目，考中者称进士' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_013', title: '唐诗', category: '文学', dynasty: '唐朝',
+    content: '唐诗是中国诗歌的黄金时代。代表诗人有：初唐四杰（王勃、杨炯、卢照邻、骆宾王）、盛唐李白（诗仙）、杜甫（诗圣）、王维（诗佛），中唐白居易、刘禹锡，晚唐李商隐、杜牧等。',
+    tags: ['唐诗', '李白', '杜甫', '白居易', '诗仙', '诗圣'], keyTerms: [
+      { term: '诗仙', definition: '对李白的尊称，因其诗歌充满浪漫主义色彩' },
+      { term: '诗圣', definition: '对杜甫的尊称，因其诗歌现实主义' },
+      { term: '新乐府运动', definition: '白居易倡导的诗歌革新运动' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_014', title: '贞观之治与开元盛世', category: '历史事件', dynasty: '唐朝',
+    content: '唐太宗李世民在位期间（627-649年）政治清明、社会稳定，史称"贞观之治"。唐玄宗李隆基在位前期（713-741年）达到唐朝鼎盛，称"开元盛世"。',
+    tags: ['贞观之治', '开元盛世', '唐太宗', '唐玄宗'], keyTerms: [
+      { term: '贞观之治', definition: '唐太宗时期的盛世' },
+      { term: '开元盛世', definition: '唐玄宗前期的鼎盛时期' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+
+  // ===== 宋元 =====
+  { id: 'kp_015', title: '宋词', category: '文学', dynasty: '宋朝',
+    content: '宋词是宋朝最具代表性的文学形式。主要分为婉约派（柳永、李清照、晏殊）和豪放派（苏轼、辛弃疾）。苏轼开创了豪放词风，扩大了词的题材范围。',
+    tags: ['宋词', '苏轼', '李清照', '辛弃疾', '婉约派', '豪放派'], keyTerms: [
+      { term: '婉约派', definition: '词风婉转含蓄，以柳永、李清照为代表' },
+      { term: '豪放派', definition: '词风豪迈奔放，以苏轼、辛弃疾为代表' },
+      { term: '唐宋八大家', definition: '韩愈、柳宗元、欧阳修、苏轼、苏洵、苏辙、王安石、曾巩' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_016', title: '四大发明', category: '文化', dynasty: '宋元',
+    content: '四大发明是中国古代对世界文明贡献最大的四项技术：造纸术（东汉蔡伦）、活字印刷术（北宋毕昇）、指南针（宋代用于航海）、火药（宋代广泛用于军事）。',
+    tags: ['四大发明', '活字印刷', '指南针', '火药', '毕昇'], keyTerms: [
+      { term: '活字印刷术', definition: '毕昇发明的用活字排版印刷的技术' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_017', title: '元曲', category: '文学', dynasty: '元朝',
+    content: '元曲是元代文学的代表，包括杂剧和散曲。关汉卿（《窦娥冤》）、王实甫（《西厢记》）、马致远（《天净沙·秋思》）、白朴是元曲四大家。',
+    tags: ['元曲', '关汉卿', '窦娥冤', '西厢记', '元曲四大家'], keyTerms: [
+      { term: '元曲四大家', definition: '关汉卿、马致远、白朴、郑光祖' }
+    ], isHebeiRelated: false, examFrequency: 'medium' },
+
+  // ===== 明清 =====
+  { id: 'kp_018', title: '明清小说', category: '文学', dynasty: '明清',
+    content: '明清时期是中国古典小说的繁荣时期。四大名著：《三国演义》（罗贯中）、《水浒传》（施耐庵）、《西游记》（吴承恩）、《红楼梦》（曹雪芹）。此外还有《儒林外史》《聊斋志异》等。',
+    tags: ['四大名著', '红楼梦', '三国演义', '水浒传', '西游记'], keyTerms: [
+      { term: '四大名著', definition: '《三国演义》《水浒传》《西游记》《红楼梦》' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_019', title: '郑和下西洋', category: '历史事件', dynasty: '明朝',
+    content: '1405-1433年，郑和率领船队七次下西洋，到达东南亚、印度、阿拉伯和东非沿岸30多个国家和地区。是世界航海史上的壮举，比哥伦布早近一个世纪。',
+    tags: ['郑和', '下西洋', '明朝航海'], keyTerms: [
+      { term: '郑和下西洋', definition: '明代官方的远洋航海活动' }
+    ], isHebeiRelated: false, examFrequency: 'medium' },
+  { id: 'kp_020', title: '《本草纲目》', category: '文化', dynasty: '明朝',
+    content: '李时珍历经27年编写的药物学巨著，收录药物1892种，附方11096个，是世界医药学的重要文献。',
+    tags: ['李时珍', '本草纲目', '中医药'], keyTerms: [
+      { term: '本草纲目', definition: '李时珍所著药物学百科全书' }
+    ], isHebeiRelated: false, examFrequency: 'medium' },
+
+  // ===== 近代 =====
+  { id: 'kp_021', title: '鸦片战争', category: '历史事件', dynasty: '近代',
+    content: '1840年英国发动鸦片战争，清政府战败，1842年签订中国近代第一个不平等条约《南京条约》。中国开始沦为半殖民地半封建社会，近代史开端。',
+    tags: ['鸦片战争', '南京条约', '林则徐', '虎门销烟'], keyTerms: [
+      { term: '《南京条约》', definition: '中国近代第一个不平等条约' },
+      { term: '虎门销烟', definition: '林则徐在广东虎门销毁鸦片的事件' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_022', title: '太平天国运动', category: '历史事件', dynasty: '近代',
+    content: '1851-1864年，洪秀全领导的反对清朝封建统治和外国侵略的农民起义。建立太平天国，定都天京（南京）。颁布《天朝田亩制度》。',
+    tags: ['太平天国', '洪秀全', '天朝田亩制度'], keyTerms: [
+      { term: '《天朝田亩制度》', definition: '太平天国的土地纲领' }
+    ], isHebeiRelated: false, examFrequency: 'medium' },
+  { id: 'kp_023', title: '洋务运动', category: '历史事件', dynasty: '近代',
+    content: '19世纪60-90年代，以李鸿章、左宗棠、张之洞为代表的洋务派推行"自强""求富"的洋务运动，创办近代军事工业和民用工业，建立新式海军。甲午战败标志洋务运动破产。',
+    tags: ['洋务运动', '李鸿章', '自强求富'], keyTerms: [
+      { term: '洋务运动', definition: '晚清以学习西方科技为主的近代化运动' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_024', title: '甲午战争与《马关条约》', category: '历史事件', dynasty: '近代',
+    content: '1894年甲午中日战争，北洋水师全军覆没。1895年签订《马关条约》，割让台湾及澎湖列岛，赔款2亿两白银。大大加深了中国半殖民地化程度。',
+    tags: ['甲午战争', '马关条约', '北洋水师', '邓世昌'], keyTerms: [
+      { term: '《马关条约》', definition: '甲午战争后签订的不平等条约' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_025', title: '戊戌变法', category: '历史事件', dynasty: '近代',
+    content: '1898年，康有为、梁启超领导维新变法运动。光绪帝颁布一系列变法诏令，但103天后被慈禧太后镇压，史称"百日维新"。',
+    tags: ['戊戌变法', '康有为', '梁启超', '百日维新'], keyTerms: [
+      { term: '百日维新', definition: '戊戌变法仅持续103天即告失败' }
+    ], isHebeiRelated: false, examFrequency: 'medium' },
+  { id: 'kp_026', title: '辛亥革命', category: '历史事件', dynasty: '近代',
+    content: '1911年孙中山领导的辛亥革命推翻了清政府，结束了中国两千多年的封建君主专制制度。1912年中华民国成立，孙中山就任临时大总统。',
+    tags: ['辛亥革命', '孙中山', '中华民国', '三民主义'], keyTerms: [
+      { term: '三民主义', definition: '民族、民权、民生三大主义' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_027', title: '新文化运动', category: '历史事件', dynasty: '近代',
+    content: '1915年开始的新文化运动，以陈独秀创办《新青年》为标志。提倡"民主"与"科学"，反对封建礼教。鲁迅发表《狂人日记》等白话小说。',
+    tags: ['新文化运动', '陈独秀', '鲁迅', '民主科学'], keyTerms: [
+      { term: '《新青年》', definition: '陈独秀创办的杂志，新文化运动的主要阵地' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_028', title: '五四运动', category: '历史事件', dynasty: '近代',
+    content: '1919年5月4日，北京学生因巴黎和会中国外交失败发起反帝反封建爱国运动，后发展为全国范围的罢课罢工罢市。五四运动标志着中国新民主主义革命的开端。',
+    tags: ['五四运动', '1919', '新民主主义革命', '巴黎和会'], keyTerms: [
+      { term: '五四运动', definition: '1919年反帝反封建的爱国运动，新民主主义革命开端' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_029', title: '中国共产党的成立', category: '历史事件', dynasty: '近代',
+    content: '1921年7月23日，中国共产党第一次全国代表大会在上海召开，后转移到浙江嘉兴南湖游船。出席代表13人，代表全国50多名党员。中共的成立是中国历史上开天辟地的大事变。',
+    tags: ['中国共产党成立', '1921', '中共一大', '红船'], keyTerms: [
+      { term: '中共一大', definition: '中国共产党第一次全国代表大会' }
+    ], isHebeiRelated: true, examFrequency: 'high' },
+  { id: 'kp_046', title: '抗日战争', category: '历史事件', dynasty: '近代',
+    content: '1937-1945年的全面抗日战争，是中华民族抗击日本侵略的民族解放战争。1937年七七事变（卢沟桥事变）标志全面抗战爆发。1945年日本投降，抗战胜利。',
+    tags: ['抗日战争', '七七事变', '南京大屠杀', '日本投降'], keyTerms: [
+      { term: '七七事变', definition: '1937年7月7日日军进攻卢沟桥，全面抗战爆发' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_047', title: '解放战争', category: '历史事件', dynasty: '近代',
+    content: '1946-1949年中国共产党领导的人民解放军推翻国民党统治的战争。三大战役（辽沈、淮海、平津）和渡江战役是关键战役。1949年10月1日中华人民共和国成立。',
+    tags: ['解放战争', '三大战役', '新中国成立', '西柏坡'], keyTerms: [
+      { term: '三大战役', definition: '辽沈战役、淮海战役、平津战役' }
+    ], isHebeiRelated: true, examFrequency: 'high' },
+
+  // ===== 当代 =====
+  { id: 'kp_048', title: '社会主义革命与建设', category: '历史事件', dynasty: '当代',
+    content: '1949-1956年，完成社会主义改造（农业、手工业、资本主义工商业），确立社会主义制度。1956年中共八大指出国内主要矛盾已经转变。1957-1966年全面建设社会主义时期。',
+    tags: ['社会主义改造', '社会主义制度', '中共八大'], keyTerms: [
+      { term: '社会主义改造', definition: '对农业、手工业和资本主义工商业的改造' }
+    ], isHebeiRelated: false, examFrequency: 'medium' },
+  { id: 'kp_049', title: '改革开放', category: '历史事件', dynasty: '当代',
+    content: '1978年十一届三中全会召开，邓小平提出改革开放政策。改革从农村（家庭联产承包责任制）开始，逐步扩展到城市。设立深圳等经济特区。中国进入社会主义现代化建设新时期。',
+    tags: ['改革开放', '邓小平', '十一届三中全会', '经济特区'], keyTerms: [
+      { term: '改革开放', definition: '1978年开始的对外开放和对内改革政策' },
+      { term: '家庭联产承包责任制', definition: '以家庭为单位向集体承包土地的经营制度' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_050', title: '新时代成就', category: '历史事件', dynasty: '当代',
+    content: '2012年党的十八大以来，中国特色社会主义进入新时代。全面建成小康社会，打赢脱贫攻坚战。一带一路倡议、人类命运共同体理念。经济总量稳居世界第二。',
+    tags: ['新时代', '脱贫攻坚', '一带一路', '人类命运共同体'], keyTerms: [
+      { term: '一带一路', definition: '丝绸之路经济带和21世纪海上丝绸之路' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+
+  // ===== 哲学思想 =====
+  { id: 'kp_030', title: '儒家思想', category: '哲学', dynasty: '先秦',
+    content: '孔子创立儒家学派，核心思想是"仁"（爱人）和"礼"（社会规范），主张"为政以德"。孟子发展"仁政"和"民贵君轻"思想。荀子主张"礼法并用"。汉武帝后儒家成为官方正统思想。',
+    tags: ['孔子', '孟子', '仁', '礼', '儒家'], keyTerms: [
+      { term: '仁', definition: '孔子思想核心，指爱人' },
+      { term: '礼', definition: '社会行为规范和等级秩序' },
+      { term: '民贵君轻', definition: '孟子提出的民本思想' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_031', title: '道家思想', category: '哲学', dynasty: '先秦',
+    content: '老子创立道家，主张"道法自然""无为而治"，著有《道德经》。庄子继承发展道家思想，主张"逍遥游""万物齐一"。道家与儒家互补，共同塑造了中国文化。',
+    tags: ['老子', '庄子', '道家', '道法自然', '无为而治'], keyTerms: [
+      { term: '道', definition: '道家核心概念，指宇宙万物的本原和规律' },
+      { term: '无为而治', definition: '不妄为，顺应自然规律治理' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+
+  // ===== 河北特色 =====
+  { id: 'kp_032', title: '河北历史概况', category: '河北特色', dynasty: '各时期',
+    content: '河北简称"冀"，因位于黄河以北得名。古属冀州，春秋战国属燕赵两国，故称"燕赵大地"。元明清三代定都北京，河北成为畿辅重地。长城、大运河等重要文化遗产纵贯河北。',
+    tags: ['河北', '冀', '燕赵', '畿辅'], keyTerms: [
+      { term: '燕赵', definition: '河北的古称，源于战国燕国和赵国所在地' }
+    ], isHebeiRelated: true, hebeiNote: '河北地理历史总述', examFrequency: 'high' },
+  { id: 'kp_033', title: '邯郸—成语之乡', category: '河北特色', dynasty: '先秦',
+    content: '邯郸是国家历史文化名城，战国时期赵国都城。与邯郸相关的成语典故多达1500余条，如"邯郸学步""完璧归赵""负荆请罪""毛遂自荐""纸上谈兵""黄粱一梦"等。',
+    tags: ['邯郸', '成语', '赵国', '赵都'], keyTerms: [
+      { term: '邯郸学步', definition: '比喻模仿别人不成，反而丧失自己原有技能' },
+      { term: '完璧归赵', definition: '蔺相如出使秦国保全和氏璧的故事' }
+    ], isHebeiRelated: true, hebeiNote: '邯郸是河北重要历史文化名城', examFrequency: 'high' },
+  { id: 'kp_034', title: '承德避暑山庄', category: '河北特色', dynasty: '清朝',
+    content: '承德避暑山庄是清代皇帝夏季避暑和处理政务的离宫，始建于1703年（康熙四十二年），历经89年建成。1994年被列入世界文化遗产。是现存最大的古典皇家园林。',
+    tags: ['承德', '避暑山庄', '世界遗产', '清朝'], keyTerms: [
+      { term: '避暑山庄', definition: '清代在承德修建的皇家园林和离宫' }
+    ], isHebeiRelated: true, hebeiNote: '河北著名世界文化遗产', examFrequency: 'high' },
+  { id: 'kp_035', title: '山海关与长城', category: '河北特色', dynasty: '明清',
+    content: '山海关位于秦皇岛市，是明长城的东部起点，有"天下第一关"之称。长城河北段经过秦皇岛、唐山、承德、张家口等地，是长城保存最完好的段落之一。',
+    tags: ['山海关', '长城', '天下第一关', '秦皇岛'], keyTerms: [
+      { term: '天下第一关', definition: '山海关的别称' }
+    ], isHebeiRelated: true, hebeiNote: '河北著名关隘', examFrequency: 'medium' },
+  { id: 'kp_036', title: '赵州桥', category: '河北特色', dynasty: '隋朝',
+    content: '赵州桥（安济桥）位于石家庄赵县，隋代李春设计建造，是世界上现存最古老的单孔石拱桥。桥身采用"敞肩式"结构，比欧洲同类桥梁早700多年。',
+    tags: ['赵州桥', '李春', '安济桥', '隋朝'], keyTerms: [
+      { term: '赵州桥', definition: '世界上现存最古老的单孔石拱桥' }
+    ], isHebeiRelated: true, hebeiNote: '河北著名古桥', examFrequency: 'medium' },
+  { id: 'kp_037', title: '西柏坡', category: '河北特色', dynasty: '近代',
+    content: '西柏坡位于石家庄平山县，是解放战争时期中共中央和解放军总部所在地。1949年在这里召开了七届二中全会，毛泽东提出"两个务必"。西柏坡被誉为"新中国从这里走来"。',
+    tags: ['西柏坡', '七届二中全会', '两个务必', '平山县'], keyTerms: [
+      { term: '两个务必', definition: '务必保持谦虚谨慎不骄不躁的作风，务必保持艰苦奋斗的作风' }
+    ], isHebeiRelated: true, hebeiNote: '革命圣地，位于河北平山县', examFrequency: 'high' },
+  { id: 'kp_038', title: '河北名人', category: '河北特色', dynasty: '各时期',
+    content: '河北历史上名人辈出：战国名将廉颇（保定定州）、赵云（石家庄正定）；汉代董仲舒（衡水景县）；唐代魏征（邢台巨鹿）、贾岛（保定涿州）；宋代名将赵匡胤（保定清苑）；元代郭守敬（邢台）；清代纪晓岚（沧州献县）；近代李大钊（唐山乐亭）、张之洞（沧州南皮）；现代作家孙犁（衡水安平）等。',
+    tags: ['河北名人', '廉颇', '赵云', '魏征', '李大钊'], keyTerms: [
+      { term: '李大钊', definition: '中国最早的马克思主义者，河北乐亭人' }
+    ], isHebeiRelated: true, hebeiNote: '河北籍重要历史人物汇总', examFrequency: 'high' },
+  { id: 'kp_039', title: '白洋淀与雄安新区', category: '河北特色', dynasty: '当代',
+    content: '白洋淀位于保定和沧州境内，是华北最大的淡水湖。2017年国家设立雄安新区（雄县、容城、安新），是千年大计、国家大事。白洋淀成为雄安新区的重要生态屏障。',
+    tags: ['白洋淀', '雄安新区', '河北湿地'], keyTerms: [
+      { term: '雄安新区', definition: '2017年设立的，继深圳经济特区和上海浦东新区后的又一国家级新区' }
+    ], isHebeiRelated: true, hebeiNote: '河北当代重大国家战略', examFrequency: 'high' },
+
+  // ===== 三支一扶政策 =====
+  { id: 'kp_040', title: '三支一扶政策概况', category: '三支政策', dynasty: '当代',
+    content: '三支一扶是大学生毕业后到农村基层从事支农、支教、支医和帮扶乡村振兴（原扶贫）工作的政策。服务期一般为2年，期满后在公务员考录、事业单位招聘和考研方面享受优惠政策。',
+    tags: ['三支一扶', '支农', '支教', '支医', '帮扶乡村振兴'], keyTerms: [
+      { term: '三支一扶', definition: '大学生到农村基层从事支农、支教、支医和帮扶乡村振兴工作' }
+    ], isHebeiRelated: true, hebeiNote: '三支一扶考试核心政策', examFrequency: 'high' },
+  { id: 'kp_041', title: '乡村振兴战略', category: '三支政策', dynasty: '当代',
+    content: '乡村振兴战略是党的十九大提出的重大战略。总目标是实现农业农村现代化。总要求是产业兴旺、生态宜居、乡风文明、治理有效、生活富裕。河北是农业大省，乡村振兴任务繁重。',
+    tags: ['乡村振兴', '农业农村现代化', '三农'], keyTerms: [
+      { term: '乡村振兴总要求', definition: '产业兴旺、生态宜居、乡风文明、治理有效、生活富裕' }
+    ], isHebeiRelated: true, hebeiNote: '三支一扶考试高频考点', examFrequency: 'high' },
+  { id: 'kp_042', title: '脱贫攻坚精神', category: '三支政策', dynasty: '当代',
+    content: '脱贫攻坚精神是"上下同心、尽锐出战、精准务实、开拓创新、攻坚克难、不负人民"。2021年中国宣布脱贫攻坚战取得全面胜利，近1亿农村贫困人口全部脱贫。河北是脱贫攻坚重要战场。',
+    tags: ['脱贫攻坚', '全面小康', '精准扶贫'], keyTerms: [
+      { term: '脱贫攻坚精神', definition: '上下同心、尽锐出战、精准务实、开拓创新、攻坚克难、不负人民' }
+    ], isHebeiRelated: true, hebeiNote: '三支一扶考试高频考点', examFrequency: 'high' },
+  { id: 'kp_043', title: '基层治理现代化', category: '三支政策', dynasty: '当代',
+    content: '基层治理是国家治理的基石。党的二十大强调完善基层治理体系，提升治理能力。河北省推行"党建引领+网格化管理"等基层治理创新模式。',
+    tags: ['基层治理', '网格化管理', '党建引领'], keyTerms: [
+      { term: '网格化管理', definition: '将社区划分为网格，每个网格配备管理员的治理模式' }
+    ], isHebeiRelated: true, hebeiNote: '三支一扶考试考点', examFrequency: 'medium' },
+
+  // ===== 世界历史 =====
+  { id: 'kp_044', title: '四大文明古国', category: '世界历史', dynasty: '各时期',
+    content: '四大文明古国：古埃及（尼罗河流域）、古巴比伦（两河流域）、古印度（印度河流域）、中国（黄河流域）。均发源于大河流域，创造了早期的文字、城市和国家。',
+    tags: ['四大文明古国', '古埃及', '古巴比伦', '古印度'], keyTerms: [
+      { term: '四大文明古国', definition: '古埃及、古巴比伦、古印度、中国' }
+    ], isHebeiRelated: false, examFrequency: 'medium' },
+  { id: 'kp_045', title: '世界近现代重大事件', category: '世界历史', dynasty: '近代',
+    content: '文艺复兴（14-16世纪，意大利开始）、新航路开辟（1492年哥伦布发现美洲）、英国工业革命（18世纪60年代开始）、法国大革命（1789年）、第一次世界大战（1914-1918年）、十月革命（1917年）、第二次世界大战（1939-1945年）。',
+    tags: ['文艺复兴', '工业革命', '法国大革命', '世界大战'], keyTerms: [
+      { term: '文艺复兴', definition: '14-16世纪欧洲的思想文化运动' },
+      { term: '工业革命', definition: '18世纪从英国开始的机器代替手工的劳动方式变革' }
+    ], isHebeiRelated: false, examFrequency: 'medium' },
+  // ===== 新增：更多文学/哲学/文化知识点 =====
+  { id: 'kp_051', title: '春秋五霸', category: '历史事件', dynasty: '先秦',
+    content: '春秋时期，诸侯争霸，先后有五位诸侯称霸：齐桓公（尊王攘夷）、晋文公（退避三舍）、楚庄王（问鼎中原）、吴王阖闾、越王勾践（卧薪尝胆）。另一种说法是齐桓公、晋文公、宋襄公、秦穆公、楚庄王。',
+    tags: ['春秋五霸', '齐桓公', '晋文公', '楚庄王'], keyTerms: [
+      { term: '尊王攘夷', definition: '齐桓公提出的口号，尊奉周天子、抵御外族' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_052', title: '战国七雄', category: '历史事件', dynasty: '先秦',
+    content: '战国时期七个最强大的诸侯国：齐、楚、燕、韩、赵、魏、秦。其中燕国和赵国位于今河北境内。最终秦国通过远交近攻的策略统一六国。',
+    tags: ['战国七雄', '秦', '齐', '楚', '燕', '赵', '韩', '魏'], keyTerms: [
+      { term: '远交近攻', definition: '秦国范雎提出的外交策略，结交远方国家攻打邻近国家' }
+    ], isHebeiRelated: true, examFrequency: 'medium' },
+  { id: 'kp_053', title: '秦朝统一措施', category: '历史事件', dynasty: '秦朝',
+    content: '秦始皇统一六国后推行了一系列统一措施：政治上实行三公九卿制和郡县制；经济上统一货币（圆形方孔半两钱）、度量衡；文化上统一文字（小篆），焚书坑儒；军事上修筑长城、开发岭南。',
+    tags: ['秦始皇', '郡县制', '统一文字', '统一货币', '修筑长城'], keyTerms: [
+      { term: '三公九卿', definition: '秦朝中央官制，丞相掌行政、太尉掌军事、御史大夫掌监察' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_054', title: '西汉与东汉', category: '历史事件', dynasty: '汉朝',
+    content: '西汉（前202-9年）由刘邦建立，定都长安。文景之治后汉武帝达到鼎盛。公元9年王莽篡汉，建立新朝。25年刘秀重建汉朝，定都洛阳，史称东汉。东汉后期豪强割据，最终三国鼎立。',
+    tags: ['西汉', '东汉', '刘邦', '刘秀', '文景之治'], keyTerms: [
+      { term: '文景之治', definition: '汉文帝和汉景帝时期的休养生息政策带来的盛世' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_055', title: '察举制与征辟制', category: '文化', dynasty: '汉朝',
+    content: '两汉时期选拔人才实行察举制和征辟制。察举是由地方官员考察人才推荐给中央，主要科目有孝廉、茂才等。征辟是皇帝直接征召有名望的人士。科举制就是在这些制度基础上发展而来的。',
+    tags: ['察举制', '征辟制', '孝廉', '两汉选官'], keyTerms: [
+      { term: '察举制', definition: '由地方官员考察人才推荐给中央的选官制度' }
+    ], isHebeiRelated: false, examFrequency: 'medium' },
+  { id: 'kp_056', title: '北魏孝文帝改革', category: '历史事件', dynasty: '两晋南北朝',
+    content: '北魏孝文帝（471-499年在位）推行汉化改革：迁都洛阳、改汉姓、穿汉服、说汉语、与汉族通婚。促进了北方民族大融合，为隋唐统一奠定了基础。',
+    tags: ['北魏孝文帝', '汉化改革', '民族融合', '迁都洛阳'], keyTerms: [
+      { term: '孝文帝改革', definition: '北魏孝文帝推行的全面汉化改革' }
+    ], isHebeiRelated: false, examFrequency: 'medium' },
+  { id: 'kp_057', title: '安史之乱', category: '历史事件', dynasty: '唐朝',
+    content: '755年，安禄山和史思明在范阳（今北京）发动叛乱，史称"安史之乱"。持续8年之久，虽被平定但唐朝从此由盛转衰，藩镇割据局面形成。范阳位于今河北地区。',
+    tags: ['安史之乱', '安禄山', '史思明', '唐朝由盛转衰'], keyTerms: [
+      { term: '安史之乱', definition: '755年安禄山、史思明发动的叛乱，唐朝由盛转衰的转折点' }
+    ], isHebeiRelated: true, examFrequency: 'high' },
+  { id: 'kp_058', title: '五代十国', category: '历史事件', dynasty: '宋元',
+    content: '907年唐朝灭亡后到960年宋朝建立之间，中原地区先后出现后梁、后唐、后晋、后汉、后周五个朝代，同时南方和山西等地有十个割据政权，合称"五代十国"。是唐末藩镇割据的延续。',
+    tags: ['五代十国', '后梁', '后唐', '后晋', '后汉', '后周'], keyTerms: [
+      { term: '五代', definition: '后梁、后唐、后晋、后汉、后周' }
+    ], isHebeiRelated: false, examFrequency: 'medium' },
+  { id: 'kp_059', title: '靖康之变', category: '历史事件', dynasty: '宋朝',
+    content: '1127年，金军南下攻破北宋都城开封，掳走宋徽宗、宋钦宗及大量皇室成员和财物，北宋灭亡。宋高宗赵构南渡建立南宋，定都临安（今杭州）。',
+    tags: ['靖康之变', '北宋灭亡', '宋徽宗', '宋钦宗', '南宋建立'], keyTerms: [
+      { term: '靖康之变', definition: '1127年金军攻破开封，掳走徽钦二帝，北宋灭亡的事件' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_060', title: '行省制度', category: '文化', dynasty: '元朝',
+    content: '元朝在地方实行行省制度（行中书省），简称"行省"，是中国省级行政区的起源。河北地区由中书省直接管辖，称为"腹里"。行省制度对后世影响深远，明清朝沿用至今。',
+    tags: ['行省制度', '元朝', '中书省', '腹里'], keyTerms: [
+      { term: '行省制度', definition: '元朝创立的地方行政制度，中国省级行政区划的起源' }
+    ], isHebeiRelated: true, examFrequency: 'medium' },
+  { id: 'kp_061', title: '张居正改革', category: '历史事件', dynasty: '明朝',
+    content: '明朝万历年间，首辅张居正推行改革。主要内容：整顿吏治（考成法）、丈量土地、推行"一条鞭法"（赋役合并，以银代役）。改革使明朝一度中兴，但死后被废止。',
+    tags: ['张居正', '一条鞭法', '万历改革', '考成法'], keyTerms: [
+      { term: '一条鞭法', definition: '张居正推行的赋役制度改革，将各种赋税合并统一征收银两' }
+    ], isHebeiRelated: false, examFrequency: 'medium' },
+  { id: 'kp_062', title: '康乾盛世', category: '历史事件', dynasty: '清朝',
+    content: '清朝康熙、雍正、乾隆三朝（1661-1796年）是清朝鼎盛时期，史称"康乾盛世"。平定三藩、统一台湾、平定准噶尔、编纂《四库全书》。经济繁荣、人口增长、疆域空前辽阔。',
+    tags: ['康乾盛世', '康熙', '雍正', '乾隆', '四库全书'], keyTerms: [
+      { term: '康乾盛世', definition: '康熙、雍正、乾隆三朝约135年的鼎盛时期' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_063', title: '《南京条约》与不平等条约体系', category: '历史事件', dynasty: '近代',
+    content: '1842年中英《南京条约》是中国近代第一个不平等条约，内容包括割让香港岛、赔款2100万银元、开放五口通商等。此后列强通过一系列不平等条约（《天津条约》《北京条约》《马关条约》《辛丑条约》）侵华，中国主权丧失。',
+    tags: ['南京条约', '不平等条约', '五口通商', '香港'], keyTerms: [
+      { term: '《辛丑条约》', definition: '1901年八国联军侵华后签订，赔款4.5亿两白银，中国完全沦为半殖民地半封建社会' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_064', title: '中国同盟会与辛亥革命', category: '历史事件', dynasty: '近代',
+    content: '1905年孙中山在日本东京成立中国同盟会，提出"驱除鞑虏、恢复中华、创立民国、平均地权"的纲领。1911年武昌起义爆发，各省纷纷响应，清朝迅速崩溃。1912年中华民国成立。',
+    tags: ['同盟会', '武昌起义', '中华民国', '辛亥革命'], keyTerms: [
+      { term: '同盟会', definition: '中国第一个全国性的资产阶级革命政党' },
+      { term: '武昌起义', definition: '1911年10月10日爆发的辛亥革命第一枪' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_065', title: '新民主主义革命', category: '历史事件', dynasty: '近代',
+    content: '新民主主义革命是1919年五四运动到1949年新中国成立期间，中国共产党领导的反帝反封建革命。经历了国民革命（1924-1927）、土地革命（1927-1937）、抗日战争（1937-1945）、解放战争（1946-1949）四个时期。',
+    tags: ['新民主主义革命', '五四运动', '国民革命', '土地革命', '抗日战争', '解放战争'], keyTerms: [
+      { term: '新民主主义革命', definition: '中国共产党领导的资产阶级民主革命，分四个阶段' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_066', title: '三大战役', category: '历史事件', dynasty: '近代',
+    content: '1948年9月至1949年1月，人民解放军发动三大战役：辽沈战役（解放东北）、淮海战役（解放华东）、平津战役（解放华北）。其中平津战役的关键地点在河北。三大战役基本消灭了国民党主力部队。',
+    tags: ['三大战役', '辽沈战役', '淮海战役', '平津战役', '西柏坡'], keyTerms: [
+      { term: '平津战役', definition: '1948年11月至1949年1月，解放华北的战役，和平解放北平' }
+    ], isHebeiRelated: true, examFrequency: 'high' },
+  { id: 'kp_067', title: '丝绸之路与中外交流', category: '世界历史', dynasty: '汉朝',
+    content: '西汉张骞出使西域开辟丝绸之路，东汉班超再次打通西域。丝绸之路从长安出发，经河西走廊、西域，通往中亚、西亚乃至欧洲。主要商品：中国输出丝绸、茶叶、瓷器；输入西域的良马、葡萄、苜蓿等。',
+    tags: ['丝绸之路', '张骞', '班超', '河西走廊'], keyTerms: [
+      { term: '丝绸之路', definition: '连接中国与中亚、欧洲的古代商路' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_068', title: '汉赋与乐府诗', category: '文学', dynasty: '汉朝',
+    content: '汉赋是两汉时期流行的文学形式，代表作品有司马相如的《子虚赋》《上林赋》、班固的《两都赋》等。乐府诗是汉代官方的诗歌收集机构采集的民间诗歌，代表作《孔雀东南飞》是中国古代最长的叙事诗。',
+    tags: ['汉赋', '乐府诗', '司马相如', '孔雀东南飞'], keyTerms: [
+      { term: '乐府', definition: '汉代官方的音乐和诗歌收集机构' },
+      { term: '汉赋', definition: '汉代流行的以铺陈写物为主的文学形式' }
+    ], isHebeiRelated: false, examFrequency: 'medium' },
+  { id: 'kp_069', title: '河北抗战历史', category: '河北特色', dynasty: '近代',
+    content: '河北是抗日战争的重要战场。1937年七七事变发生在河北宛平卢沟桥。河北抗日根据地包括晋察冀根据地、冀中根据地等。冉庄地道战（保定清苑）、狼牙山五壮士（保定易县）等英雄事迹发生在河北。白洋淀雁翎队、回民支队（马本斋）也是河北抗战的重要力量。',
+    tags: ['七七事变', '地道战', '狼牙山五壮士', '晋察冀', '冀中'], keyTerms: [
+      { term: '晋察冀根据地', definition: '聂荣臻建立的第一个敌后抗日根据地，包括山西、察哈尔、河北' },
+      { term: '狼牙山五壮士', definition: '1941年在河北易县狼牙山跳崖殉国的五位八路军战士' }
+    ], isHebeiRelated: true, hebeiNote: '河北抗战重要历史', examFrequency: 'high' },
+  { id: 'kp_070', title: '龙门石窟与云冈石窟', category: '文化', dynasty: '两晋南北朝',
+    content: '云冈石窟（山西大同）始建于北魏，是早期佛教石窟艺术的代表。龙门石窟（河南洛阳）始建于北魏，盛于唐代。二者与敦煌莫高窟并称中国三大石窟。石窟艺术反映了佛教在中国的传播和民族文化的融合。',
+    tags: ['云冈石窟', '龙门石窟', '莫高窟', '石窟艺术'], keyTerms: [
+      { term: '三大石窟', definition: '敦煌莫高窟、云冈石窟、龙门石窟' }
+    ], isHebeiRelated: false, examFrequency: 'medium' },
+  { id: 'kp_071', title: '八股文与科举', category: '文化', dynasty: '明清',
+    content: '明清时期科举考试采用八股文，文章结构分为破题、承题、起讲、入手、起股、中股、后股、束股八个部分，内容必须"代圣人立言"。八股文禁锢了士人的思想，清末随着科举废除而消亡。',
+    tags: ['八股文', '科举', '明清', '代圣人立言'], keyTerms: [
+      { term: '八股文', definition: '明清科举考试采用的固定格式文体' }
+    ], isHebeiRelated: false, examFrequency: 'medium' },
+  { id: 'kp_072', title: '王阳明心学', category: '哲学', dynasty: '明清',
+    content: '王阳明（王守仁）是明代著名思想家，创立心学。核心思想是"致良知"和"知行合一"。认为"心即理"，主张通过内心反省达到对天理的体认。与程朱理学并称为宋明理学的两大流派。',
+    tags: ['王阳明', '心学', '致良知', '知行合一'], keyTerms: [
+      { term: '致良知', definition: '王阳明心学核心，指通过内省恢复本心固有的善' },
+      { term: '知行合一', definition: '认识和实践的统一，知中有行，行中有知' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_073', title: '河北的世界文化遗产', category: '河北特色', dynasty: '各时期',
+    content: '河北省拥有丰富世界文化遗产：承德避暑山庄及周围寺庙（1994）、长城河北段（1987）、明清皇家陵寝—清东陵（唐山遵化）和清西陵（保定易县）（2000）、大运河河北段（2014）。此外还有山海关、金山岭长城等国家重点文保单位。',
+    tags: ['承德避暑山庄', '清东陵', '清西陵', '大运河', '长城'], keyTerms: [
+      { term: '清东陵', definition: '位于唐山遵化的清代皇家陵寝，葬有顺治、康熙、乾隆等' },
+      { term: '清西陵', definition: '位于保定易县的清代皇家陵寝，葬有雍正、嘉庆、光绪等' }
+    ], isHebeiRelated: true, hebeiNote: '河北世界文化遗产汇总', examFrequency: 'high' },
+  { id: 'kp_074', title: '河北乡村振兴实践', category: '三支政策', dynasty: '当代',
+    content: '河北省是农业大省，乡村振兴战略实施以来，河北在产业振兴、人才振兴、文化振兴、生态振兴、组织振兴方面取得显著成效。阜平县骆驼湾村、张北县德胜村等成为脱贫攻坚和乡村振兴的典型案例。河北省推进"农业+"模式，发展乡村旅游业。',
+    tags: ['乡村振兴', '河北农业', '阜平', '张北', '乡村旅游'], keyTerms: [
+      { term: '五个振兴', definition: '产业振兴、人才振兴、文化振兴、生态振兴、组织振兴' }
+    ], isHebeiRelated: true, hebeiNote: '三支一扶考试重要内容', examFrequency: 'high' },
+  { id: 'kp_075', title: '中国近代化探索', category: '历史事件', dynasty: '近代',
+    content: '中国近代化经历了从器物到制度再到思想的层层深入过程：洋务运动（学习西方技术）→戊戌变法（学习君主立宪）→辛亥革命（学习民主共和）→新文化运动（学习民主科学）。这一过程反映了中国人民探索救国救民道路的艰辛历程。',
+    tags: ['近代化', '洋务运动', '戊戌变法', '辛亥革命', '新文化运动'], keyTerms: [
+      { term: '中国近代化', definition: '从器物到制度到思想，逐步向西方学习的现代化过程' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_076', title: '中国当代重大科技成就', category: '文化', dynasty: '当代',
+    content: '1964年第一颗原子弹爆炸成功，1967年氢弹试验成功，1970年东方红一号卫星发射成功（两弹一星）。2003年神舟五号载人航天成功。2012年蛟龙号深潜。2020年北斗系统建成。2021年天问一号火星着陆。',
+    tags: ['两弹一星', '神舟五号', '北斗', '天问一号'], keyTerms: [
+      { term: '两弹一星', definition: '原子弹、氢弹、人造卫星的研制成功' }
+    ], isHebeiRelated: false, examFrequency: 'medium' },
+  { id: 'kp_077', title: '燕赵文化与河北精神', category: '河北特色', dynasty: '各时期',
+    content: '燕赵文化源于战国时期的燕国和赵国，以慷慨悲歌、任侠尚义著称。韩愈说"燕赵古称多慷慨悲歌之士"。燕赵文化的核心精神包括：自强不息、厚德载物、刚健有为、舍生取义。这种精神在河北历史上不断传承，影响深远。',
+    tags: ['燕赵文化', '慷慨悲歌', '河北精神', '燕赵'], keyTerms: [
+      { term: '燕赵文化', definition: '以慷慨悲歌、尚义任侠为特征的河北地域文化' }
+    ], isHebeiRelated: true, hebeiNote: '河北文化核心认知', examFrequency: 'high' },
+  { id: 'kp_078', title: '顾炎武与明末清初思想', category: '哲学', dynasty: '明清',
+    content: '顾炎武是明末清初著名思想家，提出"天下兴亡，匹夫有责"。主张"经世致用"，反对空谈心性。代表作《日知录》《天下郡国利病书》。与黄宗羲、王夫之并称明末清初三大思想家。',
+    tags: ['顾炎武', '天下兴亡匹夫有责', '经世致用', '日知录'], keyTerms: [
+      { term: '天下兴亡匹夫有责', definition: '顾炎武提出的社会责任感名言' }
+    ], isHebeiRelated: false, examFrequency: 'high' },
+  { id: 'kp_079', title: '世界两次工业革命', category: '世界历史', dynasty: '近代',
+    content: '第一次工业革命（18世纪60年代-19世纪中期）：以蒸汽机为标志，从英国开始。珍妮纺纱机、瓦特改良蒸汽机、史蒂芬孙发明火车。第二次工业革命（19世纪70年代-20世纪初）：以电力和内燃机为标志。爱迪生发明电灯、贝尔发明电话、卡尔·本茨发明汽车。',
+    tags: ['工业革命', '蒸汽机', '电力', '内燃机', '瓦特', '爱迪生'], keyTerms: [
+      { term: '第一次工业革命', definition: '以蒸汽机为标志，从英国开始的工业变革' },
+      { term: '第二次工业革命', definition: '以电力和内燃机为标志的工业变革' }
+    ], isHebeiRelated: false, examFrequency: 'medium' },
+  { id: 'kp_080', title: '文艺复兴与启蒙运动', category: '世界历史', dynasty: '近代',
+    content: '文艺复兴（14-16世纪）起源于意大利，核心思想是人文主义。代表人物：但丁《神曲》、达芬奇《蒙娜丽莎》、莎士比亚《哈姆雷特》。启蒙运动（17-18世纪）起源于法国，核心思想是理性主义。代表人物：伏尔泰、孟德斯鸠（三权分立）、卢梭（社会契约论）、康德。',
+    tags: ['文艺复兴', '启蒙运动', '人文主义', '理性主义', '但丁', '伏尔泰'], keyTerms: [
+      { term: '人文主义', definition: '文艺复兴的核心思想，以人为中心，肯定人的价值' },
+      { term: '三权分立', definition: '孟德斯鸠提出的立法、行政、司法三权相互制衡' }
+    ], isHebeiRelated: false, examFrequency: 'medium' }
+];
+// type: single(单选) | judge(判断)
+const quizQuestions = [
+  // --- 先秦 ---
+  { id: 'q_001', question: '中国历史上第一个世袭制王朝是？', options: ['夏朝', '商朝', '周朝', '秦朝'], correctIndex: 0, explanation: '夏朝（前2070-前1600）由禹建立，开启了王位世袭制，是中国第一个世袭制王朝。', category: '历史事件', dynasty: '先秦', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_002', question: '"国人暴动"发生在哪个朝代？', options: ['商朝', '西周', '东周', '秦朝'], correctIndex: 1, explanation: '公元前841年，西周都城镐京的平民（国人）因不满周厉王暴政发动暴动，史称"国人暴动"。', category: '历史事件', dynasty: '先秦', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_003', question: '《诗经》分为风、雅、颂三部分，其中"风"是指？', options: ['宫廷乐歌', '宗庙祭祀乐歌', '各地民歌', '贵族诗歌'], correctIndex: 2, explanation: '"风"是各地民歌，共160篇，是《诗经》中最有思想艺术价值的部分。', category: '文学', dynasty: '先秦', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_004', question: '"百家争鸣"局面出现于哪个历史时期？', options: ['西周', '春秋战国', '秦朝', '汉朝'], correctIndex: 1, explanation: '春秋战国时期，各学派纷纷著书立说、自由辩论，形成了"百家争鸣"的思想繁荣局面。', category: '哲学', dynasty: '先秦', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_005', question: '儒家学派的创始人是？', options: ['孟子', '荀子', '孔子', '老子'], correctIndex: 2, explanation: '孔子（前551-前479）是儒家学派创始人，核心思想是"仁"和"礼"。', category: '哲学', dynasty: '先秦', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+
+  // --- 秦汉 ---
+  { id: 'q_006', question: '秦始皇统一六国是在哪一年？', options: ['公元前230年', '公元前221年', '公元前210年', '公元前206年'], correctIndex: 1, explanation: '公元前221年，秦始皇灭掉最后一个诸侯国齐国，完成统一大业。', category: '历史事件', dynasty: '秦朝', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_007', question: '中国第一部纪传体通史是？', options: ['《春秋》', '《汉书》', '《史记》', '《资治通鉴》'], correctIndex: 2, explanation: '《史记》是司马迁所著的中国第一部纪传体通史，记载了黄帝到汉武帝约3000年的历史。', category: '文学', dynasty: '汉朝', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_008', question: '"丝绸之路"的开辟与下列哪位人物有关？', options: ['班超', '张骞', '郑和', '甘英'], correctIndex: 1, explanation: '汉武帝时期，张骞两次出使西域，开辟了从长安经西域通往中亚、欧洲的丝绸之路。', category: '历史事件', dynasty: '汉朝', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_009', question: '东汉改进造纸术的是？', options: ['张衡', '华佗', '蔡伦', '毕昇'], correctIndex: 2, explanation: '东汉蔡伦在105年改进了造纸术，制造出轻便廉价的"蔡侯纸"。', category: '文化', dynasty: '汉朝', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_010', question: '"罢黜百家，独尊儒术"是哪位皇帝时期推行的？', options: ['汉高祖', '汉文帝', '汉武帝', '汉光武帝'], correctIndex: 2, explanation: '汉武帝采纳董仲舒的建议，"罢黜百家，独尊儒术"，使儒家思想成为官方正统。', category: '哲学', dynasty: '汉朝', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+
+  // --- 三国两晋南北朝 ---
+  { id: 'q_011', question: '奠定三国鼎立格局的关键战役是？', options: ['官渡之战', '赤壁之战', '淝水之战', '巨鹿之战'], correctIndex: 1, explanation: '208年的赤壁之战，孙刘联军以少胜多击败曹操，奠定了三国鼎立的基础。', category: '历史事件', dynasty: '三国', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_012', question: '被后世称为"书圣"的是？', options: ['颜真卿', '柳公权', '王羲之', '欧阳询'], correctIndex: 2, explanation: '王羲之是东晋著名书法家，代表作《兰亭序》被誉为"天下第一行书"。', category: '文化', dynasty: '两晋南北朝', difficulty: 1, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+
+  // --- 隋唐 ---
+  { id: 'q_013', question: '科举制度创立于哪个朝代？', options: ['汉朝', '隋朝', '唐朝', '宋朝'], correctIndex: 1, explanation: '科举制度始于隋朝，隋炀帝时正式设立进士科，唐朝进一步完善。', category: '文化', dynasty: '隋唐', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_014', question: '"贞观之治"是哪位皇帝在位时期的盛世？', options: ['唐高祖', '唐太宗', '唐玄宗', '武则天'], correctIndex: 1, explanation: '唐太宗李世民在位期间（627-649年）政治清明、社会稳定，史称"贞观之治"。', category: '历史事件', dynasty: '唐朝', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_015', question: '被称为"诗仙"的唐代诗人是？', options: ['杜甫', '白居易', '王维', '李白'], correctIndex: 3, explanation: '李白诗歌充满浪漫主义色彩，被后世尊称为"诗仙"。', category: '文学', dynasty: '唐朝', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_016', question: '被称为"诗圣"的唐代诗人是？', options: ['李白', '杜甫', '王维', '白居易'], correctIndex: 1, explanation: '杜甫的诗歌深刻反映了社会现实，被尊称为"诗圣"。', category: '文学', dynasty: '唐朝', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_017', question: '唐朝由盛转衰的转折点是？', options: ['安史之乱', '黄巢起义', '藩镇割据', '宦官专权'], correctIndex: 0, explanation: '755年爆发的安史之乱是唐朝由盛转衰的转折点，持续八年，对社会经济造成严重破坏。', category: '历史事件', dynasty: '唐朝', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_018', question: '世界上现存最古老的单孔石拱桥赵州桥位于河北哪里？', options: ['石家庄赵县', '保定定州', '邯郸', '邢台'], correctIndex: 0, explanation: '赵州桥（安济桥）位于石家庄赵县，隋代李春设计建造，是世界桥梁史上的奇迹。', category: '河北特色', dynasty: '隋朝', difficulty: 1, examFrequency: 'medium', isHebeiRelated: true, examType: 'single' },
+
+  // --- 宋元 ---
+  { id: 'q_019', question: '活字印刷术的发明者是？', options: ['蔡伦', '毕昇', '沈括', '郭守敬'], correctIndex: 1, explanation: '北宋毕昇发明了活字印刷术，是印刷史上的一次伟大革命。', category: '文化', dynasty: '宋朝', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_020', question: '"唐宋八大家"中属于宋代的是？下列哪位不是宋代人？', options: ['韩愈', '欧阳修', '苏轼', '王安石'], correctIndex: 0, explanation: '韩愈是唐代人，不是宋代的。唐宋八大家中宋代有六位：欧阳修、苏洵、苏轼、苏辙、王安石、曾巩。', category: '文学', dynasty: '宋朝', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_021', question: '元曲四大家不包括以下哪一位？', options: ['关汉卿', '马致远', '王实甫', '白朴'], correctIndex: 2, explanation: '元曲四大家是关汉卿、马致远、白朴、郑光祖。王实甫虽也是元曲名家（《西厢记》），但不在四大家之列。', category: '文学', dynasty: '元朝', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_022', question: '中国历史上版图最大的王朝是？', options: ['唐朝', '元朝', '明朝', '清朝'], correctIndex: 1, explanation: '元朝的版图是中国历史上最大的，横跨欧亚大陆。', category: '历史事件', dynasty: '元朝', difficulty: 1, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+
+  // --- 明清 ---
+  { id: 'q_023', question: '中国古典四大名著中，哪一部成书最晚？', options: ['《三国演义》', '《水浒传》', '《西游记》', '《红楼梦》'], correctIndex: 3, explanation: '《红楼梦》是清代曹雪芹所著，成书于18世纪中期，是四大名著中最晚的一部。', category: '文学', dynasty: '明清', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_024', question: '郑和下西洋最早是在哪一年？', options: ['1405年', '1410年', '1420年', '1430年'], correctIndex: 0, explanation: '1405年，郑和率领船队首次下西洋，比哥伦布发现美洲早近90年。', category: '历史事件', dynasty: '明朝', difficulty: 1, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_025', question: '《本草纲目》的作者是？', options: ['华佗', '张仲景', '孙思邈', '李时珍'], correctIndex: 3, explanation: '李时珍历时27年编写《本草纲目》，收录药物1892种，是世界医药学的重要文献。', category: '文化', dynasty: '明朝', difficulty: 1, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+
+  // --- 近代 ---
+  { id: 'q_026', question: '中国近代史上第一个不平等条约是？', options: ['《北京条约》', '《南京条约》', '《马关条约》', '《辛丑条约》'], correctIndex: 1, explanation: '1842年签订的中英《南京条约》是中国近代第一个不平等条约，标志中国开始沦为半殖民地半封建社会。', category: '历史事件', dynasty: '近代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_027', question: '太平天国运动的领导人是？', options: ['洪秀全', '曾国藩', '李鸿章', '左宗棠'], correctIndex: 0, explanation: '洪秀全于1851年发动金田起义，建立太平天国，定都天京。', category: '历史事件', dynasty: '近代', difficulty: 1, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_028', question: '洋务运动的口号是？', options: ['师夷长技以制夷', '自强、求富', '变法图强', '民主共和'], correctIndex: 1, explanation: '洋务派以"自强"（前期创办军事工业）和"求富"（后期创办民用工业）为口号。', category: '历史事件', dynasty: '近代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_029', question: '甲午战争中北洋水师全军覆没是在哪场战役？', options: ['丰岛海战', '黄海海战', '威海卫战役', '大东沟海战'], correctIndex: 2, explanation: '1895年威海卫战役中，北洋水师全军覆没，标志着洋务运动的失败。', category: '历史事件', dynasty: '近代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_030', question: '戊戌变法持续了多少天？', options: ['100天', '103天', '108天', '200天'], correctIndex: 1, explanation: '戊戌变法从1898年6月11日到9月21日，共103天，故又称"百日维新"。', category: '历史事件', dynasty: '近代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_031', question: '辛亥革命的指导思想是？', options: ['三民主义', '马克思主义', '自由主义', '改良主义'], correctIndex: 0, explanation: '孙中山提出了民族、民权、民生三大主义，即三民主义，是辛亥革命的指导思想。', category: '历史事件', dynasty: '近代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_032', question: '新文化运动提倡的两面旗帜是？', options: ['自由与平等', '民主与科学', '爱国与进步', '革命与建设'], correctIndex: 1, explanation: '新文化运动高举"民主"和"科学"两面大旗，反对封建专制和迷信愚昧。', category: '历史事件', dynasty: '近代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_033', question: '五四运动爆发的直接原因是？', options: ['北洋军阀统治黑暗', '巴黎和会中国外交失败', '俄国十月革命影响', '日本提出二十一条'], correctIndex: 1, explanation: '1919年巴黎和会拒绝中国收回山东主权的要求，引发五四爱国运动。', category: '历史事件', dynasty: '近代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_034', question: '中国共产党成立的时间是？', options: ['1920年7月', '1921年7月', '1922年7月', '1923年7月'], correctIndex: 1, explanation: '1921年7月23日中共一大在上海召开，标志着中国共产党正式成立。', category: '历史事件', dynasty: '近代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_035', question: '全面抗日战争的起点是？', options: ['九一八事变', '七七事变', '华北事变', '西安事变'], correctIndex: 1, explanation: '1937年7月7日卢沟桥事变（七七事变）标志着全面抗日战争的爆发。', category: '历史事件', dynasty: '近代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_036', question: '解放战争中的三大战役不包括？', options: ['辽沈战役', '淮海战役', '平津战役', '渡江战役'], correctIndex: 3, explanation: '三大战役是指辽沈战役、淮海战役和平津战役，渡江战役是三大战役后的重大战役。', category: '历史事件', dynasty: '近代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_037', question: '新中国成立于哪一年？', options: ['1948年', '1949年', '1950年', '1951年'], correctIndex: 1, explanation: '1949年10月1日，毛泽东在天安门城楼宣布中华人民共和国成立。', category: '历史事件', dynasty: '当代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+
+  // --- 当代 ---
+  { id: 'q_038', question: '改革开放是哪一年开始的？', options: ['1976年', '1977年', '1978年', '1979年'], correctIndex: 2, explanation: '1978年十一届三中全会召开，作出改革开放的伟大决策，开启了社会主义现代化建设新时期。', category: '历史事件', dynasty: '当代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_039', question: '"一国两制"构想最早是为解决哪个问题提出的？', options: ['香港问题', '澳门问题', '台湾问题', '西藏问题'], correctIndex: 2, explanation: '"一国两制"是邓小平为解决台湾问题提出的，后成功运用于香港和澳门的回归。', category: '历史事件', dynasty: '当代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+
+  // --- 河北特色 ---
+  { id: 'q_040', question: '河北省的简称是？', options: ['燕', '赵', '冀', '直'], correctIndex: 2, explanation: '河北简称"冀"，源于古九州之一的冀州。', category: '河北特色', dynasty: '各时期', difficulty: 1, examFrequency: 'high', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_041', question: '"完璧归赵""负荆请罪"等成语与河北哪座城市有关？', options: ['石家庄', '邯郸', '保定', '邢台'], correctIndex: 1, explanation: '邯郸是战国时期赵国都城，与邯郸相关的成语达1500余条，被称为"成语之乡"。', category: '河北特色', dynasty: '先秦', difficulty: 1, examFrequency: 'high', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_042', question: '承德避暑山庄始建于哪个皇帝时期？', options: ['顺治', '康熙', '雍正', '乾隆'], correctIndex: 1, explanation: '承德避暑山庄始建于1703年康熙四十二年，历经康熙、雍正、乾隆三代建成。', category: '河北特色', dynasty: '清朝', difficulty: 2, examFrequency: 'medium', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_043', question: '有"天下第一关"之称的是？', options: ['嘉峪关', '山海关', '居庸关', '潼关'], correctIndex: 1, explanation: '山海关位于河北秦皇岛，是明长城的东部起点，被称为"天下第一关"。', category: '河北特色', dynasty: '明清', difficulty: 1, examFrequency: 'medium', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_044', question: '西柏坡位于河北省哪个市？', options: ['保定', '石家庄', '邢台', '衡水'], correctIndex: 1, explanation: '西柏坡位于石家庄市平山县，是解放战争时期中共中央所在地。', category: '河北特色', dynasty: '近代', difficulty: 1, examFrequency: 'high', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_045', question: '中国最早的马克思主义者、河北乐亭人是？', options: ['陈独秀', '李大钊', '鲁迅', '胡适'], correctIndex: 1, explanation: '李大钊（1889-1927），河北乐亭人，是中国最早的马克思主义者，中国共产党的主要创始人之一。', category: '河北特色', dynasty: '近代', difficulty: 1, examFrequency: 'high', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_046', question: '雄安新区涉及哪三个县？', options: ['雄县、安新、容城', '雄县、安新、高阳', '徐水、容城、安新', '雄县、容城、定兴'], correctIndex: 0, explanation: '雄安新区规划范围包括河北省雄县、容城县、安新县三县及周边部分区域。', category: '河北特色', dynasty: '当代', difficulty: 2, examFrequency: 'high', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_047', question: '三国名将赵云是河北哪里人？', options: ['保定定州', '石家庄正定', '邯郸', '沧州'], correctIndex: 1, explanation: '赵云（常山赵子龙）是常山真定人（今石家庄正定）。', category: '河北特色', dynasty: '三国', difficulty: 2, examFrequency: 'medium', isHebeiRelated: true, examType: 'single' },
+
+  // --- 三支一扶政策 ---
+  { id: 'q_048', question: '"三支一扶"计划服务期一般为？', options: ['1年', '2年', '3年', '4年'], correctIndex: 1, explanation: '三支一扶服务期一般为2年，期满后在考录公务员、事业单位和考研方面享受优惠政策。', category: '三支政策', dynasty: '当代', difficulty: 1, examFrequency: 'high', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_049', question: '"三支一扶"中的"支"分别指什么？', options: ['支农、支教、支医', '支农、支教、支边', '支教、支医、支边', '支农、支医、支边'], correctIndex: 0, explanation: '三支一扶是指支农、支教、支医和帮扶乡村振兴（原扶贫）。', category: '三支政策', dynasty: '当代', difficulty: 1, examFrequency: 'high', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_050', question: '乡村振兴战略的总要求不包括以下哪项？', options: ['产业兴旺', '生态宜居', '共同富裕', '治理有效'], correctIndex: 2, explanation: '乡村振兴总要求是产业兴旺、生态宜居、乡风文明、治理有效、生活富裕，不包括"共同富裕"。', category: '三支政策', dynasty: '当代', difficulty: 1, examFrequency: 'high', isHebeiRelated: true, examType: 'single' },
+
+  // --- 哲学 ---
+  { id: 'q_051', question: '老子是哪家学派的创始人？', options: ['儒家', '道家', '法家', '墨家'], correctIndex: 1, explanation: '老子是道家学派创始人，主张"道法自然""无为而治"，著有《道德经》。', category: '哲学', dynasty: '先秦', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_052', question: '孟子提出的重要政治思想是？', options: ['兼爱非攻', '民贵君轻', '以法治国', '道法自然'], correctIndex: 1, explanation: '孟子发展了孔子的"仁"的思想，提出"民为贵，社稷次之，君为轻"的民本思想。', category: '哲学', dynasty: '先秦', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_053', question: '"兼爱""非攻"是哪家学派的主张？', options: ['儒家', '道家', '墨家', '法家'], correctIndex: 2, explanation: '墨家创始人墨子主张"兼爱"（无差别爱所有人）和"非攻"（反对不义战争）。', category: '哲学', dynasty: '先秦', difficulty: 1, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+
+  // --- 世界历史 ---
+  { id: 'q_054', question: '四大文明古国都发源于？', options: ['沿海地区', '大河流域', '高原地区', '沙漠绿洲'], correctIndex: 1, explanation: '四大文明古国都发源于大河流域：古埃及-尼罗河、古巴比伦-两河、古印度-印度河、中国-黄河。', category: '世界历史', dynasty: '各时期', difficulty: 1, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_055', question: '英国工业革命开始于什么时期？', options: ['17世纪末', '18世纪60年代', '19世纪初', '19世纪中期'], correctIndex: 1, explanation: '英国工业革命从18世纪60年代开始，以珍妮纺纱机的发明为标志。', category: '世界历史', dynasty: '近代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+
+  // --- 更多判断/辨析题 ---
+  { id: 'q_056', question: '下列关于"焚书坑儒"的说法，正确的是？', options: ['发生在汉朝', '是秦始皇推行思想专制的措施', '由李斯建议废除', '发生在汉武帝时期'], correctIndex: 1, explanation: '焚书坑儒是秦始皇为加强思想控制而采取的措施，发生在秦朝。', category: '历史事件', dynasty: '秦朝', difficulty: 1, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_057', question: '下列不属于"唐代"的诗人是？', options: ['王勃', '骆宾王', '王安石', '杜牧'], correctIndex: 2, explanation: '王安石是宋代文学家、政治家，不属于唐代。王勃、骆宾王是初唐诗人，杜牧是晚唐诗人。', category: '文学', dynasty: '唐朝', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_058', question: '"唐宋八大家"中，属于唐代的是？（多选）', options: ['韩愈、柳宗元', '韩愈、柳宗元、欧阳修', '韩愈、欧阳修、苏轼', '柳宗元、苏轼、苏辙'], correctIndex: 0, explanation: '唐宋八大家中唐代仅韩愈和柳宗元两人，其余六位都是宋代人。', category: '文学', dynasty: '唐朝', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_059', question: '下列事件发生的先后顺序正确的是？', options: ['鸦片战争→太平天国→洋务运动→戊戌变法', '太平天国→鸦片战争→洋务运动→戊戌变法', '鸦片战争→洋务运动→太平天国→戊戌变法', '鸦片战争→太平天国→戊戌变法→洋务运动'], correctIndex: 0, explanation: '正确顺序：鸦片战争（1840）→太平天国（1851）→洋务运动（1860s）→戊戌变法（1898）。', category: '历史事件', dynasty: '近代', difficulty: 2, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_060', question: '中国共产党的初心和使命是？', options: ['实现共产主义', '为中国人民谋幸福，为中华民族谋复兴', '建设社会主义现代化强国', '实现中华民族伟大复兴的中国梦'], correctIndex: 1, explanation: '中国共产党的初心和使命是为中国人民谋幸福，为中华民族谋复兴。', category: '三支政策', dynasty: '当代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_061', question: '下列属于"初唐四杰"的是？', options: ['王勃、杨炯、卢照邻、骆宾王', '王勃、杨炯、陈子昂、骆宾王', '王勃、卢照邻、贺知章、骆宾王', '杨炯、卢照邻、骆宾王、张若虚'], correctIndex: 0, explanation: '初唐四杰是王勃、杨炯、卢照邻、骆宾王，他们反对齐梁绮靡文风，开创了唐代文学新局面。', category: '文学', dynasty: '唐朝', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_062', question: '被鲁迅称为"史家之绝唱，无韵之离骚"的是？', options: ['《汉书》', '《资治通鉴》', '《史记》', '《春秋》'], correctIndex: 2, explanation: '鲁迅高度评价《史记》为"史家之绝唱，无韵之离骚"，既肯定其史学价值也肯定其文学成就。', category: '文学', dynasty: '汉朝', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_063', question: '抗日战争中，中国军队取得的首次大捷是？', options: ['台儿庄大捷', '平型关大捷', '百团大战', '淞沪会战'], correctIndex: 1, explanation: '平型关大捷（1937年9月）是全面抗战以来中国军队取得的首次胜利，打破了日军不可战胜的神话。', category: '历史事件', dynasty: '近代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_064', question: '平津战役中，人民解放军和平解放的城市是？', options: ['天津', '北京（北平）', '张家口', '保定'], correctIndex: 1, explanation: '平津战役中，通过谈判和平解放了北平（今北京），使古都文物得以完整保存。平津战役是三大战役之一。', category: '历史事件', dynasty: '近代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_065', question: '下列哪项不是河北的世界文化遗产？', options: ['承德避暑山庄', '长城（河北段）', '清东陵和清西陵', '云冈石窟'], correctIndex: 3, explanation: '云冈石窟位于山西大同，不是河北的。承德避暑山庄、长城河北段、清东陵（唐山）和清西陵（保定）都是河北的世界文化遗产。', category: '河北特色', dynasty: '各时期', difficulty: 2, examFrequency: 'medium', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_066', question: '提出"实事求是"思想路线的党的会议是？', options: ['中共七大', '十一届三中全会', '遵义会议', '延安整风运动'], correctIndex: 1, explanation: '1978年十一届三中全会重新确立了实事求是的思想路线，开启了改革开放新时期。', category: '三支政策', dynasty: '当代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_067', question: '中国古代"四大发明"中，哪一项是北宋发明的？', options: ['造纸术', '活字印刷术', '火药', '指南针'], correctIndex: 1, explanation: '活字印刷术是北宋毕昇发明的，其他三项出现更早：造纸术东汉、火药唐代、指南针战国时期已有雏形。', category: '文化', dynasty: '宋朝', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_068', question: '下列关于"三支一扶"政策说法错误的是？', options: ['服务期一般为2年', '期满后考研可加分', '服务期间不能辞职', '部分地区可转为事业编'], correctIndex: 2, explanation: '"三支一扶"服务期间可以辞职，但可能会影响相关优惠政策享受。其他三项说法正确。', category: '三支政策', dynasty: '当代', difficulty: 2, examFrequency: 'high', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_069', question: '河北的"全国爱国主义教育示范基地"不包括？', options: ['西柏坡', '李大钊纪念馆', '冉庄地道战遗址', '井冈山革命博物馆'], correctIndex: 3, explanation: '井冈山革命博物馆位于江西，不是河北的。西柏坡、李大钊纪念馆（乐亭）、冉庄地道战遗址（清苑）都是河北的爱国主义教育基地。', category: '河北特色', dynasty: '近代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_070', question: '"扶贫"在乡村振兴阶段已改为？', options: ['脱贫攻坚', '帮扶乡村振兴', '农村现代化建设', '精准扶贫'], correctIndex: 1, explanation: '脱贫攻坚战胜利后，三支一扶中的"扶贫"已改为"帮扶乡村振兴"，体现工作重心从脱贫攻坚转向乡村振兴。', category: '三支政策', dynasty: '当代', difficulty: 2, examFrequency: 'high', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_071', question: '隋朝大运河的起止点分别是？', options: ['西安到杭州', '洛阳到杭州', '北京到杭州', '洛阳到扬州'], correctIndex: 2, explanation: '隋朝大运河北起涿郡（今北京），南至余杭（今杭州），以洛阳为中心，全长2000多公里。', category: '历史事件', dynasty: '隋朝', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_072', question: '《天朝田亩制度》是哪个政权颁布的？', options: ['明末农民政权', '太平天国', '中华民国临时政府', '清朝政府'], correctIndex: 1, explanation: '《天朝田亩制度》是太平天国1853年颁布的土地纲领，主张"有田同耕，有饭同食"。', category: '历史事件', dynasty: '近代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_073', question: '"两个务必"是在哪次会议上提出的？', options: ['中共七大', '七届二中全会', '七届三中全会', '中共八大'], correctIndex: 1, explanation: '1949年在西柏坡召开的七届二中全会上，毛泽东提出"两个务必"。西柏坡位于河北平山县。', category: '河北特色', dynasty: '近代', difficulty: 2, examFrequency: 'high', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_074', question: '下列不属于莎士比亚四大悲剧的是？', options: ['《哈姆雷特》', '《奥赛罗》', '《威尼斯商人》', '《麦克白》'], correctIndex: 2, explanation: '莎士比亚四大悲剧是《哈姆雷特》《奥赛罗》《李尔王》《麦克白》。《威尼斯商人》是喜剧。', category: '世界历史', dynasty: '各时期', difficulty: 2, examFrequency: 'low', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_075', question: '"精准扶贫"理念最早是在哪一年提出的？', options: ['2011年', '2013年', '2015年', '2017年'], correctIndex: 1, explanation: '2013年11月，习近平总书记在湖南湘西考察时首次提出"精准扶贫"重要理念。', category: '三支政策', dynasty: '当代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_076', question: '下列哪组全是婉约派词人？', options: ['苏轼、辛弃疾', '柳永、李清照', '苏轼、柳永', '辛弃疾、李清照'], correctIndex: 1, explanation: '婉约派以柳永、李清照、晏殊、周邦彦为代表，词风婉转含蓄。苏轼、辛弃疾是豪放派代表。', category: '文学', dynasty: '宋朝', difficulty: 2, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_077', question: '以下哪位河北籍人物是中国共产党主要创始人之一？', options: ['毛泽东', '李大钊', '周恩来', '朱德'], correctIndex: 1, explanation: '李大钊（河北乐亭人）是中国最早的马克思主义者，中国共产党主要创始人之一。', category: '河北特色', dynasty: '近代', difficulty: 1, examFrequency: 'high', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_078', question: '王实甫的代表作是？', options: ['《窦娥冤》', '《西厢记》', '《汉宫秋》', '《墙头马上》'], correctIndex: 1, explanation: '王实甫是元代著名戏曲家，代表作《西厢记》描写张生和崔莺莺的爱情故事，被誉为"天下夺魁"。', category: '文学', dynasty: '元朝', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_079', question: '五四运动后期，运动中心从北京转移到？', options: ['上海', '广州', '南京', '武汉'], correctIndex: 0, explanation: '1919年6月，五四运动中心从北京转移到上海，运动主力从学生变为工人（六三运动）。', category: '历史事件', dynasty: '近代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_080', question: '三支一扶人员服务期满后，在公务员考试中有什么优惠政策？', options: ['直接录用', '定向招录', '免笔试', '加10分'], correctIndex: 1, explanation: '三支一扶服务期满且考核合格的人员，可参加公务员定向招录，即专门面向基层服务项目人员的职位。', category: '三支政策', dynasty: '当代', difficulty: 2, examFrequency: 'high', isHebeiRelated: true, examType: 'single' },
+  // ===== 新增题目 =====
+  // --- 先秦更多 ---
+  { id: 'q_081', question: '与"退避三舍"相关的历史人物是？', options: ['齐桓公', '晋文公', '楚庄王', '秦穆公'], correctIndex: 1, explanation: '晋文公重耳流亡时曾答应楚王若两国交战将退避三舍，后与楚国在城濮之战中履行承诺。', category: '历史事件', dynasty: '先秦', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_082', question: '"百家争鸣"中，主张"兼爱""非攻"的学派是？', options: ['儒家', '道家', '墨家', '法家'], correctIndex: 2, explanation: '墨家创始人墨子主张"兼爱"（无差别之爱）和"非攻"（反对不义战争）。', category: '哲学', dynasty: '先秦', difficulty: 1, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_083', question: '"战国七雄"中，位于今天河北境内的有？', options: ['齐和楚', '燕和赵', '韩和魏', '秦和楚'], correctIndex: 1, explanation: '战国七雄中，燕国（今河北北部）和赵国（今河北南部）位于河北地区。', category: '河北特色', dynasty: '先秦', difficulty: 2, examFrequency: 'medium', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_084', question: '《诗经》中"风"是指？', options: ['宫廷乐歌', '宗庙祭祀乐歌', '各地民歌', '史诗'], correctIndex: 2, explanation: '"风"是各地民歌，共160篇，是《诗经》中最具思想艺术价值的部分。', category: '文学', dynasty: '先秦', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_085', question: '"己所不欲，勿施于人"出自？', options: ['《老子》', '《庄子》', '《论语》', '《孟子》'], correctIndex: 2, explanation: '这句话出自《论语·颜渊》，是孔子提出的重要道德准则。', category: '哲学', dynasty: '先秦', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  // --- 秦汉更多 ---
+  { id: 'q_086', question: '秦朝在地方实行的行政制度是？', options: ['分封制', '郡县制', '行省制', '三公九卿制'], correctIndex: 1, explanation: '秦始皇废除分封制，在全国推行郡县制，加强了中央集权。', category: '历史事件', dynasty: '秦朝', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_087', question: '"文景之治"是指哪两位皇帝？', options: ['汉高祖和汉武帝', '汉文帝和汉景帝', '汉武昭帝和汉宣帝', '汉光武帝和汉明帝'], correctIndex: 1, explanation: '文景之治指汉文帝刘恒和汉景帝刘启在位时期，推行休养生息政策出现的盛世。', category: '历史事件', dynasty: '汉朝', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_088', question: '提出"罢黜百家，独尊儒术"的是？', options: ['孔子', '董仲舒', '司马迁', '班固'], correctIndex: 1, explanation: '董仲舒向汉武帝建议"罢黜百家，独尊儒术"，使儒家思想成为官方正统。', category: '哲学', dynasty: '汉朝', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_089', question: '东汉张衡的发明是？', options: ['造纸术', '地动仪', '司南', '浑天仪'], correctIndex: 1, explanation: '张衡是东汉著名科学家，发明了世界上第一台地动仪，比欧洲早1700多年。', category: '文化', dynasty: '汉朝', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_090', question: '《汉书》的作者是？', options: ['司马迁', '班固', '范晔', '陈寿'], correctIndex: 1, explanation: '《汉书》是东汉班固所著的中国第一部纪传体断代史。', category: '文学', dynasty: '汉朝', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  // --- 三国两晋南北朝更多 ---
+  { id: 'q_091', question: '官渡之战的交战双方是？', options: ['曹操vs刘备', '曹操vs袁绍', '孙权vs曹操', '刘备vs孙权'], correctIndex: 1, explanation: '200年官渡之战，曹操以少胜多击败袁绍，奠定了统一北方的基础。', category: '历史事件', dynasty: '三国', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_092', question: '北魏孝文帝改革的核心是？', options: ['军事改革', '汉化改革', '政治改革', '经济改革'], correctIndex: 1, explanation: '孝文帝推行汉化改革：迁都洛阳、改汉姓、穿汉服、说汉语，促进民族融合。', category: '历史事件', dynasty: '两晋南北朝', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_093', question: '被称为"天下第一行书"的是？', options: ['《祭侄文稿》', '《兰亭序》', '《寒食帖》', '《伯远帖》'], correctIndex: 1, explanation: '王羲之的《兰亭序》被誉为"天下第一行书"，是书法艺术的巅峰之作。', category: '文化', dynasty: '两晋南北朝', difficulty: 1, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  // --- 隋唐更多 ---
+  { id: 'q_094', question: '隋朝创立的重要制度是？', options: ['察举制', '科举制', '征辟制', '世卿世禄制'], correctIndex: 1, explanation: '隋文帝创立科举制，隋炀帝设进士科，这是中国选官制度的重大变革。', category: '文化', dynasty: '隋唐', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_095', question: '隋朝大运河以哪个城市为中心？', options: ['长安', '洛阳', '建康', '开封'], correctIndex: 1, explanation: '隋朝大运河以洛阳为中心，北达涿郡（北京），南至余杭（杭州）。', category: '历史事件', dynasty: '隋朝', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_096', question: '唐朝三省六部制中，负责执行的是？', options: ['中书省', '门下省', '尚书省', '内阁'], correctIndex: 2, explanation: '三省中，中书省决策、门下省审议、尚书省执行。尚书省下设六部。', category: '文化', dynasty: '唐朝', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_097', question: '被誉为"诗佛"的唐代诗人是？', options: ['李白', '杜甫', '王维', '孟浩然'], correctIndex: 2, explanation: '王维的诗歌充满禅意和山水田园之美，被称为"诗佛"。', category: '文学', dynasty: '唐朝', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_098', question: '安史之乱的爆发地范阳位于今天的？', options: ['陕西西安', '河南洛阳', '北京地区', '江苏南京'], correctIndex: 2, explanation: '安禄山以范阳（今北京地区）为基地发动叛乱。范阳位于今天的河北地区。', category: '历史事件', dynasty: '唐朝', difficulty: 2, examFrequency: 'medium', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_099', question: '"初唐四杰"包括王勃、杨炯、卢照邻和？', options: ['陈子昂', '骆宾王', '张若虚', '贺知章'], correctIndex: 1, explanation: '初唐四杰是王勃、杨炯、卢照邻、骆宾王。', category: '文学', dynasty: '唐朝', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_100', question: '文成公主入藏是在哪位皇帝时期？', options: ['唐高祖', '唐太宗', '唐高宗', '唐玄宗'], correctIndex: 1, explanation: '641年唐太宗李世民派文成公主嫁给吐蕃赞普松赞干布，促进了汉藏友好。', category: '历史事件', dynasty: '唐朝', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  // --- 宋元更多 ---
+  { id: 'q_101', question: '"陈桥兵变"中黄袍加身的是？', options: ['赵匡胤', '赵光义', '赵普', '曹彬'], correctIndex: 0, explanation: '960年赵匡胤在陈桥驿发动兵变，黄袍加身，建立宋朝。', category: '历史事件', dynasty: '宋朝', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_102', question: '"靖康之变"中，北宋被哪个政权所灭？', options: ['西夏', '辽国', '金国', '蒙古'], correctIndex: 2, explanation: '1127年金国攻破开封，掳走徽钦二帝，北宋灭亡。', category: '历史事件', dynasty: '宋朝', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_103', question: '《清明上河图》的作者是？', options: ['吴道子', '张择端', '顾恺之', '阎立本'], correctIndex: 1, explanation: '张择端是北宋画家，创作了描绘汴京繁华景象的《清明上河图》。', category: '文化', dynasty: '宋朝', difficulty: 1, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_104', question: '"人生自古谁无死，留取丹心照汗青"的作者是？', options: ['岳飞', '文天祥', '陆游', '辛弃疾'], correctIndex: 1, explanation: '文天祥在《过零丁洋》中写下这一千古名句，表现了他的民族气节。', category: '文学', dynasty: '宋朝', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_105', question: '元朝在地方实行什么制度？', options: ['郡县制', '分封制', '行省制', '州县制'], correctIndex: 2, explanation: '元朝在地方实行行省制（行中书省），是中国省级行政区划的起源。河北地区属中书省"腹里"。', category: '文化', dynasty: '元朝', difficulty: 1, examFrequency: 'medium', isHebeiRelated: true, examType: 'single' },
+  // --- 明清更多 ---
+  { id: 'q_106', question: '明朝的开国皇帝是？', options: ['朱元璋', '朱棣', '朱允炆', '朱厚照'], correctIndex: 0, explanation: '1368年朱元璋在应天（南京）称帝，建立明朝，年号洪武。', category: '历史事件', dynasty: '明朝', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_107', question: '明朝迁都北京的是哪位皇帝？', options: ['朱元璋', '朱允炆', '朱棣', '朱厚照'], correctIndex: 2, explanation: '1421年明成祖朱棣迁都北京，奠定了北京作为中国政治中心的地位。', category: '历史事件', dynasty: '明朝', difficulty: 1, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_108', question: '"一条鞭法"是哪位改革家推行的？', options: ['王安石', '范仲淹', '张居正', '司马光'], correctIndex: 2, explanation: '张居正在明朝万历年间推行一条鞭法，将赋役合并统一征收银两。', category: '历史事件', dynasty: '明朝', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_109', question: '《水浒传》的作者是？', options: ['罗贯中', '施耐庵', '吴承恩', '曹雪芹'], correctIndex: 1, explanation: '《水浒传》是施耐庵所著的中国第一部以农民起义为题材的长篇小说。', category: '文学', dynasty: '明清', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_110', question: '清朝皇帝康熙的名字是？', options: ['爱新觉罗·胤禛', '爱新觉罗·玄烨', '爱新觉罗·弘历', '爱新觉罗·福临'], correctIndex: 1, explanation: '康熙皇帝名爱新觉罗·玄烨，8岁登基，在位61年，是中国在位时间最长的皇帝。', category: '历史事件', dynasty: '清朝', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_111', question: '"天下兴亡，匹夫有责"是谁提出的？', options: ['顾炎武', '黄宗羲', '王夫之', '梁启超'], correctIndex: 0, explanation: '顾炎武是明末清初思想家，提出"天下兴亡，匹夫有责"的社会责任感理念。', category: '哲学', dynasty: '明清', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_112', question: '王阳明心学的核心思想是？', options: ['格物致知', '致良知', '存天理灭人欲', '道法自然'], correctIndex: 1, explanation: '王阳明心学的核心是"致良知"和"知行合一"，主张通过内省发现本心之善。', category: '哲学', dynasty: '明清', difficulty: 2, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  // --- 近代更多 ---
+  { id: 'q_113', question: '中国近代史以哪一事件为开端？', options: ['鸦片战争', '太平天国运动', '洋务运动', '甲午战争'], correctIndex: 0, explanation: '1840年鸦片战争是中国近代史的开端，中国开始沦为半殖民地半封建社会。', category: '历史事件', dynasty: '近代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_114', question: '洋务运动的口号"自强""求富"中"自强"是指？', options: ['发展教育事业', '创办军事工业', '发展民用工业', '改革政治制度'], correctIndex: 1, explanation: '洋务运动前期以"自强"为口号创办军事工业（如江南制造总局），后期以"求富"为口号创办民用工业。', category: '历史事件', dynasty: '近代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_115', question: '中日甲午战争后签订的条约是？', options: ['《南京条约》', '《北京条约》', '《马关条约》', '《辛丑条约》'], correctIndex: 2, explanation: '1895年中日签订《马关条约》，割让台湾及澎湖，赔款2亿两白银。', category: '历史事件', dynasty: '近代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_116', question: '戊戌变法的主要推动者是？', options: ['曾国藩、李鸿章', '康有为、梁启超', '孙中山、黄兴', '陈独秀、李大钊'], correctIndex: 1, explanation: '康有为、梁启超是戊戌变法的主要领导人，主张君主立宪。', category: '历史事件', dynasty: '近代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_117', question: '中国同盟会成立于哪一年？', options: ['1904年', '1905年', '1911年', '1912年'], correctIndex: 1, explanation: '1905年孙中山在日本东京成立中国同盟会，是中国第一个全国性革命政党。', category: '历史事件', dynasty: '近代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_118', question: '新文化运动的主要阵地在？', options: ['《民报》', '《新青年》', '《时务报》', '《国闻报》'], correctIndex: 1, explanation: '陈独秀1915年创办《新青年》杂志，是新文化运动的主要阵地。', category: '历史事件', dynasty: '近代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_119', question: '中国新民主主义革命的开端是？', options: ['辛亥革命', '五四运动', '中共成立', '南昌起义'], correctIndex: 1, explanation: '1919年五四运动标志着中国新民主主义革命的开端。', category: '历史事件', dynasty: '近代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_120', question: '中国共产党第一次全国代表大会召开于？', options: ['1920年北京', '1921年上海', '1922年广州', '1923年武汉'], correctIndex: 1, explanation: '1921年7月中共一大在上海召开，后转移到嘉兴南湖。', category: '历史事件', dynasty: '近代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_121', question: '中国共产党确立"武装反抗国民党"方针的会议是？', options: ['八七会议', '古田会议', '遵义会议', '瓦窑堡会议'], correctIndex: 0, explanation: '1927年八七会议确定实行土地革命和武装反抗国民党反动派的总方针。', category: '历史事件', dynasty: '近代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_122', question: '遵义会议确立了谁在党和红军中的领导地位？', options: ['陈独秀', '李大钊', '毛泽东', '周恩来'], correctIndex: 2, explanation: '1935年遵义会议确立了毛泽东在党和红军中的领导地位，是党的历史上生死攸关的转折点。', category: '历史事件', dynasty: '近代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_123', question: '百团大战的指挥者是？', options: ['毛泽东', '朱德', '彭德怀', '林彪'], correctIndex: 2, explanation: '1940年彭德怀指挥百团大战，是八路军在华北地区发动的大规模进攻战役。', category: '历史事件', dynasty: '近代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_124', question: '促进抗日民族统一战线初步形成的事件是？', options: ['九一八事变', '七七事变', '西安事变', '华北事变'], correctIndex: 2, explanation: '1936年西安事变（张学良、杨虎城扣押蒋介石）和平解决，促进了抗日民族统一战线的初步形成。', category: '历史事件', dynasty: '近代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_125', question: '日本宣布无条件投降是在？', options: ['1945年8月15日', '1945年9月2日', '1945年9月3日', '1945年10月1日'], correctIndex: 0, explanation: '1945年8月15日日本天皇宣布无条件投降，9月2日正式签署投降书。', category: '历史事件', dynasty: '近代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  // --- 当代更多 ---
+  { id: 'q_126', question: '新中国第一部宪法颁布于？', options: ['1949年', '1954年', '1956年', '1978年'], correctIndex: 1, explanation: '1954年第一届全国人民代表大会通过《中华人民共和国宪法》，是新中国第一部宪法。', category: '历史事件', dynasty: '当代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_127', question: '"两弹一星"中的"两弹"指？', options: ['导弹和氢弹', '原子弹和氢弹', '原子弹和导弹', '氢弹和中子弹'], correctIndex: 2, explanation: '"两弹一星"指原子弹、导弹和人造卫星。1964年原子弹、1967年氢弹、1970年人造卫星。', category: '文化', dynasty: '当代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_128', question: '中国恢复在联合国合法席位是在？', options: ['1970年', '1971年', '1972年', '1973年'], correctIndex: 1, explanation: '1971年10月25日，第26届联大恢复中华人民共和国在联合国的合法席位。', category: '历史事件', dynasty: '当代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_129', question: '中美建交是在哪一年？', options: ['1972年', '1978年', '1979年', '1982年'], correctIndex: 2, explanation: '1972年尼克松访华发表《上海公报》，1979年1月1日中美正式建交。', category: '历史事件', dynasty: '当代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_130', question: '1992年邓小平南方谈话的核心是？', options: ['阶级斗争', '改革开放', '发展才是硬道理', '一国两制'], correctIndex: 2, explanation: '1992年邓小平南方谈话提出"发展才是硬道理"，强调坚持改革开放不动摇。', category: '历史事件', dynasty: '当代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  // --- 更多河北特色 ---
+  { id: 'q_131', question: '狼牙山五壮士跳崖发生在河北哪个地区？', options: ['保定易县', '石家庄平山', '邯郸涉县', '张家口蔚县'], correctIndex: 0, explanation: '1941年狼牙山五壮士在保定易县狼牙山跳崖殉国。', category: '河北特色', dynasty: '近代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_132', question: '冉庄地道战遗址位于河北哪个市？', options: ['保定', '石家庄', '邢台', '沧州'], correctIndex: 0, explanation: '冉庄地道战遗址位于保定清苑区，是抗日战争时期的重要遗址。', category: '河北特色', dynasty: '近代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_133', question: '回民支队的司令员是？', options: ['马本斋', '马占山', '马鸿逵', '马步芳'], correctIndex: 0, explanation: '马本斋是河北献县人，组建回民支队，是著名的抗日英雄。', category: '河北特色', dynasty: '近代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_134', question: '河北的"省花"是？', options: ['牡丹', '月季', '芍药', '菊花'], correctIndex: 1, explanation: '月季是河北省的省花。河北省的省树是国槐。', category: '河北特色', dynasty: '各时期', difficulty: 3, examFrequency: 'low', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_135', question: '正定古城位于河北省哪个市？', options: ['保定', '石家庄', '邯郸', '邢台'], correctIndex: 1, explanation: '正定古城位于石家庄市正定县，有"古建艺术宝库"之称，隆兴寺、赵云庙等名胜众多。', category: '河北特色', dynasty: '各时期', difficulty: 2, examFrequency: 'medium', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_136', question: '清西陵位于河北哪个县？', options: ['易县', '遵化', '清苑', '满城'], correctIndex: 0, explanation: '清西陵位于保定易县，葬有雍正、嘉庆、道光、光绪四位皇帝。', category: '河北特色', dynasty: '清朝', difficulty: 2, examFrequency: 'medium', isHebeiRelated: true, examType: 'single' },
+  // --- 三支政策更多 ---
+  { id: 'q_137', question: '三支一扶人员服务期满后考研，可享受什么优惠？', options: ['免试入学', '初试总分加10分', '同等条件优先录取', '直接复试'], correctIndex: 2, explanation: '三支一扶服务期满且考核合格的人员，3年内参加全国硕士研究生招生考试，初试总分加10分，同等条件下优先录取。', category: '三支政策', dynasty: '当代', difficulty: 2, examFrequency: 'high', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_138', question: '乡镇振兴战略中"治理有效"的目标是？', options: ['加强党的领导', '完善乡村治理体系', '发展集体经济', '加强法治建设'], correctIndex: 1, explanation: '"治理有效"是乡村振兴总要求之一，目标是完善乡村治理体系，实现乡村善治。', category: '三支政策', dynasty: '当代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_139', question: '河北的"太行山农业创新驿站"主要作用是？', options: ['发展乡村旅游', '科技支撑农业产业', '建设美丽乡村', '改善农村基础设施'], correctIndex: 1, explanation: '河北太行山农业创新驿站以科技创新支撑农业产业发展，是河北乡村振兴的特色做法。', category: '河北特色', dynasty: '当代', difficulty: 3, examFrequency: 'low', isHebeiRelated: true, examType: 'single' },
+  // --- 世界历史更多 ---
+  { id: 'q_140', question: '法国大革命的标志性事件是？', options: ['三级会议召开', '攻占巴士底狱', '处死路易十六', '拿破仑上台'], correctIndex: 1, explanation: '1789年7月14日巴黎人民攻占巴士底狱，标志法国大革命爆发。', category: '世界历史', dynasty: '近代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_141', question: '新航路开辟中，哥伦布发现美洲是在？', options: ['1487年', '1492年', '1498年', '1522年'], correctIndex: 1, explanation: '1492年哥伦布在西班牙资助下横渡大西洋到达美洲，开辟了欧洲到美洲的新航路。', category: '世界历史', dynasty: '近代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_142', question: '马克思主义诞生的标志是？', options: ['《共产党宣言》发表', '《资本论》出版', '第一国际成立', '巴黎公社成立'], correctIndex: 0, explanation: '1848年马克思和恩格斯发表《共产党宣言》，标志马克思主义的诞生。', category: '世界历史', dynasty: '近代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_143', question: '十月革命发生在哪一年？', options: ['1916年', '1917年', '1918年', '1919年'], correctIndex: 1, explanation: '1917年11月（俄历10月）列宁领导十月革命，建立了世界上第一个社会主义国家。', category: '世界历史', dynasty: '近代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_144', question: '第二次世界大战的转折点是？', options: ['敦刻尔克撤退', '斯大林格勒战役', '诺曼底登陆', '珍珠港事件'], correctIndex: 1, explanation: '1942-1943年斯大林格勒战役是二战的重要转折点。', category: '世界历史', dynasty: '近代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  // --- 更多辨析题 ---
+  { id: 'q_145', question: '下列关于分封制的说法，正确的是？', options: ['秦朝创立分封制', '周天子将土地和人民分封给诸侯', '分封制加强了中央集权', '汉武帝废除了分封制'], correctIndex: 1, explanation: '分封制是西周的政治制度，周天子将土地和人民分封给诸侯，诸侯有世袭统治权。', category: '历史事件', dynasty: '先秦', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_146', question: '下列哪项不属于"四大发明"？', options: ['造纸术', '地动仪', '火药', '指南针'], correctIndex: 1, explanation: '四大发明是造纸术、印刷术、火药、指南针。地动仪是张衡的发明，但不属于四大发明。', category: '文化', dynasty: '宋元', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_147', question: '下列事件按时间顺序排列正确的是？', options: ['中共成立→五四运动→南昌起义→长征', '五四运动→中共成立→南昌起义→长征', '五四运动→南昌起义→中共成立→长征', '中共成立→五四运动→长征→南昌起义'], correctIndex: 1, explanation: '正确顺序：五四运动（1919）→中共成立（1921）→南昌起义（1927）→长征（1934）。', category: '历史事件', dynasty: '近代', difficulty: 2, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_148', question: '关于三支一扶说法正确的是？', options: ['服务期一般为3年', '服务期满可直接转为公务员', '服务期内计算工龄', '仅限应届生报考'], correctIndex: 2, explanation: '三支一扶服务期内计算工龄。服务期一般为2年，期满后参加公务员定向招录，不是直接转任。', category: '三支政策', dynasty: '当代', difficulty: 2, examFrequency: 'high', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_149', question: '下列河北籍名人与其成就对应错误的是？', options: ['李大钊—中国最早的马克思主义者', '赵云—蜀汉名将', '纪晓岚—清代名臣，编《四库全书》', '张之洞—洋务运动领袖'], correctIndex: 2, explanation: '纪晓岚（纪昀）是《四库全书》总纂官之一，但"编《四库全书》"的主要主持者是乾隆皇帝组织的，不是他个人。张之洞是河北南皮人，洋务运动领袖。', category: '河北特色', dynasty: '各时期', difficulty: 3, examFrequency: 'medium', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_150', question: '中国共产党的三大作风不包括？', options: ['理论联系实际', '密切联系群众', '批评与自我批评', '艰苦奋斗'], correctIndex: 3, explanation: '党的三大作风是：理论联系实际、密切联系群众、批评与自我批评。"艰苦奋斗"是党的优良传统但不是三大作风之一。', category: '三支政策', dynasty: '当代', difficulty: 2, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_151', question: '唐代"古文运动"的倡导者是？', options: ['李白和杜甫', '韩愈和柳宗元', '白居易和元稹', '王维和孟浩然'], correctIndex: 1, explanation: '韩愈和柳宗元倡导古文运动，反对骈文，提倡古文（散体文），是唐宋八大家的唐代代表。', category: '文学', dynasty: '唐朝', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_152', question: '"贞观之治"中，"贞观"是哪个皇帝的年号？', options: ['唐高祖', '唐太宗', '唐高宗', '唐玄宗'], correctIndex: 1, explanation: '"贞观"是唐太宗李世民的年号（627-649年）。', category: '历史事件', dynasty: '唐朝', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_153', question: '儒家"五常"是指？', options: ['仁义礼智信', '温良恭俭让', '忠孝节义勇', '礼乐射御书数'], correctIndex: 0, explanation: '儒家五常是"仁、义、礼、智、信"，是儒家伦理思想的核心。', category: '哲学', dynasty: '先秦', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_154', question: '"温良恭俭让"出自哪部经典？', options: ['《论语》', '《孟子》', '《大学》', '《中庸》'], correctIndex: 0, explanation: '"温良恭俭让"出自《论语·学而》，是孔子温和、善良、恭敬、节俭、谦让的品德。', category: '哲学', dynasty: '先秦', difficulty: 3, examFrequency: 'low', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_155', question: '明朝抗倭名将是？', options: ['岳飞', '戚继光', '郑成功', '文天祥'], correctIndex: 1, explanation: '戚继光是明朝抗倭名将，组建戚家军，在东南沿海抗击倭寇。', category: '历史事件', dynasty: '明朝', difficulty: 1, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_156', question: '郑成功收复台湾是在哪一年？', options: ['1661年', '1662年', '1683年', '1684年'], correctIndex: 1, explanation: '1662年郑成功击败荷兰殖民者，收复台湾。1683年清军攻占台湾，1684年设台湾府。', category: '历史事件', dynasty: '明清', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_157', question: '《聊斋志异》的作者是？', options: ['蒲松龄', '吴敬梓', '曹雪芹', '李汝珍'], correctIndex: 0, explanation: '蒲松龄是清代文学家，代表作《聊斋志异》是中国古代文言短篇小说的巅峰之作。', category: '文学', dynasty: '清朝', difficulty: 1, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_158', question: '科举制度正式废除是在？', options: ['1898年', '1901年', '1905年', '1911年'], correctIndex: 2, explanation: '1905年清政府正式废除科举制度，标志着延续1300多年的科举制度的终结。', category: '文化', dynasty: '近代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_159', question: '中国共产党的根本宗旨是？', options: ['实现共产主义', '全心全意为人民服务', '建设社会主义', '解放和发展生产力'], correctIndex: 1, explanation: '中国共产党的根本宗旨是全心全意为人民服务，这是党的性质决定的。', category: '三支政策', dynasty: '当代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_160', question: '十九大报告中指出，我国社会主要矛盾已经转化为？', options: ['人民日益增长的物质文化需要同落后的社会生产之间的矛盾', '人民日益增长的美好生活需要和不平衡不充分的发展之间的矛盾', '人民日益增长的精神文化需要同落后的社会生产之间的矛盾', '人民日益增长的物质需要同不平衡不充分的发展之间的矛盾'], correctIndex: 1, explanation: '十九大报告指出，我国社会主要矛盾已经转化为人民日益增长的美好生活需要和不平衡不充分的发展之间的矛盾。', category: '三支政策', dynasty: '当代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_161', question: '"四个自信"不包括？', options: ['道路自信', '理论自信', '制度自信', '民族自信'], correctIndex: 3, explanation: '"四个自信"是道路自信、理论自信、制度自信、文化自信。"民族自信"不是四个自信的内容。', category: '三支政策', dynasty: '当代', difficulty: 2, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_162', question: '河北省拥有的世界文化遗产数量（截至2023年）约为？', options: ['2项', '4项', '6项', '8项'], correctIndex: 1, explanation: '河北拥有的世界文化遗产包括：避暑山庄及周围寺庙、长城河北段、明清皇家陵寝（清东陵清西陵）、大运河河北段等。', category: '河北特色', dynasty: '各时期', difficulty: 3, examFrequency: 'low', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_163', question: '"但愿人长久，千里共婵娟"的作者是？', options: ['李白', '杜甫', '苏轼', '辛弃疾'], correctIndex: 2, explanation: '这句词出自苏轼的《水调歌头·明月几时有》，是中秋名篇。', category: '文学', dynasty: '宋朝', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_164', question: '下列对应关系错误的是？', options: ['秦朝—小篆', '汉朝—隶书', '唐朝—楷书', '宋朝—甲骨文'], correctIndex: 3, explanation: '甲骨文是商朝的文字。宋朝主要使用楷书和行书。', category: '文化', dynasty: '各时期', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_165', question: '下列不属于河北籍历史人物的是？', options: ['魏征', '郭守敬', '诸葛亮', '纪晓岚'], correctIndex: 2, explanation: '诸葛亮是山东琅琊（临沂）人。魏征（邢台巨鹿）、郭守敬（邢台）、纪晓岚（沧州献县）都是河北人。', category: '河北特色', dynasty: '各时期', difficulty: 2, examFrequency: 'medium', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_166', question: '《孙子兵法》的作者是？', options: ['孙武', '孙膑', '吴起', '白起'], correctIndex: 0, explanation: '《孙子兵法》是春秋时期孙武所著，是中国现存最早的兵书，被誉为"兵学圣典"。', category: '哲学', dynasty: '先秦', difficulty: 1, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_167', question: '中国社会主义建设总路线的提出是在？', options: ['中共七大', '中共八大', '中共九大', '十一届三中全会'], correctIndex: 1, explanation: '1956年中共八大提出国内主要矛盾已经转变，全国人民的主要任务是集中力量发展社会生产力。', category: '历史事件', dynasty: '当代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_168', question: '关于河北在抗日战争中的贡献，下列说法正确的是？', options: ['河北不是主要抗日战场', '百团大战主要在河北进行', '晋察冀根据地是第一个敌后根据地', '河北没有出现过抗日英雄'], correctIndex: 2, explanation: '晋察冀根据地是八路军建立的第一个敌后抗日根据地，由聂荣臻创建。河北是抗日战争的重要战场。', category: '河北特色', dynasty: '近代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_169', question: '中国进入社会主义初级阶段的标志是？', options: ['新中国成立', '社会主义改造完成', '十一届三中全会', '改革开放'], correctIndex: 1, explanation: '1956年社会主义改造基本完成，标志着社会主义制度在中国确立，中国进入社会主义初级阶段。', category: '历史事件', dynasty: '当代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_170', question: '河北省全面推进乡村振兴的重点任务不包括？', options: ['保障粮食安全', '发展乡村产业', '推进城镇化', '实施乡村建设行动'], correctIndex: 2, explanation: '"推进城镇化"不是乡村振兴的重点任务，而是与乡村振兴并行的工作。乡村振兴重点是发展产业、改善环境、加强治理等。', category: '三支政策', dynasty: '当代', difficulty: 2, examFrequency: 'high', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_171', question: '"大同"思想是哪个学派的理想社会设想？', options: ['道家', '儒家', '墨家', '法家'], correctIndex: 1, explanation: '儒家经典《礼记·礼运》提出了"天下为公"的大同社会理想，是儒家对理想社会的设想。', category: '哲学', dynasty: '先秦', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_172', question: '标志着中国完全沦为半殖民地半封建社会的条约是？', options: ['《南京条约》', '《北京条约》', '《马关条约》', '《辛丑条约》'], correctIndex: 3, explanation: '1901年《辛丑条约》签订，赔款4.5亿两白银，中国完全沦为半殖民地半封建社会。', category: '历史事件', dynasty: '近代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_173', question: '河北省面积最大的湖泊是？', options: ['衡水湖', '白洋淀', '燕塞湖', '天桂湖'], correctIndex: 1, explanation: '白洋淀是河北省最大的湖泊，也是华北地区最大的淡水湖，位于保定和沧州境内。', category: '河北特色', dynasty: '各时期', difficulty: 2, examFrequency: 'medium', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_174', question: '中国共产党的思想路线的核心是？', options: ['解放思想', '实事求是', '与时俱进', '求真务实'], correctIndex: 1, explanation: '中国共产党的思想路线的核心是实事求是。实事求是也是马克思主义中国化理论成果的精髓。', category: '三支政策', dynasty: '当代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_175', question: '中国加入世界贸易组织（WTO）是在？', options: ['1999年', '2001年', '2002年', '2003年'], correctIndex: 1, explanation: '2001年12月11日中国正式加入世界贸易组织，标志着中国对外开放进入新阶段。', category: '历史事件', dynasty: '当代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_176', question: '"港珠澳大桥"开通是在？', options: ['2016年', '2017年', '2018年', '2019年'], correctIndex: 2, explanation: '2018年10月23日港珠澳大桥正式开通，是世界上最长的跨海大桥。', category: '历史事件', dynasty: '当代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_177', question: '下列哪项不是当代中国的基本国策？', options: ['计划生育', '对外开放', '保护环境', '以经济建设为中心'], correctIndex: 3, explanation: '"以经济建设为中心"是党的基本路线的核心内容，不是基本国策。计划生育、对外开放、保护环境都是基本国策。', category: '三支政策', dynasty: '当代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_178', question: '河北廊坊市的区位优势主要体现为？', options: ['沿海港口城市', '毗邻北京天津', '矿产资源丰富', '历史文化名城'], correctIndex: 1, explanation: '廊坊位于北京和天津之间，是京津冀协同发展的核心区域，区位优势突出。', category: '河北特色', dynasty: '当代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: true, examType: 'single' },
+  { id: 'q_179', question: '下列哪项属于乡村振兴的"五个振兴"？', options: ['工业振兴', '科技振兴', '教育振兴', '生态振兴'], correctIndex: 3, explanation: '五个振兴是产业、人才、文化、生态、组织振兴。"生态振兴"是其中之一。', category: '三支政策', dynasty: '当代', difficulty: 1, examFrequency: 'high', isHebeiRelated: false, examType: 'single' },
+  { id: 'q_180', question: '"空谈误国，实干兴邦"体现的哲学思想是？', options: ['物质决定意识', '实践是检验真理的唯一标准', '矛盾具有普遍性', '量变引起质变'], correctIndex: 1, explanation: '"空谈误国，实干兴邦"强调实践的重要性，体现了实践是检验真理的唯一标准这一哲学原理。', category: '哲学', dynasty: '当代', difficulty: 2, examFrequency: 'medium', isHebeiRelated: false, examType: 'single' }
+];
+
+/* ===================================================================
+   功能逻辑部分 —— 可自由修改而不影响数据
+   =================================================================== */
+
+// ======================== Store ========================
+const Store = {
+  prefix: 'szyf_',
+  get(k, d) { try { const v = localStorage.getItem(this.prefix + k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(this.prefix + k, JSON.stringify(v)); } catch {} },
+  remove(k) { try { localStorage.removeItem(this.prefix + k); } catch {} }
+};
+
+// ======================== 工具 ========================
+const U = {
+  fy(y) { return y < 0 ? `公元前${-y}年` : y === 0 ? '公元元年' : `公元${y}年`; },
+  sh(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; },
+  fs(a, q) { if (!q) return a; q = q.trim().toLowerCase(); return a.filter(i => [i.title, i.question, i.content, i.explanation, i.name, ...(i.tags||[]), ...(i.keyTerms||[]).flatMap(t=>[t.term, t.definition])].some(f => f && f.toLowerCase().includes(q))); },
+  cc(c) { return ({'文学':'var(--cat-wenxue)','历史事件':'var(--cat-lishi)','哲学':'var(--cat-zhexue)','人物':'var(--cat-renwu)','文化':'var(--cat-wenhua)','世界历史':'var(--cat-shijie)','河北特色':'var(--cat-hebei)','三支政策':'var(--cat-sanzhi)'})[c]||'var(--text-muted)'; },
+  ci(c) { return ({'文学':'📖','历史事件':'🏛️','哲学':'💭','人物':'👤','文化':'🎭','世界历史':'🌍','河北特色':'🔴','三支政策':'📋'})[c]||'📌'; },
+  fb(f) { return ({high:{t:'高频',c:'badge-high'},medium:{t:'中频',c:'badge-medium'},low:{t:'低频',c:'badge-low'}})[f]||{t:'中频',c:'badge-medium'}; },
+  db(a,b) { return Math.floor((new Date(b)-new Date(a))/864e5); },
+  td() { return new Date().toISOString().slice(0,10); }
+};
+
+// ======================== SM-2 ========================
+function sm2(q, ef, iv, rp) {
+  if (q < 3) { rp = 0; iv = 1; } else { if (rp === 0) iv = 1; else if (rp === 1) iv = 6; else iv = Math.round(iv * ef); rp++; }
+  ef = Math.max(1.3, ef + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02)));
+  return { iv, ef, rp, nx: Date.now() + iv * 864e5 };
+}
+
+// ======================== 闪卡生成 ========================
+function genFC() {
+  const c = [];
+  knowledgePoints.forEach(k => {
+    c.push({ id: `fc_kp_${k.id}`, f: k.title, b: k.content, cat: k.category, h: k.tags.slice(0,3).join('、'), sid: k.id, hb: k.isHebeiRelated });
+    (k.keyTerms||[]).forEach((t,i) => c.push({ id: `fc_kt_${k.id}_${i}`, f: t.term, b: t.definition, cat: k.category, h: k.title, sid: k.id, hb: k.isHebeiRelated }));
+  });
+  quizQuestions.forEach(q => c.push({ id: `fc_q_${q.id}`, f: q.question, b: `正确答案：${String.fromCharCode(65+q.correctIndex)}. ${q.options[q.correctIndex]}\n\n解析：${q.explanation}`, cat: q.category, h: `难度${q.difficulty}星`, sid: q.id, hb: q.isHebeiRelated }));
+  return c;
+}
+
+// ======================== 状态 ========================
+const S = {
+  page:'timeline', tl:{sel:null,cat:'all'},
+  qz:{qs:[],idx:0,ans:[],res:false},
+  fc:{cs:[],idx:0,flp:false,cat:'all',mas:'all'},
+  sr:{q:''},
+  h: Store.get('h',[]), fp: Store.get('fp',{}),
+  st: Store.get('st',{tq:0,cr:0,fr:0,sk:0,ld:null}),
+  pr: Store.get('pr',{dk:false})
+};
+const sv = () => { Store.set('h',S.h); Store.set('fp',S.fp); Store.set('st',S.st); Store.set('pr',S.pr); };
+const $ = id => document.getElementById(id);
+const qsa = (s,c) => Array.from((c||document).querySelectorAll(s));
+const ri = h => { $('app').innerHTML = h; };
+
+// ======================== 导航 ========================
+function nav(pg, p) {
+  S.page = pg; history.pushState(null, '', '#' + pg);
+  qsa('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === pg));
+  rcp(p);
+}
+function rcp(p) {
+  if (S.page === 'timeline') rt(p);
+  else if (S.page === 'quiz') rq(p);
+  else if (S.page === 'flashcards') rf(p);
+  else if (S.page === 'dashboard') rd(p);
+}
+window.addEventListener('hashchange', () => {
+  const pg = location.hash.slice(1) || 'timeline';
+  if (['timeline','quiz','flashcards','dashboard'].includes(pg)) {
+    S.page = pg; qsa('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === pg)); rcp();
+  }
+});
+function uhs() {
+  const a = $('accuracyDisplay');
+  const r = S.st.tq > 0 ? Math.round(S.st.cr/S.st.tq*100) : null;
+  if (a) a.textContent = r !== null ? `🎯 正确率 ${r}%` : '🎯 开始答题吧';
+  const s = $('streakDisplay');
+  if (s) s.textContent = `🔥 连续学习 ${S.st.sk||0} 天`;
+}
+function usk() {
+  const t = U.td();
+  if (S.st.ld === t) return;
+  if (S.st.ld) S.st.sk = U.db(S.st.ld, t) === 1 ? (S.st.sk||0)+1 : 1;
+  else S.st.sk = 1;
+  S.st.ld = t; sv(); uhs();
+}
+
+// ======================== 时间轴 ========================
+function rt(p) {
+  const isHB = id => knowledgePoints.some(kp => kp.dynasty === dynasties.find(d=>d.id===id)?.name && kp.isHebeiRelated);
+  let h = `<div class="fade-in"><div class="flex flex-wrap gap-3 mb-4 items-center">
+    <span class="text-sm font-medium" style="color:var(--text-secondary);">📂 筛选：</span>
+    <select id="tlf" class="px-3 py-1.5 rounded-lg border text-sm" style="background:var(--bg-card);border-color:var(--border);color:var(--text-primary);" onchange="S.tl.cat=this.value;rt()">
+      <option value="all">全部</option><option value="文学">📖文学</option><option value="历史事件">🏛️历史</option><option value="哲学">💭哲学</option><option value="人物">👤人物</option><option value="文化">🎭文化</option><option value="河北特色">🔴河北</option><option value="三支政策">📋三支</option>
+    </select>
+    <span class="text-xs" style="color:var(--text-muted);">💡 点击朝代查看详情</span>
+  </div>
+  <div class="tl-container card p-4 mb-4">`;
+  dynasties.forEach(d => {
+    const hb = isHB(d.id);
+    h += `<div class="tl-node ${hb?'hebei':''}" onclick="S.tl.sel='${d.id}';rt()"><div class="tl-dot"></div><div class="text-sm font-bold" style="color:var(--text-primary);">${d.name}</div><div class="text-xs" style="color:var(--text-muted);">${U.fy(d.startYear)}</div>${hb?'<div class="text-xs text-hebei">🔴</div>':''}</div>`;
+  });
+  h += `</div>`;
+  const sel = p?.dynasty || S.tl.sel;
+  if (sel) { const d = dynasties.find(dd => dd.id === sel); if (d) h += ddDetail(d); }
+  h += `</div>`; ri(h);
+  const f = $('tlf'); if (f) f.value = S.tl.cat;
+}
+
+function ddDetail(d) {
+  const cat = S.tl.cat;
+  let kps = knowledgePoints.filter(kp => kp.dynasty === d.name || kp.content.includes(d.name));
+  if (cat !== 'all') kps = kps.filter(kp => kp.category === cat);
+  let qs = quizQuestions.filter(q => q.dynasty === d.name);
+  if (cat !== 'all') qs = qs.filter(q => q.category === cat);
+  let h = `<div class="card p-5 mb-4 fade-in" style="border-left:4px solid var(--accent);">
+    <div class="flex items-center gap-2 mb-3"><span class="text-lg font-bold">${d.name}</span><span class="text-xs" style="color:var(--text-muted)">${U.fy(d.startYear)} ~ ${U.fy(d.endYear)}</span>${d.capital?`<span class="badge text-xs" style="background:var(--border);">🏛️ ${d.capital}</span>`:''}</div>
+    <p class="text-sm mb-4 leading-relaxed" style="color:var(--text-secondary);">${d.summary}</p>`;
+  if (d.keyFigures?.length) {
+    h += `<div class="mb-3"><span class="text-sm font-bold">👤 重要人物：</span><div class="flex flex-wrap gap-2 mt-1">`;
+    d.keyFigures.forEach(f => { h += `<span class="badge text-xs" style="background:var(--accent-light);color:var(--accent);" title="${f.description}">${f.name}</span>`; });
+    h += `</div></div>`;
+  }
+  if (d.keyEvents?.length) {
+    h += `<div class="mb-3"><span class="text-sm font-bold">📅 重要事件：</span><ul class="mt-1 space-y-1">`;
+    d.keyEvents.forEach(e => { h += `<li class="text-xs" style="color:var(--text-secondary);">· ${U.fy(e.year)} — ${e.event}</li>`; });
+    h += `</ul></div>`;
+  }
+  if (kps.length) {
+    h += `<div class="mt-3"><span class="text-sm font-bold">📖 关联知识点：</span><div class="flex flex-wrap gap-2 mt-1">`;
+    kps.forEach(kp => { const c = U.cc(kp.category); h += `<span class="badge text-xs clickable" style="background:${c}20;color:${c};" onclick="nav('dashboard',{q:'${kp.title.replace(/'/g,"\\'")}'})">${U.ci(kp.category)} ${kp.title}</span>`; });
+    h += `</div></div>`;
+  }
+  if (qs.length) h += `<div class="mt-4 pt-3" style="border-top:1px solid var(--border);"><button onclick="startQz('${d.name}')" class="px-4 py-2 rounded-lg text-sm text-white" style="background:var(--accent);">✍️ 刷该朝代（${qs.length}题）</button></div>`;
+  h += `</div>`; return h;
+}
+
+// ======================== 刷题 ========================
+function rq(p) {
+  if (S.qz.res) { rqRes(); return; }
+  if (S.qz.qs.length && S.qz.idx < S.qz.qs.length) { rqQ(); return; }
+  let h = `<div class="fade-in max-w-2xl mx-auto"><div class="card p-6 mb-4">
+    <h2 class="text-lg font-bold mb-4">✍️ 刷题设置</h2>
+    <div class="space-y-4">
+      <div><label class="text-sm" style="color:var(--text-secondary);">类别</label>
+        <select id="qc" class="w-full px-3 py-2 rounded-lg border mt-1 text-sm" style="background:var(--bg-card);border-color:var(--border);color:var(--text-primary);">
+          <option value="all">全部</option><option value="文学">📖文学</option><option value="历史事件">🏛️历史</option><option value="哲学">💭哲学</option><option value="人物">👤人物</option><option value="文化">🎭文化</option><option value="河北特色">🔴河北</option><option value="三支政策">📋三支</option>
+        </select>
+      </div>
+      <div><label class="text-sm" style="color:var(--text-secondary);">数量</label>
+        <select id="qn" class="w-full px-3 py-2 rounded-lg border mt-1 text-sm" style="background:var(--bg-card);border-color:var(--border);color:var(--text-primary);">
+          <option value="5">5题</option><option value="10" selected>10题</option><option value="20">20题</option><option value="all">全部</option>
+        </select>
+      </div>
+      <label class="flex items-center gap-2 text-sm" style="color:var(--text-secondary);"><input type="checkbox" id="qh" style="accent-color:var(--accent);">🔴仅河北特色</label>
+      <div class="flex gap-3">
+        <button onclick="startQz()" class="flex-1 px-4 py-2.5 rounded-lg text-sm font-medium text-white" style="background:var(--accent);">🚀开始答题</button>
+        <button onclick="startWQ()" class="px-4 py-2.5 rounded-lg text-sm text-white" style="background:var(--wrong);">❌错题重练</button>
+      </div>
+    </div></div>`;
+  if (S.st.tq > 0) h += `<div class="card p-4 text-sm" style="color:var(--text-secondary);">已答题 <b>${S.st.tq}</b>，正确率 <b style="color:var(--correct);">${Math.round(S.st.cr/S.st.tq*100)}%</b></div>`;
+  h += `</div>`; ri(h);
+}
+
+function startQz(dy) {
+  let p = [...quizQuestions];
+  if (dy) p = p.filter(q => q.dynasty === dy);
+  else {
+    const c = $('qc')?.value || 'all'; const hb = $('qh')?.checked || false;
+    if (c !== 'all') p = p.filter(q => q.category === c);
+    if (hb) p = p.filter(q => q.isHebeiRelated);
+  }
+  if (!p.length) { alert('无符合条件的题目'); return; }
+  const n = dy ? 50 : ($('qn')?.value||'10');
+  const cnt = n === 'all' ? p.length : Math.min(+n, p.length);
+  S.qz.qs = U.sh(p).slice(0, cnt); S.qz.idx = 0; S.qz.ans = []; S.qz.res = false; rqQ();
+}
+
+function startWQ() {
+  if (!S.h.length) { alert('还没有错题记录'); return; }
+  const ids = new Set(S.h.filter(a => !a.c).map(a => a.id));
+  const w = quizQuestions.filter(q => ids.has(q.id));
+  if (!w.length) { alert('没有错题！🎉'); return; }
+  S.qz.qs = U.sh(w); S.qz.idx = 0; S.qz.ans = []; S.qz.res = false; rqQ();
+}
+
+function rqQ() {
+  const q = S.qz.qs[S.qz.idx];
+  if (!q) { rqRes(); return; }
+  const ans = S.qz.ans[S.qz.idx] !== undefined;
+  const sel = S.qz.ans[S.qz.idx];
+  const lb = ['A','B','C','D','E','F'];
+  let h = `<div class="fade-in max-w-2xl mx-auto"><div class="card p-5">
+    <div class="flex items-center justify-between mb-3"><span class="text-sm" style="color:var(--text-secondary);">第 ${S.qz.idx+1}/${S.qz.qs.length} 题</span>
+      <span class="badge text-xs" style="background:${U.cc(q.category)}20;color:${U.cc(q.category)};">${U.ci(q.category)} ${q.category}</span></div>
+    <div class="progress-bar mb-4"><div class="progress-bar-fill" style="width:${(S.qz.idx+1)/S.qz.qs.length*100}%"></div></div>
+    <div class="text-base font-medium mb-4 leading-relaxed">${q.question}</div>`;
+  q.options.forEach((o,i) => {
+    let cls = 'quiz-option';
+    if (ans) { cls += i === q.correctIndex ? ' correct' : (i === sel ? ' wrong' : ''); }
+    else if (i === sel) cls += ' selected';
+    h += `<button class="${cls}" ${ans?'disabled':''} onclick="selA(${i})"><span class="font-bold mr-2">${lb[i]}.</span>${o}</button>`;
+  });
+  if (!ans) {
+    h += `<button onclick="confA()" id="cb" class="w-full mt-4 px-4 py-2.5 rounded-lg text-sm font-medium text-white ${sel===undefined?'op-50':''}" style="background:var(--accent);" ${sel===undefined?'disabled':''}>确认答案</button>`;
+  }
+  if (ans) {
+    const ok = sel === q.correctIndex;
+    h += `<div class="mt-4 p-4 rounded-lg" style="background:${ok?'var(--correct)15':'var(--wrong)15'};">
+      <div class="text-sm font-bold mb-1" style="color:${ok?'var(--correct)':'var(--wrong)'};">${ok?'✅正确！':'❌错误'}</div>
+      <div class="text-sm mb-2" style="color:var(--text-secondary);">✅<b>${lb[q.correctIndex]}. ${q.options[q.correctIndex]}</b></div>
+      <div class="text-sm leading-relaxed" style="color:var(--text-secondary);">📖${q.explanation}</div></div>`;
+    h += S.qz.idx < S.qz.qs.length-1
+      ? `<button onclick="nxtQ()" class="w-full mt-4 px-4 py-2.5 rounded-lg text-sm font-medium text-white" style="background:var(--accent);">➡️下一题</button>`
+      : `<button onclick="finQ()" class="w-full mt-4 px-4 py-2.5 rounded-lg text-sm font-medium text-white" style="background:var(--gold);">📊查看结果</button>`;
+  }
+  h += `</div></div>`; ri(h);
+}
+
+function selA(i) { if (S.qz.ans[S.qz.idx] === undefined) { S.qz.ans[S.qz.idx] = i; rqQ(); } }
+function confA() {
+  const i = S.qz.ans[S.qz.idx];
+  if (i === undefined) return;
+  const q = S.qz.qs[S.qz.idx];
+  const ok = i === q.correctIndex;
+  S.st.tq++; if (ok) S.st.cr++;
+  S.h.push({id:q.id, s:i, c:ok, t:new Date().toISOString()});
+  if (S.h.length > 500) S.h.splice(0, S.h.length-500);
+  sv(); uhs(); rqQ();
+}
+function nxtQ() { if (S.qz.idx < S.qz.qs.length-1) { S.qz.idx++; rqQ(); } }
+function finQ() { S.qz.res = true; rqRes(); }
+
+function rqRes() {
+  if (!S.qz.qs.length) { S.qz.res = false; rq(); return; }
+  const cor = S.qz.ans.filter((a,i) => a!==undefined && a===S.qz.qs[i].correctIndex).length;
+  const rate = Math.round(cor/S.qz.qs.length*100);
+  const cs = {};
+  S.qz.qs.forEach((q,i) => {
+    if (!cs[q.category]) cs[q.category] = {t:0,c:0};
+    cs[q.category].t++; if (S.qz.ans[i]!==undefined && S.qz.ans[i]===q.correctIndex) cs[q.category].c++;
+  });
+  const wr = S.qz.qs.filter((q,i) => S.qz.ans[i]!==undefined && S.qz.ans[i]!==q.correctIndex);
+  const lb = ['A','B','C','D'];
+  let h = `<div class="fade-in max-w-2xl mx-auto">
+    <div class="card p-6 text-center mb-4"><div class="text-3xl mb-2">${rate>=80?'🎉':rate>=60?'💪':'📚'}</div>
+      <div class="text-2xl font-bold" style="color:${rate>=80?'var(--correct)':rate>=60?'var(--gold)':'var(--wrong)'};">${cor}/${S.qz.qs.length}</div>
+      <div class="text-lg" style="color:var(--text-secondary);">正确率 ${rate}%</div></div>
+    <div class="card p-4 mb-4"><div class="text-sm font-bold mb-3">📊分类统计</div>`;
+  Object.entries(cs).forEach(([cat,st]) => {
+    const pct = st.t > 0 ? Math.round(st.c/st.t*100) : 0;
+    h += `<div class="flex items-center gap-3 mb-2"><span class="text-xs w-16" style="color:var(--text-muted);">${U.ci(cat)}${cat}</span>
+      <div class="progress-bar flex-1"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+      <span class="text-xs" style="color:var(--text-secondary);">${st.c}/${st.t}</span></div>`;
+  });
+  h += `</div>`;
+  if (wr.length) {
+    h += `<div class="card p-4 mb-4"><div class="text-sm font-bold mb-3">📝错题回顾</div>`;
+    wr.forEach((q,i) => {
+      const idx = S.qz.qs.indexOf(q);
+      h += `<div class="text-xs mb-3 pb-3" style="border-bottom:1px solid var(--border);"><div class="font-medium">${i+1}.${q.question}</div>
+        <div style="color:var(--wrong);">❌你选了：${lb[S.qz.ans[idx]]}</div>
+        <div style="color:var(--correct);">✅${lb[q.correctIndex]}.${q.options[q.correctIndex]}</div></div>`;
+    });
+    h += `</div>`;
+  }
+  h += `<div class="flex gap-3">
+    <button onclick="S.qz.res=false;S.qz.qs=[];rq()" class="flex-1 px-4 py-2.5 rounded-lg text-sm" style="background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);">返回</button>
+    <button onclick="retWQ()" class="flex-1 px-4 py-2.5 rounded-lg text-sm text-white" style="background:var(--accent);">🔁错题重练</button>
+  </div></div>`;
+  ri(h); usk();
+}
+function retWQ() {
+  const w = S.qz.qs.filter((q,i) => S.qz.ans[i]!==undefined && S.qz.ans[i]!==q.correctIndex);
+  if (!w.length) { alert('没有错题！'); return; }
+  S.qz.qs = w; S.qz.idx = 0; S.qz.ans = []; S.qz.res = false; rqQ();
+}
+
+// ======================== 闪卡 ========================
+function rf(p) {
+  if (!S.fc.cs.length) { S.fc.cs = genFC(); S.fc.idx = 0; S.fc.flp = false; }
+  const c = S.fc.cs[S.fc.idx];
+  if (!c) { ri(`<div class="text-center py-10" style="color:var(--text-muted);">暂无闪卡</div>`); return; }
+  const pr = S.fp[c.id] || {lv:0,tr:0,ef:2.5,iv:0,rp:0};
+  let h = `<div class="fade-in max-w-lg mx-auto"><div class="flex gap-2 mb-4">
+    <select id="fcc" class="flex-1 px-3 py-1.5 rounded-lg border text-sm" style="background:var(--bg-card);border-color:var(--border);color:var(--text-primary);" onchange="filFC()">
+      <option value="all">全部</option><option value="文学">📖文学</option><option value="历史事件">🏛️历史</option><option value="哲学">💭哲学</option><option value="文化">🎭文化</option><option value="河北特色">🔴河北</option><option value="三支政策">📋三支</option>
+    </select>
+    <select id="fcm" class="px-3 py-1.5 rounded-lg border text-sm" style="background:var(--bg-card);border-color:var(--border);color:var(--text-primary);" onchange="filFC()">
+      <option value="all">全部</option>
+      <option value="0">未学</option><option value="1">🌟初学</option><option value="2">🌟🌟学习中</option><option value="3">🌟🌟🌟基本</option><option value="4">🌟🌟🌟🌟熟练</option><option value="5">🌟🌟🌟🌟🌟精通</option>
+    </select></div>`;
+  const l = Object.values(S.fp).filter(p => p.lv >= 3).length;
+  h += `<div class="text-xs mb-3 flex justify-between" style="color:var(--text-muted);"><span>🃏${S.fc.cs.length}张·掌握${l}张</span><span>${S.fc.idx+1}/${S.fc.cs.length}</span></div>`;
+  h += `<div class="flashcard-container mb-4" onclick="flpFC()"><div class="flashcard-inner ${S.fc.flp?'flipped':''}">
+    <div class="flashcard-front"><div class="text-xs mb-2" style="color:${U.cc(c.cat)};">${U.ci(c.cat)}${c.cat}</div>
+      <div class="text-lg font-medium text-center leading-relaxed">${c.f}</div>
+      ${c.h?`<div class="mt-3 text-xs" style="color:var(--text-muted);">💡${c.h}</div>`:''}
+      <div class="mt-auto text-xs" style="color:var(--text-muted);">👆点击翻转</div>
+      ${c.hb?'<div class="mt-1 badge badge-hebei text-xs">🔴河北特色</div>':''}
+    </div>
+    <div class="flashcard-back"><div class="text-xs mb-2" style="color:var(--text-muted);">📖答案</div>
+      <div class="text-base text-center leading-relaxed whitespace-pre-line">${c.b}</div>
+    </div></div></div>`;
+  if (S.fc.flp) {
+    h += `<div class="mb-4"><div class="text-xs text-center mb-2" style="color:var(--text-muted);">掌握程度：</div><div class="flex gap-1 justify-center">`;
+    [[1,'生疏','var(--wrong)'],[2,'较难','#D97706'],[3,'一般','var(--gold)'],[4,'简单','#10B981'],[5,'熟练','var(--correct)']].forEach(([lv,lb,col]) => {
+      const a = pr.lv === lv;
+      h += `<button onclick="rtFC(${lv})" class="px-3 py-1.5 rounded-lg text-xs font-medium" style="background:${a?col:'var(--bg-card)'};color:${a?'white':col};border:1px solid ${col};">${'🌟'.repeat(lv)}${lb}</button>`;
+    });
+    h += `</div></div>`;
+  }
+  h += `<div class="flex gap-3">
+    <button onclick="prvFC()" class="flex-1 px-4 py-2 rounded-lg text-sm" style="background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);" ${S.fc.idx===0?'disabled style="opacity:0.4"':''}>⬅️上一张</button>
+    <button onclick="nxtFC()" class="flex-1 px-4 py-2 rounded-lg text-sm text-white" style="background:var(--accent);">➡️下一张</button>
+  </div></div>`;
+  ri(h);
+  if ($('fcc')) $('fcc').value = S.fc.cat;
+  if ($('fcm')) $('fcm').value = S.fc.mas;
+}
+function flpFC() { S.fc.flp = !S.fc.flp; rf(); }
+function rtFC(lv) {
+  const c = S.fc.cs[S.fc.idx];
+  const p = S.fp[c.id] || {lv:0,tr:0,ef:2.5,iv:0,rp:0};
+  const r = sm2(lv, p.ef, p.iv, p.rp);
+  S.fp[c.id] = {lv, tr:(p.tr||0)+1, lr:new Date().toISOString(), nx:r.nx, ef:r.ef, iv:r.iv, rp:r.rp};
+  S.st.fr = (S.st.fr||0) + 1; sv();
+  setTimeout(() => nxtFC(), 300);
+}
+function nxtFC() { if (S.fc.idx < S.fc.cs.length-1) { S.fc.idx++; S.fc.flp = false; rf(); } }
+function prvFC() { if (S.fc.idx > 0) { S.fc.idx--; S.fc.flp = false; rf(); } }
+function filFC() {
+  const c = $('fcc').value; const m = $('fcm').value;
+  S.fc.cat = c; S.fc.mas = m;
+  let a = genFC();
+  if (c !== 'all') a = a.filter(x => x.cat === c);
+  if (m !== 'all') { const lv = +m; a = a.filter(x => { const p = S.fp[x.id]; return p ? p.lv === lv : lv === 0; }); }
+  S.fc.cs = a; S.fc.idx = 0; S.fc.flp = false; rf();
+}
+
+// ======================== 总览 ========================
+function rd(p) {
+  const q = p?.q || S.sr.q || '';
+  const st = S.st; const r = st.tq > 0 ? Math.round(st.cr/st.tq*100) : 0;
+  const ft = Object.keys(S.fp).length;
+  const fm = Object.values(S.fp).filter(p => p.lv >= 3).length;
+  const fr = ft > 0 ? Math.round(fm/ft*100) : 0;
+  const cd = {};
+  S.h.forEach(h => { const q = quizQuestions.find(qq => qq.id === h.id); if (!q) return; if (!cd[q.category]) cd[q.category]={t:0,c:0}; cd[q.category].t++; if (h.c) cd[q.category].c++; });
+  let h = `<div class="fade-in">
+    <div class="card p-4 mb-4"><div class="flex gap-2">
+      <input id="si" type="text" placeholder="🔍搜索知识点/题目/关键词..." value="${q}" class="flex-1 px-4 py-2.5 rounded-lg border text-sm" style="background:var(--bg-primary);border-color:var(--border);color:var(--text-primary);" onkeydown="if(event.key==='Enter')ds()">
+      <button onclick="ds()" class="px-4 py-2.5 rounded-lg text-sm text-white" style="background:var(--accent);">搜索</button>
+    </div></div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+      <div class="card p-3 text-center"><div class="text-2xl font-bold" style="color:var(--accent);">${st.tq||0}</div><div class="text-xs" style="color:var(--text-muted);">📝答题总数</div></div>
+      <div class="card p-3 text-center"><div class="text-2xl font-bold" style="color:${r>=70?'var(--correct)':'var(--wrong)'};">${r}%</div><div class="text-xs" style="color:var(--text-muted);">🎯正确率</div></div>
+      <div class="card p-3 text-center"><div class="text-2xl font-bold" style="color:var(--gold);">${fr}%</div><div class="text-xs" style="color:var(--text-muted);">🃏闪卡掌握率</div></div>
+      <div class="card p-3 text-center"><div class="text-2xl font-bold" style="color:#F59E0B;">${st.sk||0}</div><div class="text-xs" style="color:var(--text-muted);">🔥连续学习</div></div>
+    </div>`;
+  if (Object.keys(cd).length) {
+    h += `<div class="card p-4 mb-4"><div class="text-sm font-bold mb-3">📊分类掌握度</div>`;
+    Object.entries(cd).forEach(([cat,d]) => {
+      const pct = d.t > 0 ? Math.round(d.c/d.t*100) : 0;
+      h += `<div class="flex items-center gap-3 mb-2"><span class="text-xs w-16" style="color:${U.cc(cat)};">${U.ci(cat)}${cat}</span>
+        <div class="progress-bar flex-1"><div class="progress-bar-fill" style="width:${pct}%;background:linear-gradient(90deg,${U.cc(cat)},${U.cc(cat)}88);"></div></div>
+        <span class="text-xs" style="color:var(--text-secondary);">${pct}%</span></div>`;
+    });
+    h += `</div>`;
+  }
+  h += `<div class="card p-4 mb-4"><div class="text-sm font-bold mb-3">🎯今日推荐</div>`;
+  const now = Date.now();
+  const due = Object.entries(S.fp).filter(([,p]) => p.nx && p.nx <= now).slice(0,3);
+  if (due.length) { due.forEach(([id]) => { const card = genFC().find(c => c.id === id); if (card) h += `<div class="text-xs cursor-pointer mb-1 p-2 rounded clickable" style="background:var(--accent-light);" onclick="nav('flashcards')">🃏${card.f}<span style="color:var(--text-muted);">（${card.cat}）</span></div>`; }); }
+  else h += `<div class="text-xs mb-2" style="color:var(--text-muted);">📅没有到期复习</div>`;
+  const wc = Object.entries(cd).filter(([,d]) => d.t >= 3 && d.c/d.t < 0.6);
+  if (wc.length) wc.forEach(([cat]) => h += `<div class="text-xs cursor-pointer mt-1 clickable" onclick="nav('quiz')" style="color:var(--accent);">→强化${U.ci(cat)}${cat}</div>`);
+  h += `</div>`;
+  if (q && q.trim()) {
+    const kr = U.fs(knowledgePoints, q), qr = U.fs(quizQuestions, q);
+    h += `<div class="card p-4 mb-4"><div class="text-sm font-bold mb-3">🔍结果：${kr.length+qr.length}条</div>`;
+    if (kr.length) kr.forEach(kp => h += `<div class="text-xs mb-2 p-2 rounded clickable" style="background:var(--bg-secondary);" onclick="nav('timeline',{dynasty:'${kp.dynasty}'})"><span class="font-medium">${kp.title}</span><span class="badge text-xs" style="background:${U.cc(kp.category)}20;color:${U.cc(kp.category)};">${kp.category}</span><span class="block mt-1" style="color:var(--text-muted);">${kp.content.slice(0,80)}...</span></div>`);
+    if (qr.length) qr.slice(0,5).forEach(r => h += `<div class="text-xs mb-1 p-2 rounded" style="background:var(--bg-secondary);">${r.question}</div>`);
+    h += `</div>`;
+  }
+  h += `<div class="card p-4"><div class="text-sm font-bold mb-3">⚙️数据管理</div>
+    <div class="flex gap-2 flex-wrap">
+      <button onclick="expD()" class="px-3 py-1.5 rounded-lg text-xs" style="background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);">📤导出数据</button>
+      <label class="px-3 py-1.5 rounded-lg text-xs cursor-pointer" style="background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);">📥导入数据<input type="file" accept=".json" onchange="impD(event)" style="display:none"></label>
+      <button onclick="if(confirm('确定清除所有数据？')){clr()}" class="px-3 py-1.5 rounded-lg text-xs" style="background:var(--wrong)15;border:1px solid var(--wrong);color:var(--wrong);">🗑️重置</button>
+    </div>
+    <div class="text-xs mt-2" style="color:var(--text-muted);">📌数据存在本地，可导出JSON编辑后重新导入</div>
+  </div></div>`;
+  ri(h); S.sr.q = q; uhs();
+}
+function ds() { const q = $('si')?.value||''; S.sr.q = q; rd({q}); }
+function expD() {
+  const d = {v:1, ts:new Date().toISOString(), st:S.st, h:S.h, fp:S.fp, pr:S.pr};
+  const b = new Blob([JSON.stringify(d,null,2)],{type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `三支一扶_${U.td()}.json`; a.click();
+}
+function impD(e) {
+  const f = e.target.files?.[0]; if (!f) return;
+  new FileReader().onload = ev => { try { const d = JSON.parse(ev.target.result); if (d.st) Object.assign(S.st,d.st); if (d.h) S.h = d.h; if (d.fp) Object.assign(S.fp,d.fp); if (d.pr) Object.assign(S.pr,d.pr); sv(); nav('dashboard'); alert('✅导入成功！'); } catch { alert('❌格式错误'); } };
+}
+function clr() { Store.remove('h'); Store.remove('fp'); Store.remove('st'); Store.remove('pr'); location.reload(); }
+
+// ======================== 暗色模式 ========================
+function togD() {
+  const d = document.documentElement.classList.toggle('dark');
+  S.pr.dk = d; $('darkIcon').textContent = d ? '☀️' : '🌙'; sv();
+}
+
+// ======================== 触控滑动支持（移动端） ========================
+let tx = 0, ty = 0;
+document.addEventListener('touchstart', e => {
+  if (e.touches.length === 1) { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }
+}, {passive:true});
+document.addEventListener('touchend', e => {
+  if (!tx) return;
+  const dx = e.changedTouches[0].clientX - tx;
+  const dy = e.changedTouches[0].clientY - ty;
+  const absDx = Math.abs(dx), absDy = Math.abs(dy);
+  // 只触发水平滑动，且距离 > 50px，垂直偏移 < 30px
+  if (absDx > 50 && absDy < absDx * 0.7) {
+    const dir = dx > 0 ? 'left' : 'right'; // 右滑=上一项，左滑=下一项
+    if (S.page === 'quiz' && !S.qz.res && S.qz.ans[S.qz.idx] !== undefined) {
+      e.preventDefault();
+      if (S.qz.idx < S.qz.qs.length - 1) { S.qz.idx++; rqQ(); }
+    } else if (S.page === 'flashcards') {
+      e.preventDefault();
+      if (dir === 'right' && S.fc.idx > 0) { S.fc.idx--; S.fc.flp = false; rf(); }
+      else if (dir === 'left' && S.fc.idx < S.fc.cs.length - 1) { S.fc.idx++; S.fc.flp = false; rf(); }
+    }
+  }
+  tx = 0; ty = 0;
+}, {passive:false});
+
+// ======================== 键盘快捷键 ========================
+document.addEventListener('keydown', e => {
+  if (['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
+  if (S.page === 'quiz' && !S.qz.res && e.key === 'ArrowRight' && S.qz.ans[S.qz.idx]!==undefined) { e.preventDefault(); nxtQ(); }
+  if (S.page === 'flashcards') {
+    if (e.key===' ' || e.key==='Enter') { e.preventDefault(); flpFC(); }
+    if (e.key==='ArrowRight') { e.preventDefault(); nxtFC(); }
+    if (e.key==='ArrowLeft') { e.preventDefault(); prvFC(); }
+    if (e.key>='1' && e.key<='5' && S.fc.flp) { e.preventDefault(); rtFC(+e.key); }
+  }
+  if ((e.key==='d'||e.key==='D') && (e.ctrlKey||e.metaKey)) { e.preventDefault(); togD(); }
+});
+
+// ======================== 启动 ========================
+document.addEventListener('DOMContentLoaded', () => {
+  if (S.pr.dk) { document.documentElement.classList.add('dark'); $('darkIcon').textContent = '☀️'; }
+  $('darkToggle').addEventListener('click', togD);
+  document.addEventListener('click', e => { const b = e.target.closest('[data-tab]'); if (b) nav(b.dataset.tab); });
+  const h = location.hash.slice(1);
+  const pg = ['timeline','quiz','flashcards','dashboard'].includes(h) ? h : 'timeline';
+  S.page = pg; qsa('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === pg));
+  uhs(); rcp(); usk();
+});
+</script>
+</body>
+</html>
