@@ -1419,117 +1419,116 @@ function usk() {
 }
 
 // ======================== 时间轴（水平多层标注） ========================
-let _tlDetail = 2; // 精细度：1=仅朝代 2=朝代+事件 3=全部
+let _tlDetail = 2;
 
 function rt(p) {
-  const targetId = p?.dynasty || S.tl.sel || dynasties[0].id;
+  const targetId = p?.dynasty || S.tl.sel || dynasties[0]?.id;
   const dy = dynasties.find(d => d.id === targetId);
 
-  // 计算总宽度（基于最晚朝代结束年份）
-  const firstY = dynasties[0].startYear;
-  const lastY = dynasties[dynasties.length-1].endYear;
-  const span = lastY - firstY;
-  const pxPerYear = 2.5; // 每年代理像素
-  const totalW = Math.max(span * pxPerYear, 600);
+  try {
+    const firstY = dynasties[0].startYear;
+    const lastY = dynasties[dynasties.length-1].endYear;
+    const span = lastY - firstY;
+    const pxPerYear = Math.max(1.8, Math.min(3.5, 800 / span));
+    const totalW = Math.max(span * pxPerYear, 400);
 
-  let h = `<div class="fade-in">`;
+    let h = `<div class="fade-in">`;
 
-  // 精细度切换
-  h += `<div class="flex items-center gap-2 mb-3 flex-wrap">
-    <span class="text-xs" style="color:var(--text-secondary);">📏 精细度：</span>
-    <button class="tl-layer-btn ${_tlDetail>=1?'active':''}" onclick="_tlDetail=1;rt()">Ⅰ 朝代</button>
-    <button class="tl-layer-btn ${_tlDetail>=2?'active':''}" onclick="_tlDetail=2;rt()">Ⅱ +事件</button>
-    <button class="tl-layer-btn ${_tlDetail>=3?'active':''}" onclick="_tlDetail=3;rt()">Ⅲ +详情</button>
-    <span class="text-xs" style="color:var(--text-muted);margin-left:4px;">💡 左右滑动 · 点击事件查看详情</span>
-  </div>`;
-
-  // 滚动容器
-  h += `<div class="tl-horiz card p-3"><div class="tl-horiz-inner" style="width:${totalW}px;">`;
-  h += `<div class="tl-horiz-line"></div>`;
-
-  // ====== 第1层：朝代标尺（总有） ======
-  h += `<div class="tl-layer-1">`;
-  dynasties.forEach(d => {
-    const x = ((d.startYear - firstY) / span) * totalW;
-    const w = Math.max(((d.endYear - d.startYear) / span) * totalW - 2, 40);
-    const active = d.id === targetId;
-    const isHB = knowledgePoints.some(kp => kp.dynasty === d.name && kp.isHebeiRelated);
-    h += `<div class="tl-dyn-block ${active?'active':''} ${isHB?'hebei':''}" style="left:${x}px;width:${w}px;" onclick="S.tl.sel='${d.id}';rt()">
-      <div class="tl-dyn-name">${d.name}</div>
-      <div class="tl-dyn-years">${U.fy(d.startYear)}~${U.fy(d.endYear)}</div>
+    // 精细度切换
+    h += `<div class="flex items-center gap-2 mb-3 flex-wrap">
+      <span class="text-xs" style="color:var(--text-secondary);">📏 精细度：</span>
+      <button class="tl-layer-btn ${_tlDetail>=1?'active':''}" onclick="_tlDetail=1;rt()">Ⅰ 朝代</button>
+      <button class="tl-layer-btn ${_tlDetail>=2?'active':''}" onclick="_tlDetail=2;rt()">Ⅱ +事件</button>
+      <button class="tl-layer-btn ${_tlDetail>=3?'active':''}" onclick="_tlDetail=3;rt()">Ⅲ +详情</button>
+      <span class="text-xs" style="color:var(--text-muted);margin-left:4px;">💡 左右滑动</span>
     </div>`;
-    // 朝代分隔竖线
-    if (d.startYear !== firstY) {
-      h += `<div class="tl-divider" style="left:${x}px;"></div>`;
-    }
-  });
-  h += `</div>`; // layer-1
 
-  // ====== 第2层：事件标注（精细度 >=2） ======
-  if (_tlDetail >= 2 && dy && dy.keyEvents?.length) {
-    // 找出当前朝代的事件范围
-    const dyStart = dy.startYear, dyEnd = dy.endYear;
-    const dySpan = dyEnd - dyStart;
-    const dyLeft = ((dyStart - firstY) / span) * totalW;
-    const dyWidth = Math.max(((dyEnd - dyStart) / span) * totalW, 80);
+    // 水平滚动容器
+    h += `<div class="tl-horiz card p-3"><div class="tl-horiz-inner" style="width:${totalW}px;">`;
+    h += `<div class="tl-horiz-line"></div>`;
 
-    h += `<div class="tl-layer-2">`;
-    dy.keyEvents.forEach(e => {
-      const eX = ((e.year - firstY) / span) * totalW;
-      const hasHebei = (e.details && e.details.includes('河北')) || (e.significance && e.significance.includes('河北'));
-      h += `<div class="tl-ev-mark ${hasHebei?'hebei':''}" style="left:${eX-20}px;" onclick="showEvDetail('${d.id}',${dy.keyEvents.indexOf(e)})">
-        <div class="tl-ev-dot"></div>
-        <div class="tl-ev-label">${e.event.length>8?e.event.slice(0,7)+'…':e.event}</div>
-        <div class="tl-ev-year">${U.fy(e.year)}</div>
+    // 第1层：朝代
+    h += `<div class="tl-layer-1">`;
+    dynasties.forEach(d => {
+      const x = ((d.startYear - firstY) / span) * totalW;
+      const w = Math.max(((d.endYear - d.startYear) / span) * totalW, 40);
+      const active = d.id === targetId;
+      const isHB = knowledgePoints.some(kp => kp.dynasty === d.name && kp.isHebeiRelated);
+      h += `<div class="tl-dyn-block ${active?'active':''} ${isHB?'hebei':''}" style="left:${x}px;width:${w}px;" onclick="S.tl.sel='${d.id}';rt()">
+        <div class="tl-dyn-name">${d.name}</div>
+        <div class="tl-dyn-years">${U.fy(d.startYear)}~${U.fy(d.endYear)}</div>
       </div>`;
+      if (d.startYear !== firstY) {
+        h += `<div class="tl-divider" style="left:${x}px;"></div>`;
+      }
     });
-    h += `</div>`; // layer-2
-  }
-
-  // ====== 第3层：详细事件卡片（精细度 >=3） ======
-  if (_tlDetail >= 3 && dy && dy.keyEvents?.length) {
-    h += `<div class="tl-layer-3" id="tlLayer3">`;
-    dy.keyEvents.forEach(e => {
-      const hasHebei = (e.details && e.details.includes('河北')) || (e.significance && e.significance.includes('河北'));
-      h += `<div class="tl-detail-card ${hasHebei?'hebei-card':''}">
-        <div class="tl-dc-year">${U.fy(e.year)}</div>
-        <div class="tl-dc-title">${e.event}</div>`;
-      if (e.details) h += `<div class="tl-dc-detail">📖 ${e.details}</div>`;
-      if (e.significance) h += `<div class="tl-dc-sig">🎯 ${e.significance}</div>`;
-      h += `</div>`;
-    });
-    // 刷题快捷
-    let qs = quizQuestions.filter(q => q.dynasty === dy.name);
-    if (qs.length) h += `<div style="margin-top:8px;"><button onclick="startQz('${dy.name}')" class="w-full px-3 py-1.5 rounded-lg text-xs text-white" style="background:var(--accent);">✍️ 刷${dy.name}题目（${qs.length}题）</button></div>`;
     h += `</div>`;
+
+    // 第2层：事件
+    if (_tlDetail >= 2 && dy && dy.keyEvents?.length) {
+      h += `<div class="tl-layer-2">`;
+      dy.keyEvents.forEach((e, i) => {
+        const eX = ((e.year - firstY) / span) * totalW;
+        const hb = (e.details && e.details.includes('河北')) || (e.significance && e.significance.includes('河北'));
+        h += `<div class="tl-ev-mark ${hb?'hebei':''}" style="left:${Math.max(0,eX-20)}px;" onclick="showEvDetail(${i})">
+          <div class="tl-ev-dot"></div>
+          <div class="tl-ev-label">${e.event.length>6?e.event.slice(0,6)+'…':e.event}</div>
+          <div class="tl-ev-year">${U.fy(e.year)}</div>
+        </div>`;
+      });
+      h += `</div>`;
+    }
+
+    // 第3层：详情
+    if (_tlDetail >= 3 && dy && dy.keyEvents?.length) {
+      h += `<div class="tl-layer-3">`;
+      dy.keyEvents.forEach(e => {
+        const hb = (e.details && e.details.includes('河北')) || (e.significance && e.significance.includes('河北'));
+        h += `<div class="tl-detail-card ${hb?'hebei-card':''}">
+          <div class="tl-dc-year">${U.fy(e.year)}</div>
+          <div class="tl-dc-title">${e.event}</div>`;
+        if (e.details) h += `<div class="tl-dc-detail">📖 ${e.details}</div>`;
+        if (e.significance) h += `<div class="tl-dc-sig">🎯 ${e.significance}</div>`;
+        h += `</div>`;
+      });
+      let qs = quizQuestions.filter(q => q.dynasty === dy.name);
+      if (qs.length) h += `<div style="margin-top:8px;"><button onclick="startQz('${dy.name.replace(/'/g,'')}')" class="w-full px-3 py-1.5 rounded-lg text-xs text-white" style="background:var(--accent);">✍️ 刷${dy.name}题目（${qs.length}题）</button></div>`;
+      h += `</div>`;
+    }
+
+    // 引导
+    if (!dy || !dy.keyEvents?.length) {
+      h += `<div class="tl-empty">暂无详细事件数据</div>`;
+    } else if (_tlDetail === 1) {
+      h += `<div class="tl-empty mt-2">🔽 切换至"Ⅱ +事件"查看具体事件</div>`;
+    }
+
+    h += `</div></div></div>`;
+    ri(h);
+
+    setTimeout(() => {
+      const el = document.querySelector('.tl-dyn-block.active');
+      if (el && el.scrollIntoView) el.scrollIntoView({ inline:'center', block:'nearest' });
+    }, 100);
+  } catch(e) {
+    // 安全降级
+    ri(`<div class="fade-in"><div class="card p-4">
+      <div class="text-sm font-bold mb-2">🏛️ 时间轴</div>
+      <div class="flex flex-wrap gap-2">${dynasties.map(d => `<span class="badge text-xs" style="background:var(--accent-light);color:var(--accent);cursor:pointer;" onclick="S.tl.sel='${d.id}';rt()">${d.name}</span>`).join('')}</div>
+      <div class="text-xs mt-3" style="color:var(--text-muted);">点击朝代查看详细事件</div>
+    </div></div>`);
+    console.error('Timeline render error:', e);
   }
-
-  // 无数据
-  if (!dy || !dy.keyEvents?.length) {
-    h += `<div class="tl-empty">暂无详细事件数据</div>`;
-  }
-
-  h += `</div></div></div>`; // horiz-inner, horiz, fade-in
-  ri(h);
-
-  // 滚动到当前朝代
-  setTimeout(() => {
-    const el = document.querySelector('.tl-dyn-block.active');
-    if (el) el.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
-  }, 50);
 }
 
-// 点击事件标注跳转到对应详情卡片
-function showEvDetail(dyId, idx) {
+function showEvDetail(idx) {
   if (_tlDetail < 3) { _tlDetail = 3; rt(); }
   setTimeout(() => {
     const cards = document.querySelectorAll('.tl-detail-card');
     if (cards && cards[idx]) {
       cards[idx].scrollIntoView({ behavior:'smooth', block:'center' });
-      cards[idx].style.background = 'var(--accent-light)';
-      setTimeout(() => { cards[idx].style.background = ''; }, 1500);
     }
-  }, 100);
+  }, 150);
 }// ======================== 刷题 ========================
 function rq(p) {
   if (S.qz.res) { rqRes(); return; }
