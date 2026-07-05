@@ -123,66 +123,55 @@
     .quiz-option.wrong { border-color: var(--wrong); background: #FFEBEE; color: var(--wrong); }
     .dark .quiz-option.correct { background: #1B3A1B; }
     .dark .quiz-option.wrong { background: #3A1B1B; }
-            /* ===== 时间轴全新设计 ===== */
-/* 精细度按钮 */
-.tl-zoom { display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap; align-items:center; }
-.tl-zoom-label { font-size:0.85rem; color:var(--text-secondary); font-weight:500; }
-.tl-zoom-btn { padding:6px 16px; border-radius:6px; border:1.5px solid var(--border); font-size:0.75rem; cursor:pointer; background:var(--bg-card); color:var(--text-muted); transition:all 0.2s; font-weight:500; }
-.tl-zoom-btn.active { background:var(--accent); color:white; border-color:var(--accent); }
-/* 滚动容器 */
-.tl-scroll { overflow-x:auto; overflow-y:visible; padding:8px 0; position:relative; border-radius:12px; }
+                /* ===== 时间轴：大轴全事件 ===== */
+.tl-wrap { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.tl-scroll { overflow-x:auto; overflow-y:visible; padding:0 4px 12px; }
 .tl-scroll::-webkit-scrollbar { height:8px; }
 .tl-scroll::-webkit-scrollbar-thumb { background:var(--text-muted); border-radius:4px; }
-/* 内层 - 固定高度，弹性宽度 */
-.tl-inner { position:relative; min-width:900px; padding:20px 25px 30px; user-select:none; }
-/* 轴线 - 粗壮醒目 */
-.tl-axis-line { position:absolute; left:15px; right:15px; top:42px; height:6px; background:linear-gradient(90deg, var(--accent), var(--gold), var(--accent)); border-radius:3px; z-index:0; }
 
-/* ---- 第1层：朝代 - 大气 ---- */
-.tl-dynasty-layer { position:relative; height:70px; z-index:1; margin-bottom:4px; }
-.tl-dynasty-block { position:absolute; top:0; text-align:center; cursor:pointer; transition:all 0.25s; border-radius:8px; padding:4px 0; }
-.tl-dynasty-block:hover { transform:scale(1.05); z-index:5; }
-.tl-dynasty-block .db-name { font-size:0.95rem; font-weight:700; color:var(--accent); background:var(--accent-light); padding:3px 10px; border-radius:6px; display:inline-block; }
-.tl-dynasty-block.active .db-name { background:var(--accent); color:white; box-shadow:0 2px 12px rgba(194,59,34,0.3); }
-.tl-dynasty-block.hebei .db-name { border-left:4px solid var(--cat-hebei); }
-.tl-dynasty-block .db-years { font-size:0.65rem; color:var(--text-muted); margin-top:2px; }
+.tl-inner { position:relative; user-select:none; min-height:460px; }
+/* 主轴线 - 厚重 */
+.tl-line { position:absolute; left:0; right:0; top:200px; height:6px; background:linear-gradient(90deg, var(--crimson-dark), var(--crimson), var(--gold)); border-radius:3px; z-index:1; }
+/* 精细刻度：每100年 */
+.tl-tick { position:absolute; top:194px; width:1px; height:18px; background:var(--border); z-index:2; }
+.tl-tick.m500 { top:190px; width:2px; height:26px; background:var(--text-muted); }
+.tl-tick.m1000 { top:186px; width:3px; height:34px; background:var(--ink); }
+.tl-tick-label { position:absolute; top:224px; font-size:0.55rem; color:var(--text-muted); white-space:nowrap; transform:translateX(-50%); z-index:2; }
 
-/* ---- 第2层：事件 - 在轴线上下交错 ---- */
-.tl-event-layer { position:relative; height:180px; z-index:2; }
-.tl-event-item { position:absolute; cursor:pointer; transition:all 0.25s; }
-.tl-event-item:hover { z-index:10; }
-.tl-event-item .ei-connect { position:absolute; left:50%; width:2px; background:var(--accent); opacity:0.4; }
-/* 上方事件 */
-.tl-event-item.up .ei-connect { bottom:-2px; height:28px; }
-.tl-event-item.up { padding-bottom:36px; }
-/* 下方事件 */
-.tl-event-item.down .ei-connect { top:-2px; height:28px; }
-.tl-event-item.down { padding-top:36px; }
-/* 圆点 */
-.tl-event-item .ei-dot { width:16px; height:16px; border-radius:50%; background:var(--accent); border:3px solid var(--bg-primary); box-shadow:0 0 0 2px var(--accent); margin:0 auto; }
-.tl-event-item.hebei-event .ei-dot { background:var(--cat-hebei); box-shadow:0 0 0 2px var(--cat-hebei); }
-/* 标签 - 带背景 */
-.tl-event-item .ei-label { font-size:0.72rem; font-weight:600; color:var(--text-primary); background:var(--bg-card); border:1px solid var(--border); border-radius:6px; padding:3px 8px; white-space:nowrap; box-shadow:0 1px 4px rgba(0,0,0,0.06); display:inline-block; }
-.tl-event-item .ei-year { font-size:0.6rem; color:var(--accent); font-weight:700; text-align:center; margin-bottom:2px; }
-/* 详情弹出气泡 */
-.tl-event-item .ei-detail { display:none; position:absolute; z-index:20; width:280px; padding:10px 12px; border-radius:8px; background:var(--bg-card); border:1px solid var(--border); box-shadow:0 4px 20px rgba(0,0,0,0.12); cursor:default; }
-.tl-event-item.up .ei-detail { top:100%; margin-top:8px; left:50%; transform:translateX(-50%); }
-.tl-event-item.down .ei-detail { bottom:100%; margin-bottom:8px; left:50%; transform:translateX(-50%); }
-.tl-event-item .ei-detail.show { display:block; animation:fadeIn 0.2s ease; }
-.tl-event-item .ei-detail .ed-title { font-size:0.85rem; font-weight:700; color:var(--accent); margin-bottom:3px; }
-.tl-event-item .ei-detail .ed-year { font-size:0.65rem; color:var(--text-muted); }
-.tl-event-item .ei-detail .ed-text { font-size:0.72rem; color:var(--text-secondary); line-height:1.5; margin-top:4px; }
-.tl-event-item .ei-detail .ed-sig { font-size:0.68rem; color:var(--gold); background:rgba(197,165,90,0.1); padding:4px 6px; border-radius:4px; margin-top:4px; line-height:1.4; }
-.tl-event-item .ei-detail .ed-close { float:right; cursor:pointer; font-size:0.8rem; color:var(--text-muted); }
+/* 朝代色带 */
+.tl-era { position:absolute; top:150px; height:56px; z-index:2; cursor:pointer; border-radius:2px; opacity:0.12; transition:all 0.3s; }
+.tl-era:hover { opacity:0.3; z-index:5; }
+.tl-era.active { opacity:0.35; z-index:5; box-shadow:inset 0 0 0 1px var(--accent); }
+/* 朝代标签 */
+.tl-era-label { position:absolute; top:130px; font-size:0.75rem; font-weight:700; color:var(--accent); white-space:nowrap; z-index:6; cursor:pointer; text-align:center; transition:all 0.2s; }
+.tl-era-label:hover { transform:scale(1.1); color:var(--crimson); }
+.tl-era-label.active { background:var(--accent); color:white; padding:1px 8px; border-radius:4px; }
+.tl-era-label.hebei::after { content:'🔴'; font-size:0.5rem; margin-left:2px; }
+.tl-era-years { position:absolute; top:208px; font-size:0.5rem; color:var(--text-muted); white-space:nowrap; z-index:6; }
 
-/* ---- 朝代分隔竖线 ---- */
-.tl-sep { position:absolute; top:-10px; width:1px; height:20px; background:var(--border); z-index:0; }
+/* 事件圆点 */
+.tl-dot { position:absolute; width:14px; height:14px; border-radius:50%; background:var(--accent); border:3px solid var(--bg-primary); box-shadow:0 0 0 2px var(--accent); z-index:5; transform:translateX(-50%); transition:all 0.3s; cursor:pointer; }
+.tl-dot:hover { transform:translateX(-50%) scale(1.4); z-index:15; }
+.tl-dot.hb { background:var(--cat-hebei); box-shadow:0 0 0 2px var(--cat-hebei); }
+/* 连线 */
+.tl-conn { position:absolute; left:50%; width:2px; background:var(--timeline-line); z-index:3; transform:translateX(-50%); }
+.tl-conn.up { bottom:7px; height:24px; }
+.tl-conn.down { top:7px; height:24px; }
 
-/* 点击其他区域关闭详情 */
-.tl-overlay { display:none; position:fixed; inset:0; z-index:19; }
-.tl-overlay.show { display:block; }
-/* 空状态/引导 */
-.tl-empty { text-align:center; padding:30px; color:var(--text-muted); font-size:0.9rem; }/* ===== 进度条 ===== */
+/* 事件卡片 */
+.tl-card { position:absolute; width:180px; padding:6px 8px; border-radius:6px; background:var(--bg-card); border:1px solid var(--border); z-index:6; transition:all 0.3s; cursor:default; pointer-events:auto; }
+.tl-card:hover { z-index:20; box-shadow:0 4px 20px rgba(0,0,0,0.12); transform:scale(1.03); }
+.tl-card.up { top:6px; }
+.tl-card.down { top:390px; }
+.tl-card.hb { border-left:3px solid var(--cat-hebei); }
+.tl-card .tc-yr { font-size:0.55rem; font-weight:700; color:var(--accent); display:inline-block; background:var(--accent-light); padding:0 4px; border-radius:2px; }
+.tl-card .tc-title { font-size:0.72rem; font-weight:700; margin:2px 0 1px; color:var(--text-primary); }
+.tl-card .tc-detail { font-size:0.63rem; line-height:1.4; color:var(--text-secondary); }
+.tl-card .tc-sig { font-size:0.6rem; line-height:1.3; color:var(--gold); background:rgba(197,165,90,0.06); padding:2px 5px; border-radius:3px; margin-top:2px; }
+
+/* 空 */
+.tl-empty { position:absolute; top:180px; left:0; width:100%; text-align:center; color:var(--text-muted); font-size:0.85rem; }
+/* ===== 进度条 ===== */
     .progress-bar {
       height: 8px; border-radius: 4px; background: var(--border); overflow: hidden;
     }
@@ -1446,122 +1435,119 @@ function usk() {
   S.st.ld = t; sv(); uhs();
 }
 
-// ======================== 时间轴（全新设计） ========================
-let _tlLevel = 2;
-
+// ======================== 时间轴：全朝代、全事件 ========================
 function rt(p) {
   const targetId = p?.dynasty || S.tl.sel || dynasties[0]?.id;
-  const dy = dynasties.find(d => d.id === targetId);
   try {
     const firstY = dynasties[0].startYear;
-    const lastY = dynasties[dynasties.length-1].endYear;
+    const lastY = 2026;
     const span = lastY - firstY;
-    const pxPerYear = 2.2;
-    const totalW = Math.max(span * pxPerYear, 900);
+    const pxPerYear = 1.8;
+    const totalW = Math.max(span * pxPerYear, 1000);
 
-    let h = `<div class="fade-in">
-    <div class="tl-zoom">
-      <span class="tl-zoom-label">📏 缩放：</span>
-      <button class="tl-zoom-btn ${_tlLevel>=1?'active':''}" onclick="_tlLevel=1;rt()">Ⅰ 朝代</button>
-      <button class="tl-zoom-btn ${_tlLevel>=2?'active':''}" onclick="_tlLevel=2;rt()">Ⅱ 事件</button>
-      <button class="tl-zoom-btn ${_tlLevel>=3?'active':''}" onclick="_tlLevel=3;rt()">Ⅲ 详情</button>
-      <span style="margin-left:8px;font-size:0.7rem;color:var(--text-muted);">↔ 滑动查看 · 点击事件看详情</span>
-    </div>
-    <div class="card p-0" style="overflow:hidden;">
-    <div class="tl-scroll"><div class="tl-inner" style="width:${totalW}px;">
-    <div class="tl-axis-line"></div>`;
-
-    // === 第1层：朝代 ===
-    h += `<div class="tl-dynasty-layer">`;
+    // 收集所有事件
+    const allEvents = [];
     dynasties.forEach(d => {
-      const x = ((d.startYear - firstY) / span) * totalW;
-      const w = Math.max(((d.endYear - d.startYear) / span) * totalW - 4, 50);
-      const active = d.id === targetId;
-      const isHB = knowledgePoints.some(kp => kp.dynasty === d.name && kp.isHebeiRelated);
-      h += `<div class="tl-dynasty-block ${active?'active':''} ${isHB?'hebei':''}" style="left:${x}px;width:${w}px;" onclick="S.tl.sel='${d.id}';rt()">
-        <div class="db-name">${d.name}</div>
-        <div class="db-years">${U.fy(d.startYear)}~${U.fy(d.endYear)}</div>
-      </div>`;
-      if (d.startYear !== firstY) {
-        h += `<div class="tl-sep" style="left:${x}px;"></div>`;
-      }
-    });
-    h += `</div>`;
-
-    // === 第2层：事件 + 详情 ===
-    if (_tlLevel >= 2 && dy && dy.keyEvents?.length) {
-      h += `<div class="tl-event-layer">`;
-      // 生成唯一ID
-      const uid = Date.now();
-      dy.keyEvents.forEach((e, i) => {
-        const eX = ((e.year - firstY) / span) * totalW;
-        // 上下交错
-        const side = i % 2 === 0 ? 'up' : 'down';
-        const hasHebei = (e.details && e.details.includes('河北')) || (e.significance && e.significance.includes('河北'));
-        const label = _tlLevel >= 3 ? e.event : (e.event.length > 8 ? e.event.slice(0,7)+'…' : e.event);
-        h += '<div class="tl-event-item ' + side + ' ' + (hasHebei?'hebei-event':'') + '" style="left:' + (eX-100) + 'px;width:200px;" data-idx="' + i + '" onclick="toggleEventDetail(this, ' + i + ')">';
-        // 连接线
-        h += '<div class="ei-connect"></div>';
-        // 上方内容
-        if (side === 'up') {
-          h += '<div class="ei-year">' + U.fy(e.year) + '</div>';
-          h += '<div class="ei-label">' + label + '</div>';
-          h += '<div class="ei-dot" style="clear:both;margin-top:4px;"></div>';
-        } else {
-          h += '<div class="ei-dot" style="margin-bottom:4px;"></div>';
-          h += '<div class="ei-label">' + label + '</div>';
-          h += '<div class="ei-year" style="margin-top:2px;">' + U.fy(e.year) + '</div>';
-        }
-        // 详情弹窗（第3层）
-        if (_tlLevel >= 3) {
-          h += '<div class="ei-detail" id="ed_' + uid + '_' + i + '">';
-          h += '<span class="ed-close" onclick="event.stopPropagation();closeAllDetails()">✕</span>';
-          h += '<div class="ed-year">' + U.fy(e.year) + '</div>';
-          h += '<div class="ed-title">' + e.event + '</div>';
-          if (e.details) h += '<div class="ed-text">📖 ' + e.details + '</div>';
-          if (e.significance) h += '<div class="ed-sig">🎯 ' + e.significance + '</div>';
-          h += '</div>';
-        }
-        h += '</div>'; // tl-event-item
+      (d.keyEvents || []).forEach((e, i) => {
+        allEvents.push({ ...e, dyId: d.id, dyName: d.name, ei: i });
       });
-      h += '</div>'; // tl-event-layer
+    });
 
-      // 刷题按钮
-      let qs = quizQuestions.filter(q => q.dynasty === dy.name);
-      if (qs.length) {
-        h += '<div style="padding:10px 25px;border-top:1px solid var(--border);"><button onclick="startQz(\'' + dy.name.replace(/'/g,'') + '\')" class="px-4 py-1.5 rounded-lg text-xs text-white" style="background:var(--accent);">✍️ 刷' + dy.name + '题目（' + qs.length + '题）</button></div>';
+    let h = '<div class="fade-in"><div class="tl-wrap"><div class="tl-scroll"><div class="tl-inner" style="width:' + totalW + 'px;min-height:460px;">';
+
+    // 主轴线
+    h += '<div class="tl-line"></div>';
+
+    // 刻度
+    for (let y = Math.floor(firstY / 100) * 100; y <= lastY; y += 100) {
+      if (y < firstY) continue;
+      const x = ((y - firstY) / span) * totalW;
+      let cls = 'tl-tick';
+      if (y % 1000 === 0) cls += ' m1000';
+      else if (y % 500 === 0) cls += ' m500';
+      h += '<div class="' + cls + '" style="left:' + x + 'px;"></div>';
+      if (y % 500 === 0) {
+        const lbl = y < 0 ? '\u524d' + Math.abs(y) : '' + y;
+        h += '<div class="tl-tick-label" style="left:' + x + 'px;">' + lbl + '</div>';
       }
-    } else {
-      h += '<div class="tl-empty' + (_tlLevel >= 1 && dy ? '" style="padding:20px;">🔽 点击"Ⅱ 事件"查看具体事件' : '" style="padding:60px;">点击上方朝代查看历史事件</div>');
     }
 
+    // 朝代色带 + 标签
+    dynasties.forEach(d => {
+      const x = ((d.startYear - firstY) / span) * totalW;
+      const x2 = ((d.endYear - firstY) / span) * totalW;
+      const w = Math.max(x2 - x, 10);
+      const active = d.id === targetId;
+      const isHB = knowledgePoints.some(kp => kp.dynasty === d.name && kp.isHebeiRelated);
+      h += '<div class="tl-era ' + (active?'active':'') + '" style="left:' + x + 'px;width:' + w + 'px;background:' + (isHB?'var(--cat-hebei)':'var(--accent)') + ';" onclick="S.tl.sel=\'' + d.id + '\';rt()" title="' + d.name + '"></div>';
+      // 朝代标签（落在色带中间）
+      const cx = (x + x2) / 2;
+      h += '<div class="tl-era-label ' + (active?'active':'') + ' ' + (isHB?'hebei':'') + '" style="left:' + (cx-30) + 'px;width:60px;" onclick="S.tl.sel=\'' + d.id + '\';rt()">' + d.name + '</div>';
+      // 年份在轴下
+      h += '<div class="tl-era-years" style="left:' + cx + 'px;transform:translateX(-50%);">' + U.fy(d.startYear) + '</div>';
+    });
+
+    // 事件：按年份排序
+    allEvents.sort((a, b) => a.year - b.year);
+    const placed = [];
+    const MIN_GAP = 25;
+
+    allEvents.forEach((e, idx) => {
+      const eX = ((e.year - firstY) / span) * totalW;
+      const cardW = 180;
+      // 找不重叠的left
+      let left = Math.max(2, eX - cardW/2);
+      let tries = 0;
+      while (tries < 30) {
+        const overlap = placed.some(u => left < u.r + MIN_GAP && left + cardW + MIN_GAP > u.l);
+        if (!overlap) break;
+        left += (idx % 2 === 0 ? 1 : -1) * 8;
+        tries++;
+      }
+      placed.push({l: left, r: left + cardW});
+
+      const side = idx % 2 === 0 ? 'up' : 'down';
+      const hasHB = (e.details && e.details.includes('\u6cb3\u5317')) || (e.significance && e.significance.includes('\u6cb3\u5317'));
+      // 注意：河北的Unicode会变，用文字判断
+      const _hasHB = (e.details && e.details.indexOf('河北') >= 0) || (e.significance && e.significance.indexOf('河北') >= 0);
+
+      // 圆点
+      h += '<div class="tl-dot ' + (_hasHB?'hb':'') + '" style="left:' + eX + 'px;top:197px;" onclick="S.tl.sel=\'' + e.dyId + '\';rt()" title="' + e.event + '"></div>';
+      // 连线
+      h += '<div class="tl-conn ' + side + '" style="left:' + eX + 'px;' + (side==='up'?'bottom:7px':'top:7px') + ';"></div>';
+
+      // 卡片
+      const detailText = e.details ? (e.details.length > 45 ? e.details.slice(0,44) + '...' : e.details) : '';
+      const sigText = e.significance ? (e.significance.length > 40 ? e.significance.slice(0,39) + '...' : e.significance) : '';
+
+      h += '<div class="tl-card ' + side + ' ' + (_hasHB?'hb':'') + '" style="left:' + left + 'px;">';
+      h += '<div class="tc-yr">' + U.fy(e.year) + '</div>';
+      h += '<div class="tc-title">' + e.event + '</div>';
+      if (detailText) h += '<div class="tc-detail">' + detailText + '</div>';
+      if (sigText) h += '<div class="tc-sig">\ud83c\udfaf ' + sigText + '</div>';
+      h += '</div>';
+    });
+
+    // 事件量提示
+    h += '<div style="position:absolute;right:8px;top:425px;font-size:0.6rem;color:var(--text-muted);">共' + allEvents.length + '件大事</div>';
+
     h += '</div></div></div></div>';
-    // 遮罩
-    h += '<div class="tl-overlay" id="tlOverlay" onclick="closeAllDetails()"></div>';
     ri(h);
 
+    // 滚动到选中朝代
     setTimeout(() => {
-      const el = document.querySelector('.tl-dynasty-block.active');
-      if (el) el.scrollIntoView({ inline:'center', block:'nearest', behavior:'smooth' });
+      const sel = dynasties.find(d => d.id === targetId);
+      if (sel) {
+        const cx = ((sel.startYear - firstY) / span) * totalW;
+        document.querySelector('.tl-scroll').scrollLeft = Math.max(0, cx - 200);
+      }
     }, 100);
   } catch(e) {
-    ri('<div class="fade-in card p-4"><div class="text-sm font-bold mb-2">🏛️ 朝代</div><div class="flex flex-wrap gap-2">' +
+    console.error(e);
+    ri('<div class="fade-in card p-4"><div class="text-sm font-bold mb-2">\ud83c\udfdb\ufe0f 朝代</div><div class="flex flex-wrap gap-2">' +
       dynasties.map(d => '<span class="badge text-xs clickable" style="background:var(--accent-light);color:var(--accent);padding:4px 10px;" onclick="S.tl.sel=\'' + d.id + '\';rt()">' + d.name + '</span>').join('') +
       '</div></div>');
   }
-}
-
-function toggleEventDetail(el, idx) {
-  const detail = el.querySelector('.ei-detail');
-  if (!detail) return;
-  const allShown = document.querySelectorAll('.ei-detail.show');
-  allShown.forEach(d => d.classList.remove('show'));
-  document.getElementById('tlOverlay').classList.add('show');
-  detail.classList.toggle('show');
-}
-function closeAllDetails() {
-  document.querySelectorAll('.ei-detail.show').forEach(d => d.classList.remove('show'));
-  document.getElementById('tlOverlay').classList.remove('show');
 }// ======================== 刷题 ========================
 function rq(p) {
   if (S.qz.res) { rqRes(); return; }
